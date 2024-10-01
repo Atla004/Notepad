@@ -1,16 +1,14 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { StyleSheet, Text, View } from 'react-native';
-import { Provider as PaperProvider } from 'react-native-paper';
-import { Slot, Stack } from 'expo-router';
-import Register from './Register';
-import Login from './Login';
+import { StyleSheet, Text, View } from "react-native";
+import { Provider as PaperProvider } from "react-native-paper";
+import { Slot } from "expo-router";
 
 export default function Layout() {
   return (
     <PaperProvider>
       <View style={styles.container}>
-        <Slot/>
+        <Slot />
       </View>
     </PaperProvider>
   );
@@ -19,8 +17,8 @@ export default function Layout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

@@ -19,71 +19,62 @@ export default function Login() {
 
   const handleLoginClick = () => {
     console.log("User: ", user);
-    router.push("/home");
-  }
-
-  const styles = StyleSheet.create({
-    input: {
-      maxWidth: 200, // Set the maximum width to 300
-      width: "100%", // Ensure the input takes up the full width of its container
-    },
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    card: {
-      width: 250,
-    }
-  });
+    router.push("/Home");
+  };
 
   return (
-    <View style={styles.container}>
-    <Card style = {styles.card}>
-      <Card.Content>
-        <Text variant="titleLarge">Welcome Back!</Text>
-        <Text variant="labelLarge">We`re glad to have you back</Text>
+    <View>
+      <Card style={styles.card}>
+        <Card.Content>
+          <Text variant="titleLarge">Welcome Back!</Text>
+          <Text variant="labelLarge">We`re glad to have you back</Text>
 
-        <TextInput
-          style={styles.input}
-          label="Email"
-          value={user}
-          mode="outlined"
-          onChangeText={(text) => setUser(text)}
-        />
+          <TextInput
+            style={styles.input}
+            label="Email"
+            value={user}
+            mode="outlined"
+            onChangeText={(text) => setUser(text)}
+          />
 
-        <TextInput
-          style={styles.input}
-          label="password"
-          value={password}
-          mode="outlined"
-          onChangeText={(text) => setPassword(text)}
-        />
+          <TextInput
+            style={styles.input}
+            label="password"
+            value={password}
+            mode="outlined"
+            onChangeText={(text) => setPassword(text)}
+          />
 
-        <Text variant="labelLarge">Forgot your Password?</Text>
+          <Text variant="labelLarge">Forgot your Password?</Text>
 
-        <RadioButton
-          value="ddd"
-          status={isChecked ? "checked" : "unchecked"}
-          onPress={staySignedIn}
-        />
-        <Text variant="labelLarge">Stay signed in </Text>
+          <RadioButton
+            value="ddd"
+            status={isChecked ? "checked" : "unchecked"}
+            onPress={staySignedIn}
+          />
+          <Text variant="labelLarge">Stay signed in </Text>
 
-        <Text variant="labelLarge">Need an account? </Text>
+          <Text variant="labelLarge">Need an account? </Text>
 
-        <Link href="./Register">
-          <Text variant="labelLarge">Register</Text>
-        </Link>
+          <Link href="./Register">
+            <Text variant="labelLarge">Register</Text>
+          </Link>
 
-        <Button mode="contained" onPressOut={handleLoginClick}>
-          Login
-        </Button>
-
-
-      </Card.Content>
-    </Card>
+          <Button mode="contained" onPressOut={handleLoginClick}>
+            Login
+          </Button>
+        </Card.Content>
+      </Card>
     </View>
   );
 }
 
+const styles = StyleSheet.create({
+  input: {
+    maxWidth: 200, // Set the maximum width to 300
+    width: "100%", // Ensure the input takes up the full width of its container
+  },
+  card: {
+    width: 250,
+  },
+});
