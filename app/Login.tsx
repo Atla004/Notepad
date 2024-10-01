@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { useState } from "react";
 import { Card, Text } from "react-native-paper";
@@ -16,6 +16,11 @@ export default function Login() {
   const staySignedIn = () => {
     setChecked(!isChecked);
   };
+
+  const handleLoginClick = () => {
+    console.log("User: ", user);
+    router.push("/home");
+  }
 
   const styles = StyleSheet.create({
     input: {
@@ -71,7 +76,11 @@ export default function Login() {
           <Text variant="labelLarge">Register</Text>
         </Link>
 
-        <Button mode="contained">Login</Button>
+        <Button mode="contained" onPressOut={handleLoginClick}>
+          Login
+        </Button>
+
+
       </Card.Content>
     </Card>
     </View>

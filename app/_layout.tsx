@@ -9,7 +9,9 @@ import Login from './Login';
 export default function Layout() {
   return (
     <PaperProvider>
+      <View style={styles.container}>
         <Slot/>
+      </View>
     </PaperProvider>
   );
 }
