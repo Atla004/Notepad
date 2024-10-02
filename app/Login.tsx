@@ -23,7 +23,7 @@ export default function Login() {
   };
 
   return (
-    <View>
+    <View style= {styles.container}>
       <Card style={styles.card}>
         <Card.Content>
           <Text variant="titleLarge">Welcome Back!</Text>
@@ -76,5 +76,11 @@ const styles = StyleSheet.create({
   },
   card: {
     width: 250,
+  },
+  container: {
+      flex: 1,
+      backgroundColor: "#fff",
+      alignItems: "center",
+      justifyContent: "center",
   },
 });

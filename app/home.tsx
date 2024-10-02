@@ -1,36 +1,21 @@
 import { useState } from "react";
-import {
-  SafeAreaView,
-  View,
-  FlatList,
-  StyleSheet,
-  StatusBar,
-} from "react-native";
-import { Avatar, Card, IconButton, Text } from "react-native-paper";
+import { FlatList, StyleSheet, StatusBar, View } from "react-native";
 import { Searchbar } from "react-native-paper";
 import FABNewNote from "@/components/FABNewNote";
+import CardNote from "@/components/CardNote";
 
 const data = [
   {
-    title: "Title 1",
-    description: "Description 1",
+    id: 1,
+    title: "Sin ganas de vivir",
+    description: "porque...",
   },
   {
-    title: "Title 1",
-    description: "Description 1",
+    id: 2,
+    title: "a veces pienso...",
+    description: "es mentira",
   },
 ];
-
-const Note = () => {
-  return (
-    <Card>
-      <Card.Title title="Card Title" subtitle="Card Subtitle" />
-      <Card.Content>
-        <Text>Card content</Text>
-      </Card.Content>
-    </Card>
-  );
-};
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -41,29 +26,22 @@ export default function Home() {
         onChangeText={setSearchQuery}
         value={searchQuery}
       />
-      <FlatList data={data} renderItem={() => <Note />} />
+
+      <FlatList
+        data={data}
+        renderItem={({ item }) => (
+          <CardNote title={item.title} description={item.description} />
+        )}
+        keyExtractor={(item) => item.id.toString()}
+      />
+
       <FABNewNote />
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-    flexGrow: 1,
-  },
-  item: {
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
-  },
-  fabStyle: {
-    bottom: 16,
-    right: 16,
-    position: 'absolute',
-  },
-}); 
+
+
+
+});

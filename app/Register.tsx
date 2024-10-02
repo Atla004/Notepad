@@ -12,7 +12,7 @@ const RegisterCard = () => {
   const [password, setPassword] = useState("");
 
   return (
-    <View>
+    <View style={styles.container}>
       <Card style={styles.card}>
         <Card.Content>
           <Text variant="titleLarge">Register</Text>
@@ -64,6 +64,12 @@ const styles = StyleSheet.create({
   },
   card: {
     width: 250,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
