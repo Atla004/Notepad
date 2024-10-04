@@ -1,19 +1,35 @@
 import { Stack, useLocalSearchParams } from "expo-router";
-import { View } from "react-native";
-import { Text } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import {NoteHtml} from "@/components/NoteHtml";
+
 
 const NoteScreen = () => {
   const {noteId, description}=useLocalSearchParams();
+
+
   return (
 
-    <View>
+    <View style= {styles.container}>
       <Stack.Screen
       options={{title: `${noteId}`}}
       />
-    <Text style={{ textAlign: 'center', color: 'black', fontSize: 16 }}>{description}</Text>
+      <NoteHtml/>
+
+
     </View>
+
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+    width: '100%',
+    height: '100%',
+  },
+});
+
 
 export default NoteScreen;
 

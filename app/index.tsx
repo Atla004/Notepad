@@ -1,11 +1,7 @@
-import Login from "./Login";
+import {NoteHtml} from "@/components/NoteHtml";
 import Home from "./Home";
-import Register from "./Register";
-import { StyleSheet, View } from "react-native";
 
 export default function App() {
   return <Home />
-
-  
 }
 
