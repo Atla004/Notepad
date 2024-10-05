@@ -7,7 +7,11 @@ import { Slot, Stack } from "expo-router";
 export default function Layout() {
   return (
     <PaperProvider>
+      
         <Stack 
+        screenOptions={
+          {headerShown: false}
+        }
         />
     </PaperProvider>
   );
