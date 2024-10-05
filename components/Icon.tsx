@@ -23,9 +23,9 @@ export const TrashIcon=() =>{
 }
 
 export const FolderIcon=() =>{
-  return <FontAwesome6 name="folder" size={24} color="black" />
+  return <FontAwesome6 name="folder" size={20} color="black" />
 }
 
 export const BoxIcon=() =>{
-  return <FontAwesome6 name="box" size={24} color="black" />
+  return <Feather name="inbox" size={24} color="black" />
 }

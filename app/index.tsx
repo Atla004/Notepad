@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { router } from "expo-router";
 import { Text } from 'react-native';
+import Login from './Login';
 
-export default function Index() {
+
+/* export default function Index() {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -12,7 +14,8 @@ export default function Index() {
   useEffect(() => {
     if (isMounted) {
       router.push({
-        pathname: "./(tabs)/Home",
+        //pathname: "./(tabs)/Home",
+        pathname: "./Login",
       });
     }
   }, [isMounted]);
@@ -22,4 +25,8 @@ export default function Index() {
       <Text>Index</Text>
     </>
   );
+} */
+
+export default function Index() {
+  return <Login/>;
 }
