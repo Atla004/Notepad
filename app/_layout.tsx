@@ -1,18 +1,16 @@
 import * as React from "react";
-
-import { StyleSheet, Text, View } from "react-native";
-import { Provider as PaperProvider } from "react-native-paper";
 import { Stack } from "expo-router";
+import Container from "@/components/Container";
 
 export default function Layout() {
   return (
-    <PaperProvider>
+    <Container>
         <Stack 
         screenOptions={
           {headerShown: false}
         }
         />
-    </PaperProvider>
+    </Container>
   );
 }
 
