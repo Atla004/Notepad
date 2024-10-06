@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { FlatList, StyleSheet, StatusBar, View } from "react-native";
+import { FlatList, StyleSheet, StatusBar, View, Pressable } from "react-native";
 import { Searchbar } from "react-native-paper";
 import FABNewNote from "@/components/FABNewNote";
 import CardNote from "@/components/CardNote";
+import { FavoritesIcon,SunIcon } from "@/components/Icon";
 
 const data = [
   {
@@ -25,6 +26,23 @@ export default function Home() {
         placeholder="Search notes..."
         onChangeText={setSearchQuery}
         value={searchQuery}
+        right={(props) => (
+          <>
+          <Pressable
+            onPress={() => console.log('Bookmark')}
+          >
+            <SunIcon/>
+          </Pressable>
+          <Pressable
+            onPress={() => console.log('Bookmark')}
+          >
+            <FavoritesIcon/>
+          </Pressable>
+        </>
+        )}
+
+        
+
 
       />
 

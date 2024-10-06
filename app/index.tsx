@@ -1,32 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import { router } from "expo-router";
-import { Text } from 'react-native';
-import Login from './Login';
-
-
-/* export default function Index() {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (isMounted) {
-      router.push({
-        //pathname: "./(tabs)/Home",
-        pathname: "./Login",
-      });
-    }
-  }, [isMounted]);
-
-  return (
-    <>
-      <Text>Index</Text>
-    </>
-  );
-} */
+import { Text } from "react-native";
+import Login from "./Login";
+import Home from "./(tabs)/Home";
 
 export default function Index() {
-  return <Login/>;
+  return <Login />;
 }
