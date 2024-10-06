@@ -1,4 +1,4 @@
-import { Stack, useLocalSearchParams } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { Button, Pressable, StyleSheet, View } from "react-native";
 import {NoteHtml} from "@/components/NoteHtml";
 import { FavoritesIcon,MoreIcon,SunIcon } from "@/components/Icon";
@@ -29,7 +29,7 @@ const NoteScreen = () => {
                 <SunIcon/>
               </Pressable>
               <Pressable
-                onPress={() => console.log('Bookmark')}
+                onPress={() => router.push({pathname: `./EditNoteProperties`})}
               >
                 <MoreIcon/>
               </Pressable>

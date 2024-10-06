@@ -8,7 +8,7 @@ const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: "yellow",
+    primary: "blue",
     secondary: "red",
   },
 };
