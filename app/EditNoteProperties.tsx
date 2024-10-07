@@ -7,6 +7,7 @@ import { useState } from "react";
 
 import { Chip,Button } from 'react-native-paper';
 import { PlusIcon } from "@/components/Icon";
+import CategorySheet from "@/components/CategorySheet";
 
 
 
@@ -55,6 +56,8 @@ const EditNoteProperties = () => {
       <Button icon="plus" mode="contained" onPress={() => console.log('Pressed')}>
         Add Category
       </Button>
+
+      <CategorySheet/>
     </View>
   );
 }
