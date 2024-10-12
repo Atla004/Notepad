@@ -53,11 +53,10 @@ const EditNoteProperties = () => {
       <Chip icon="close" onPress={() => console.log('Pressed')}>Example Chip</Chip>
       <Chip icon="close" onPress={() => console.log('Pressed')}>Example Chip</Chip>
 
-      <Button icon="plus" mode="contained" onPress={() => console.log('Pressed')}>
-        Add Category
-      </Button>
 
-      <CategorySheet/>
+
+      <CategorySheet/>            
+
     </View>
   );
 }
