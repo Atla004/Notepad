@@ -11,8 +11,8 @@ export const SunIcon = () => {
   return <Feather name="sun" size={24} color="black" />;
 };
 
-export const MoreIcon = () => {
-  return <Feather name="more-vertical" size={24} color="black" />;
+export const SettingsIcon = () => {
+  return <Feather name="settings" size={21} color="black" />;
 };
 
 export const TrashIcon = () => {

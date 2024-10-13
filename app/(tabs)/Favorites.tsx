@@ -34,8 +34,6 @@ export default function Favorites() {
         )}
         keyExtractor={(item) => item.id.toString()}
       />
-
-      <FABNewNote />
     </>
   );
 }

@@ -1,7 +1,7 @@
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { Button, Pressable, StyleSheet, View } from "react-native";
 import {NoteHtml} from "@/components/NoteHtml";
-import { FavoritesIcon,MoreIcon,SunIcon } from "@/components/Icon";
+import { FavoritesIcon,SettingsIcon } from "@/components/Icon";
 
 
 const NoteScreen = () => {
@@ -24,14 +24,9 @@ const NoteScreen = () => {
                 <FavoritesIcon/>
               </Pressable>
               <Pressable
-                onPress={() => console.log('Bookmark')}
-              >
-                <SunIcon/>
-              </Pressable>
-              <Pressable
                 onPress={() => router.push({pathname: `./EditNoteProperties`})}
               >
-                <MoreIcon/>
+                <SettingsIcon/>
               </Pressable>
             </>
           );

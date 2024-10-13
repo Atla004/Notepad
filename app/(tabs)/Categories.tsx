@@ -66,8 +66,6 @@ export default function Categories() {
         </View>
       )}
     />
-
-      <FABNewNote />
     </>
   );
 }

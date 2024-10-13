@@ -4,6 +4,7 @@ import { Searchbar } from "react-native-paper";
 import FABNewNote from "@/components/FABNewNote";
 import CardNote from "@/components/CardNote";
 import { FavoritesIcon,SunIcon } from "@/components/Icon";
+import { router } from "expo-router";
 
 const data = [
   {
@@ -29,12 +30,7 @@ export default function Home() {
         right={(props) => (
           <>
           <Pressable
-            onPress={() => console.log('Bookmark')}
-          >
-            <SunIcon/>
-          </Pressable>
-          <Pressable
-            onPress={() => console.log('Bookmark')}
+            onPress={() => router.push({pathname: `../Profile`})}
           >
             <FavoritesIcon/>
           </Pressable>

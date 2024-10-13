@@ -4,7 +4,8 @@ import { Text } from "react-native";
 import Login from "./Login";
 import Home from "./(tabs)/Home";
 import EditNoteProperties from "./EditNoteProperties";
+import Profile from "./Profile";
 
 export default function Index() {
-  return <Login />;
+  return <Profile />;
 }
