@@ -6,5 +6,5 @@ import Home from "./(tabs)/Home";
 import EditNoteProperties from "./EditNoteProperties";
 
 export default function Index() {
-  return <EditNoteProperties />;
+  return <Login />;
 }

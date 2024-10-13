@@ -1,4 +1,4 @@
-import { Card, Text } from "react-native-paper";
+import { Card, Chip, Text } from "react-native-paper";
 import { CardNoteProps } from "@/types/types";
 import { router } from "expo-router";
 
@@ -16,7 +16,13 @@ const CardNote = ({title, description}: CardNoteProps) => {
 
   return (
     <Card onPress={goToNote}>
-      <Card.Title title={title} subtitle={description}/>
+      <Card.Title 
+      title={title} 
+      subtitle={description}
+      right={(props) =>   <Chip>ONEPIZZA</Chip>
+    }
+      />
+      
     </Card>
   );
 };
