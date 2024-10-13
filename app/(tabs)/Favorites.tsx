@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { FlatList, StyleSheet, StatusBar, View } from "react-native";
 import { Searchbar } from "react-native-paper";
-import FABNewNote from "@/components/FABNewNote";
 import CardNote from "@/components/CardNote";
+import SearchBar from "@/components/SearchBar";
 
 const data = [
   {
@@ -21,11 +21,7 @@ export default function Favorites() {
   const [searchQuery, setSearchQuery] = useState("");
   return (
     <>
-      <Searchbar
-        placeholder="Search"
-        onChangeText={setSearchQuery}
-        value={searchQuery}
-      />
+      <SearchBar placeholder="Search..."/>
 
       <FlatList
         data={data}

@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
 import { Button, Divider, Text } from 'react-native-paper';
 import ProfileHeader from '@/components/ProfileHeader';
-
-
+import { PeopleIcon,PersonIcon } from '@/components/Icon';
 
 
 export default function Profile() {
@@ -17,31 +16,45 @@ export default function Profile() {
       <Text variant="labelLarge">avecespienso@yahoo.com</Text>
       <Divider/>
       <Text>Profile data</Text>
-      <Button>
+      <Button
+      icon="account"
+      >
         Change Email
       </Button>
-      <Button>
+      <Button
+      icon= "lock"
+      >
         Change Password
       </Button>
       <Divider/>
       <Text variant="bodySmall">Settings</Text>
-      <Button>
+      <Button
+      icon="theme-light-dark"
+      >
         Change Theme
       </Button>
       <Divider/>
       <Text variant="bodySmall">information</Text>
-      <Button>
+      <Button
+      icon="information"
+      >
         About us
       </Button>
-      <Button>
+      <Button
+      icon="help-circle"
+      >
         F.A.Q
       </Button>
       <Divider/>
       <Text variant="bodySmall">Session</Text>
-      <Button>
+      <Button
+      icon="logout"
+      >
         Log out
       </Button>
-      <Button>
+      <Button
+      icon="delete"
+      >
         Delete account
       </Button>
 

@@ -4,6 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
 import { Avatar } from "react-native-paper";
 
+
 const ProfileHeader = () => {
   return (
     <View style={styles.headerContainer}>

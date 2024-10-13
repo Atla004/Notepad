@@ -1,8 +1,7 @@
+import SearchBar from "@/components/SearchBar";
 import { useState } from "react";
 import { FlatList, StyleSheet, StatusBar, View, Text } from "react-native";
 import { Searchbar } from "react-native-paper";
-import FABNewNote from "@/components/FABNewNote";
-import CardNote from "@/components/CardNote";
 import { FlatGrid } from 'react-native-super-grid';
 
 const data = [
@@ -46,12 +45,7 @@ export default function Categories() {
 
   return (
     <>
-      <Searchbar
-        placeholder="Search Categories..."
-        onChangeText={setSearchQuery}
-        value={searchQuery}
-      />
-
+      <SearchBar placeholder="Search categories..."/>
 <FlatGrid
       itemDimension={130}
       data={items}

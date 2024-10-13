@@ -5,6 +5,7 @@ import FABNewNote from "@/components/FABNewNote";
 import CardNote from "@/components/CardNote";
 import { FavoritesIcon,SunIcon } from "@/components/Icon";
 import { router } from "expo-router";
+import SearchBar from "@/components/SearchBar";
 
 const data = [
   {
@@ -23,24 +24,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   return (
     <>
-      <Searchbar
-        placeholder="Search notes..."
-        onChangeText={setSearchQuery}
-        value={searchQuery}
-        right={(props) => (
-          <>
-          <Pressable
-            onPress={() => router.push({pathname: `../Profile`})}
-          >
-            <FavoritesIcon/>
-          </Pressable>
-        </>
-        )}
-
-        
-
-
-      />
+          <SearchBar placeholder="Search Notes..."/>
 
       <FlatList
         data={data}
