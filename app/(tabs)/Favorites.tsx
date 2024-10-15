@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FlatList, StyleSheet, StatusBar, View } from "react-native";
-import { Searchbar } from "react-native-paper";
 import CardNote from "@/components/CardNote";
 import SearchBar from "@/components/SearchBar";
 
@@ -18,13 +17,24 @@ const data = [
 ];
 
 export default function Favorites() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [search, setSearch] = useState("");
+
+  const filteredData = data.filter(
+    (item) =>
+      item.title.toLowerCase().includes(search.toLowerCase()) ||
+      item.description.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <>
-      <SearchBar placeholder="Search..."/>
+      <SearchBar
+        placeholder="Search Notes..."
+        value={search}
+        onChangeText={(text) => setSearch(text)}
+      />
 
       <FlatList
-        data={data}
+        data={filteredData}
         renderItem={({ item }) => (
           <CardNote title={item.title} description={item.description} />
         )}
@@ -34,8 +44,4 @@ export default function Favorites() {
   );
 }
 
-const styles = StyleSheet.create({
-
-
-
-});
+const styles = StyleSheet.create({});

@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, StatusBar, View, Pressable } from "react-native";
 import { Searchbar } from "react-native-paper";
 import FABNewNote from "@/components/FABNewNote";
 import CardNote from "@/components/CardNote";
-import { FavoritesIcon,SunIcon } from "@/components/Icon";
+import { FavoritesIcon, SunIcon } from "@/components/Icon";
 import { router } from "expo-router";
 import SearchBar from "@/components/SearchBar";
 
@@ -21,13 +21,24 @@ const data = [
 ];
 
 export default function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [search, setSearch] = useState("");
+
+  const filteredData = data.filter(
+    (item) =>
+      item.title.toLowerCase().includes(search.toLowerCase()) ||
+      item.description.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <>
-          <SearchBar placeholder="Search Notes..."/>
+      <SearchBar
+        placeholder="Search Notes..."
+        value={search}
+        onChangeText={(text) => setSearch(text)}
+      />
 
       <FlatList
-        data={data}
+        data={filteredData}
         renderItem={({ item }) => (
           <CardNote title={item.title} description={item.description} />
         )}
@@ -39,8 +50,4 @@ export default function Home() {
   );
 }
 
-const styles = StyleSheet.create({
-
-
-
-});
+const styles = StyleSheet.create({});
