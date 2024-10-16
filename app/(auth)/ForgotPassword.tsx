@@ -17,45 +17,48 @@ export default function ForgotPassword() {
 
   return (
     <Background>
-    <View style={styles.container}>
-      <Card style={styles.card}>
-        <Card.Content>
-          <View style={styles.centeredText}>
-            <Text variant="titleMedium" style={{ color: theme.colors.primary }}>
-              Forgot your Password?
-            </Text>
-            <Text variant="bodySmall">
-              Enter your email address to recover your information
-            </Text>
-          </View>
-          <TextInput
-            style={styles.input}
-            label="Email"
-            value={gmail}
-            mode="outlined"
-            onChangeText={(text) => setGmail(text)}
-          />
-
-          <View style={[styles.row, styles.centeredRow]}>
-            <Link href="./Login">
+      <View style={styles.container}>
+        <Card style={styles.card}>
+          <Card.Content>
+            <View style={styles.centeredText}>
               <Text
-                variant="labelLarge"
-                style={{
-                  color: theme.colors.primary,
-                  textDecorationLine: "underline",
-                }}
+                variant="titleMedium"
+                style={{ color: theme.colors.primary }}
               >
-                Go back to Log in
+                Forgot your Password?
               </Text>
-            </Link>
-          </View>
+              <Text variant="bodySmall">
+                Enter your email address to recover your information
+              </Text>
+            </View>
+            <TextInput
+              style={styles.input}
+              label="Email"
+              value={gmail}
+              mode="outlined"
+              onChangeText={(text) => setGmail(text)}
+            />
 
-          <Button mode="contained" onPressOut={handleLoginClick}>
-            Login
-          </Button>
-        </Card.Content>
-      </Card>
-    </View>
+            <View style={[styles.row, styles.centeredRow]}>
+              <Link href="./Login">
+                <Text
+                  variant="labelLarge"
+                  style={{
+                    color: theme.colors.primary,
+                    textDecorationLine: "underline",
+                  }}
+                >
+                  Go back to Log in
+                </Text>
+              </Link>
+            </View>
+
+            <Button mode="contained" onPressOut={handleLoginClick}>
+              Continue
+            </Button>
+          </Card.Content>
+        </Card>
+      </View>
     </Background>
   );
 }

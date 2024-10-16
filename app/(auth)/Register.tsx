@@ -4,6 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { Card, Text, TextInput, Button, useTheme } from "react-native-paper";
 import { Link, router, useFocusEffect } from "expo-router";
 import Background from "@/components/Background";
+import Toast from "react-native-toast-message";
 
 export default function Register() {
   const theme = useTheme(); // Obtener el tema actual
@@ -25,7 +26,7 @@ export default function Register() {
     let valid = true;
     let newErrors = { email: "", user: "", password: "" };
 
-    if (!email.includes("@")) {
+    /*     if (!email.includes("@")) {
       newErrors.email = "Invalid email address";
       valid = false;
     }
@@ -38,92 +39,98 @@ export default function Register() {
     if (password.length < 8) {
       newErrors.password = "Password must be at least 8 characters";
       valid = false;
-    }
+    } */
 
     setErrors(newErrors);
 
     if (valid) {
       // Lógica de registro aquí
       console.log("Registrado con éxito");
+      Toast.show({
+        type: "success",
+        text1: "Registro exitoso",
+        text2: "Te has registrado con éxito 👋",
+      });
+      router.push("/Login");
     }
   };
 
   return (
     <Background>
-    <View style={styles.container}>
-      <Card style={styles.card}>
-        <Card.Content>
-          <View style={styles.centeredText}>
-            <Text
-              variant="headlineMedium"
-              style={{ color: theme.colors.primary }}
-            >
-              Register
-            </Text>
-          </View>
-
-          <TextInput
-            style={[styles.input, { marginTop: -10 }]}
-            label="Email"
-            value={email}
-            mode="outlined"
-            onChangeText={(text) => setEmail(text)}
-          />
-          {errors.email ? (
-            <Text variant="labelSmall" style={styles.errorText}>
-              {errors.email}
-            </Text>
-          ) : null}
-
-          <TextInput
-            style={styles.input}
-            label="Username"
-            value={user}
-            mode="outlined"
-            onChangeText={(text) => setUser(text)}
-          />
-          {errors.user ? (
-            <Text variant="labelSmall" style={styles.errorText}>
-              {errors.user}
-            </Text>
-          ) : null}
-
-          <TextInput
-            style={styles.input}
-            label="Password"
-            value={password}
-            mode="outlined"
-            secureTextEntry
-            onChangeText={(text) => setPassword(text)}
-          />
-          {errors.password ? (
-            <Text variant="labelSmall" style={styles.errorText}>
-              {errors.password}
-            </Text>
-          ) : null}
-
-          <View style={[styles.row, styles.centeredRow]}>
-            <Text variant="labelLarge">Already have an account? </Text>
-            <Link href="./Login">
+      <View style={styles.container}>
+        <Card style={styles.card}>
+          <Card.Content>
+            <View style={styles.centeredText}>
               <Text
-                variant="labelLarge"
+                variant="headlineMedium"
                 style={{ color: theme.colors.primary }}
               >
-                Log in
+                Register
               </Text>
-            </Link>
-          </View>
+            </View>
 
-          <Button
-            mode="contained"
-            onPress={handleRegisterClick}
-            style={styles.button}
-          >
-            Register
-          </Button>
-        </Card.Content>
-      </Card>
-    </View>
+            <TextInput
+              style={[styles.input, { marginTop: -10 }]}
+              label="Email"
+              value={email}
+              mode="outlined"
+              onChangeText={(text) => setEmail(text)}
+            />
+            {errors.email ? (
+              <Text variant="labelSmall" style={styles.errorText}>
+                {errors.email}
+              </Text>
+            ) : null}
+
+            <TextInput
+              style={styles.input}
+              label="Username"
+              value={user}
+              mode="outlined"
+              onChangeText={(text) => setUser(text)}
+            />
+            {errors.user ? (
+              <Text variant="labelSmall" style={styles.errorText}>
+                {errors.user}
+              </Text>
+            ) : null}
+
+            <TextInput
+              style={styles.input}
+              label="Password"
+              value={password}
+              mode="outlined"
+              secureTextEntry
+              onChangeText={(text) => setPassword(text)}
+            />
+            {errors.password ? (
+              <Text variant="labelSmall" style={styles.errorText}>
+                {errors.password}
+              </Text>
+            ) : null}
+
+            <View style={[styles.row, styles.centeredRow]}>
+              <Text variant="labelLarge">Already have an account? </Text>
+              <Link href="./Login">
+                <Text
+                  variant="labelLarge"
+                  style={{ color: theme.colors.primary }}
+                >
+                  Log in
+                </Text>
+              </Link>
+            </View>
+
+            <Button
+              mode="contained"
+              onPress={handleRegisterClick}
+              style={styles.button}
+            >
+              Register
+            </Button>
+          </Card.Content>
+        </Card>
+      </View>
     </Background>
   );
 }
