@@ -67,6 +67,7 @@ export default function Register() {
               >
                 Register
               </Text>
+              <Text variant="bodyMedium"> Enter your personal details</Text>
             </View>
 
             <TextInput
