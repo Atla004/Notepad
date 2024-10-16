@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import {
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  ScrollView,
+} from "react-native";
 import {
   Chip,
   TextInput,
@@ -11,7 +16,7 @@ import {
 import { Pressable } from "react-native";
 import { FavoritesIcon, TrashIcon } from "@/components/Icon";
 import CategorySheet from "@/components/CategorySheet";
-import DropdownPriority from "@/components/DropdownPriority";
+import DropdownPriority from "@/components/DropdownPriority"; // Ensure DropdownPriority accepts style prop
 import { Stack } from "expo-router";
 
 const EditNoteProperties = () => {
@@ -61,7 +66,6 @@ const EditNoteProperties = () => {
           },
         }}
       />
-
       <TextInput
         style={styles.input}
         label="name"
@@ -69,8 +73,10 @@ const EditNoteProperties = () => {
         mode="outlined"
         onChangeText={(text) => setNoteName(text)}
       />
-      <Divider />
-      <Text variant="bodySmall">Categories</Text>
+      <Divider style={styles.divider} />
+      <Text style={styles.textCloseToDivider} variant="bodySmall">
+        Categories
+      </Text>
       <View style={styles.chipContainer}>
         {data.map((item) => (
           <Chip
@@ -90,10 +96,11 @@ const EditNoteProperties = () => {
           </Chip>
         ))}
       </View>
-
       <CategorySheet />
-      <Divider />
-      <Text variant="bodySmall">Priority</Text>
+      <Divider style={styles.divider} />
+      <Text style={styles.textCloseToDivider} variant="bodySmall">
+        Priority
+      </Text>
       <DropdownPriority />
     </View>
   );
@@ -129,6 +136,15 @@ const styles = StyleSheet.create({
   },
   chipText: {
     width: "100%",
+  },
+  dropdown: {
+    marginTop: 16,
+  },
+  divider: {
+    marginVertical: 16, // Adjust the value to increase or decrease the space
+  },
+  textCloseToDivider: {
+    marginTop: -8, // Adjust the value to bring the text closer to the divider
   },
 });
 

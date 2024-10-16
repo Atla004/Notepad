@@ -3,8 +3,6 @@ import { FlatList, StyleSheet, StatusBar, View, Pressable } from "react-native";
 import { Searchbar } from "react-native-paper";
 import FABNewNote from "@/components/FABNewNote";
 import CardNote from "@/components/CardNote";
-import { FavoritesIcon, SunIcon } from "@/components/Icon";
-import { router } from "expo-router";
 import SearchBar from "@/components/SearchBar";
 
 const data = [

@@ -1,5 +1,12 @@
 import { useCallback, useRef } from "react";
-import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import ActionSheet, {
   ActionSheetRef,
   SheetManager,
@@ -11,88 +18,78 @@ import AddCategoryDialog from "./AddCategoryDialog";
 export default function CategorySheet() {
   const actionSheetRef = useRef<ActionSheetRef>(null);
   const vegetableNamesWithEmoji = [
-    '🍅 Tomato',
-    '🥕 Carrot',
-    '🥦 Broccoli',
-    '🥒 Cucumber',
-    '🌶️ Hot Pepper',
-    '🫑 Bell Pepper',
-    '🧄 Garlic',
-    '🧅 Onion',
-    '🍄 Mushroom',
-    '🥔 Potato',
-    '🥬 Leafy Green',
-    '🥑 Avocado',
-    '🍆 Eggplant',
-    '🥝 Kiwi Fruit',
-    '🍓 Strawberry',
-    '🍈 Melon',
-    '🍒 Cherries',
-    '🍑 Peach',
-    '🍍 Pineapple',
-    '🥭 Mango',
-    '🍉 Watermelon',
-    '🍌 Banana',
-    '🍋 Lemon',
-    '🍊 Orange',
-    '🍎 Red Apple',
-    '🍏 Green Apple',
-    '🍐 Pear',
-    '🍇 Grapes',
-    '🍉 Watermelon',
-    '🍌 Banana',
-    '🍋 Lemon',
-    '🍊 Orange',
-    '🍎 Red Apple',
-    '🍏 Green Apple',
-    '🍐 Pear',
-    '🍇 Grapes',
-    '🍉 Watermelon',
-    '🍌 Banana',
-    '🍋 Lemon',
-    '🍊 Orange',
-    '🍎 Red Apple',
-    '🍏 Green Apple',
-    '🍐 Pear',
-    '🍇 Grapes',
-    '🍉 Watermelon',
-    '🍌 Banana',
-    '🍋 Lemon',
-    '🍊 Orange',
-    '🍎 Red Apple',
-    '🍏 Green Apple',
-    '🍐 Pear',
-    '🍇 Grapes',
-    '🍉 Watermelon',
-    '🍌 Banana',
-    '🍋 Lemon',
-    '🍎 Red Apple',
-    '🍏 Green Apple',
-    '🍐 Pear',
-    '🍇 Grapes',
-    '🍉 Watermelon',
-    '🍌 Banana',
-    '🍋 Lemon',
-    '🍊 Orange',
-    '🍎 Red Apple',
-    '🍏 Green Apple',
+    "🍅 Tomato",
+    "🥕 Carrot",
+    "🥦 Broccoli",
+    "🥒 Cucumber",
+    "🌶️ Hot Pepper",
+    "🫑 Bell Pepper",
+    "🧄 Garlic",
+    "🧅 Onion",
+    "🍄 Mushroom",
+    "🥔 Potato",
+    "🥬 Leafy Green",
+    "🥑 Avocado",
+    "🍆 Eggplant",
+    "🥝 Kiwi Fruit",
+    "🍓 Strawberry",
+    "🍈 Melon",
+    "🍒 Cherries",
+    "🍑 Peach",
+    "🍍 Pineapple",
+    "🥭 Mango",
+    "🍉 Watermelon",
+    "🍌 Banana",
+    "🍋 Lemon",
+    "🍊 Orange",
+    "🍎 Red Apple",
+    "🍏 Green Apple",
+    "🍐 Pear",
+    "🍇 Grapes",
+    "🍉 Watermelon",
+    "🍌 Banana",
+    "🍋 Lemon",
+    "🍊 Orange",
+    "🍎 Red Apple",
+    "🍏 Green Apple",
+    "🍐 Pear",
+    "🍇 Grapes",
+    "🍉 Watermelon",
+    "🍌 Banana",
+    "🍋 Lemon",
+    "🍊 Orange",
+    "🍎 Red Apple",
+    "🍏 Green Apple",
+    "🍐 Pear",
+    "🍇 Grapes",
+    "🍉 Watermelon",
+    "🍌 Banana",
+    "🍋 Lemon",
+    "🍊 Orange",
+    "🍎 Red Apple",
+    "🍏 Green Apple",
+    "🍐 Pear",
+    "🍇 Grapes",
+    "🍉 Watermelon",
+    "🍌 Banana",
+    "🍋 Lemon",
   ];
-
 
   const renderItem = useCallback(
     ({ item }: { item: any }) => (
       <Text
         style={{
-          color: 'black',
+          color: "black",
           fontSize: 20,
           height: 40,
-          verticalAlign: 'middle',
-          width: '100%',
-        }}>
+          verticalAlign: "middle",
+          width: "100%",
+        }}
+      >
         {item}
       </Text>
     ),
-    [],
+    []
   );
   return (
     <>
@@ -105,40 +102,33 @@ export default function CategorySheet() {
       >
         <Text>Add Category</Text>
       </Button>
-      <ActionSheet 
-        ref={actionSheetRef}
-        
-      >
-        <TextInput>
-          
-        </TextInput>
-  
+      <ActionSheet ref={actionSheetRef}>
+        <TextInput></TextInput>
+
         <View
           style={{
             paddingHorizontal: 12,
             height: 400,
-            alignItems: 'center',
+            alignItems: "center",
             paddingTop: 20,
             gap: 10,
-            width: '100%',
-          }}>
+            width: "100%",
+          }}
+        >
           <FlatList
             data={vegetableNamesWithEmoji}
             style={{
-              width: '100%',
+              width: "100%",
             }}
-
             keyExtractor={(item, index) => item + index}
             renderItem={renderItem}
           />
         </View>
 
         <AddCategoryDialog />
-
       </ActionSheet>
     </>
   );
-  
 }
 
 const styles = StyleSheet.create({
