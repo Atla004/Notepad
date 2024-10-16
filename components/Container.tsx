@@ -9,9 +9,10 @@ const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: "#FA7921",
-    surface: "#EBEBD3",
-    primaryContainer: "#F7F7ED",
+    primary: "#FA7921", // naranja
+    surface: "#EBEBD3", // Beige
+    primaryContainer: "#F7F7ED", //white
+    tertiary: "#532302", //marron
   },
   roundness: 8, // Añadir más propiedades si es necesario
   // Puedes añadir más propiedades según sea necesario

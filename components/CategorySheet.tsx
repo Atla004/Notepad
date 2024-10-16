@@ -12,10 +12,12 @@ import ActionSheet, {
   SheetManager,
   SheetProvider,
 } from "react-native-actions-sheet";
-import { Button, TextInput } from "react-native-paper";
+import { Button, TextInput, useTheme } from "react-native-paper";
 import AddCategoryDialog from "./AddCategoryDialog";
+import Background from "./Background";
 
 export default function CategorySheet() {
+  const theme = useTheme();
   const actionSheetRef = useRef<ActionSheetRef>(null);
   const vegetableNamesWithEmoji = [
     "🍅 Tomato",
@@ -99,6 +101,7 @@ export default function CategorySheet() {
         onPress={() => {
           actionSheetRef.current?.show();
         }}
+        style={[styles.btn, { backgroundColor: theme.colors.tertiary }]}
       >
         <Text>Add Category</Text>
       </Button>
@@ -133,20 +136,12 @@ export default function CategorySheet() {
 
 const styles = StyleSheet.create({
   btn: {
-    height: 50,
+    height: 40,
     justifyContent: "center",
-    alignItems: "center",
-    alignSelf: "center",
-    backgroundColor: "#2563eb",
-    paddingHorizontal: 10,
     borderRadius: 10,
-    elevation: 5,
-    shadowColor: "black",
-    shadowOffset: { width: 0.3 * 4, height: 0.5 * 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 0.7 * 4,
-    width: "100%",
     marginBottom: 10,
+    width: "95%",
+    alignSelf: "center", // Añadido para centrar horizontalmente
   },
   btnTitle: {
     color: "white",

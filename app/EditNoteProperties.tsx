@@ -12,6 +12,8 @@ import {
   Dialog,
   Portal,
   Text,
+  Button,
+  useTheme,
 } from "react-native-paper";
 import { Pressable } from "react-native";
 import { FavoritesIcon, TrashIcon } from "@/components/Icon";
@@ -24,6 +26,7 @@ const EditNoteProperties = () => {
   const [visible, setVisible] = useState(false);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
+  const theme = useTheme();
 
   const data = [
     { id: 1, title: "Category 1" },
@@ -83,7 +86,7 @@ const EditNoteProperties = () => {
             key={item.id}
             icon="close"
             onPress={() => console.log("close")}
-            style={styles.chips}
+            style={[styles.chips, { backgroundColor: theme.colors.tertiary }]}
           >
             <Text
               numberOfLines={1}
@@ -102,6 +105,8 @@ const EditNoteProperties = () => {
         Priority
       </Text>
       <DropdownPriority />
+
+      <Button mode="contained"> Save </Button>
     </View>
   );
 };
