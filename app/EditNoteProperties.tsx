@@ -22,23 +22,29 @@ import DropdownPriority from "@/components/DropdownPriority"; // Ensure Dropdown
 import { Stack } from "expo-router";
 
 const EditNoteProperties = () => {
+  const theme = useTheme();
   const [noteName, setNoteName] = useState("");
   const [visible, setVisible] = useState(false);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
-  const theme = useTheme();
 
   const data = [
-    { id: 1, title: "Category 1" },
+    { id: 1, title: " 1" },
     { id: 2, title: "Category 2" },
     { id: 3, title: "Category 3" },
     { id: 4, title: "Category 4ffff" },
     { id: 5, title: "Category 5" },
+    { id: 6, title: "Category 6" },
+    { id: 7, title: "Category 7" },
+    { id: 8, title: "Category 8" },
+    { id: 9, title: "Category 9" },
+    { id: 10, title: "Category 10" },
+
     // Agrega más elementos según sea necesario
   ];
 
   return (
-    <View>
+    <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
       <Stack.Screen
         options={{
           title: `Edit Note Properties`,
@@ -56,12 +62,25 @@ const EditNoteProperties = () => {
                 <Portal>
                   <Dialog visible={visible} onDismiss={hideDialog}>
                     <Dialog.Icon icon="alert" />
-                    <Dialog.Title style={styles.title}>
-                      This is a title
+                    <Dialog.Title style={styles.dialogTitle}>
+                      Confirm
                     </Dialog.Title>
                     <Dialog.Content>
-                      <Text variant="bodyMedium">This is simple dialog</Text>
+                      <Text variant="bodyMedium" style={styles.dialogContent}>
+                        Are you sure you want to delete this note?
+                      </Text>
                     </Dialog.Content>
+                    <Dialog.Actions>
+                      <Button onPress={hideDialog} style={styles.dialogButton}>
+                        Cancel
+                      </Button>
+                      <Button
+                        onPress={() => console.log("Nota borrada")}
+                        style={[styles.dialogButton, styles.deleteButton]}
+                      >
+                        <Text style={{ color: "white" }}>Delete</Text>
+                      </Button>
+                    </Dialog.Actions>
                   </Dialog>
                 </Portal>
               </>
@@ -69,6 +88,11 @@ const EditNoteProperties = () => {
           },
         }}
       />
+
+      <Divider style={styles.divider} />
+      <Text style={styles.textCloseToDivider} variant="bodySmall">
+        Note Name
+      </Text>
       <TextInput
         style={styles.input}
         label="name"
@@ -80,25 +104,40 @@ const EditNoteProperties = () => {
       <Text style={styles.textCloseToDivider} variant="bodySmall">
         Categories
       </Text>
-      <View style={styles.chipContainer}>
-        {data.map((item) => (
-          <Chip
-            key={item.id}
-            icon="close"
-            onPress={() => console.log("close")}
-            style={[styles.chips, { backgroundColor: theme.colors.tertiary }]}
-          >
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              variant="bodySmall"
-              style={styles.chipText}
+      <ScrollView
+        style={[
+          styles.scrollView,
+          { backgroundColor: theme.colors.primaryContainer },
+        ]}
+      >
+        <View
+          style={[
+            styles.chipContainer,
+            { backgroundColor: theme.colors.primaryContainer },
+          ]}
+        >
+          {data.map((item) => (
+            <Chip
+              key={item.id}
+              icon="close"
+              onPress={() => console.log("close")}
+              style={[styles.chips, { backgroundColor: theme.colors.tertiary }]}
             >
-              {item.title}
-            </Text>
-          </Chip>
-        ))}
-      </View>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                variant="bodySmall"
+                style={[
+                  styles.chipText,
+                  { color: theme.colors.primaryContainer },
+                ]}
+              >
+                {item.title}
+              </Text>
+            </Chip>
+          ))}
+        </View>
+      </ScrollView>
       <CategorySheet />
       <Divider style={styles.divider} />
       <Text style={styles.textCloseToDivider} variant="bodySmall">
@@ -112,32 +151,38 @@ const EditNoteProperties = () => {
 };
 
 const styles = StyleSheet.create({
+  scrollView: {
+    maxHeight: 100,
+    marginBottom: 16,
+    marginTop: 8,
+    marginHorizontal: 18,
+  },
   input: {
-    maxWidth: 200,
+    maxWidth: 300,
     width: "100%",
+    alignSelf: "center",
   },
   card: {
     width: 250,
   },
   container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    width: "100%",
+    height: "100%",
   },
   title: {
     textAlign: "center",
   },
   chipContainer: {
-    backgroundColor: "white",
-    padding: 10,
     borderRadius: 5,
     flexDirection: "row",
     flexWrap: "wrap",
+    width: "100%",
+    alignSelf: "center",
   },
   chips: {
     margin: 4,
     width: 100,
+    borderRadius: 5,
   },
   chipText: {
     width: "100%",
@@ -150,6 +195,23 @@ const styles = StyleSheet.create({
   },
   textCloseToDivider: {
     marginTop: -8, // Adjust the value to bring the text closer to the divider
+  },
+  dialogTitle: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 18,
+    color: "red",
+  },
+  dialogContent: {
+    textAlign: "center",
+    fontSize: 16,
+  },
+  dialogButton: {
+    marginHorizontal: 10,
+  },
+  deleteButton: {
+    backgroundColor: "red",
+    borderRadius: 8,
   },
 });
 

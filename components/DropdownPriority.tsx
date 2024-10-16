@@ -13,20 +13,8 @@ const DropdownPriority = () => {
   const [value, setValue] = useState<string | null>(null);
   const [isFocus, setIsFocus] = useState(false);
 
-  const renderLabel = () => {
-    if (value || isFocus) {
-      return (
-        <Text style={[styles.label, isFocus && { color: "blue" }]}>
-          Dropdown label
-        </Text>
-      );
-    }
-    return null;
-  };
-
   return (
     <View style={styles.container}>
-      {renderLabel()}
       <Dropdown
         style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
         placeholderStyle={styles.placeholderStyle}
@@ -55,7 +43,11 @@ export default DropdownPriority;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
-    padding: 16,
+    padding: 5,
+    marginLeft: 20,
+    marginRight: 20,
+    borderRadius: 8,
+    marginBottom: 20,
   },
   dropdown: {
     height: 50,
@@ -69,7 +61,6 @@ const styles = StyleSheet.create({
   },
   label: {
     position: "absolute",
-    backgroundColor: "white",
     left: 22,
     top: 8,
     zIndex: 999,
