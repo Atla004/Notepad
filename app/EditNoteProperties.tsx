@@ -17,7 +17,7 @@ import {
 } from "react-native-paper";
 import { Pressable } from "react-native";
 import { FavoritesIcon, TrashIcon } from "@/components/Icon";
-import CategorySheet from "@/components/CategorySheet";
+import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import DropdownPriority from "@/components/DropdownPriority"; // Ensure DropdownPriority accepts style prop
 import { Stack } from "expo-router";
 import { CloseIcon } from "@/components/Icon";
@@ -117,7 +117,8 @@ const EditNoteProperties = () => {
       <Text style={styles.textCloseToDivider} variant="bodySmall">
         Categories
       </Text>
-      <ScrollView
+
+      {/*       <ScrollView
         style={[
           styles.scrollView,
           { backgroundColor: theme.colors.primaryContainer },
@@ -150,8 +151,9 @@ const EditNoteProperties = () => {
             </Chip>
           ))}
         </View>
-      </ScrollView>
-      <CategorySheet />
+      </ScrollView> */}
+
+      <CategoryMultiSelect />
       <Divider
         bold
         style={[styles.divider, { backgroundColor: theme.colors.shadow }]}
@@ -183,7 +185,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 18,
   },
   input: {
-    maxWidth: 300,
+    maxWidth: 320,
     width: "100%",
     alignSelf: "center",
   },
