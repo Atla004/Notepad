@@ -7,8 +7,8 @@ dotenv();
 
 export const autologin = async () => {
     try {   
-        const token = fetchData('jwtoken');
-        setDataExpiryTime('jwtoken', Number(process.env.JWTOKEN_EXPIRATION_DAYS as string) * 24);
+        const token = await fetchData('jwtoken');
+        await setDataExpiryTime('jwtoken', Number(process.env.JWTOKEN_EXPIRATION_DAYS as string) * 24);
         return token;
     }
     catch {
