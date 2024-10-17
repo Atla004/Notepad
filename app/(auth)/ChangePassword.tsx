@@ -6,13 +6,14 @@ import { RadioButton } from "react-native-paper";
 import Background from "@/components/Background";
 
 export default function ForgotPassword() {
-  const [gmail, setGmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
 
   const theme = useTheme();
 
   const handleLoginClick = () => {
-    console.log("User: ", gmail);
-    router.push("/EnterCode");
+    console.log("User: ", password);
+    router.push("/Login");
   };
 
   return (
@@ -25,18 +26,26 @@ export default function ForgotPassword() {
                 variant="titleMedium"
                 style={{ color: theme.colors.primary }}
               >
-                Forgot your Password?
+                You are almost there!
               </Text>
               <Text variant="bodySmall">
-                Enter your email address to recover your information
+                Enter your new password and confirm it
               </Text>
             </View>
             <TextInput
               style={styles.input}
-              label="Email"
-              value={gmail}
+              label="password"
+              value={password}
               mode="outlined"
-              onChangeText={(text) => setGmail(text)}
+              onChangeText={(text) => setPassword(text)}
+            />
+
+            <TextInput
+              style={styles.input}
+              label="confirm password"
+              value={password2}
+              mode="outlined"
+              onChangeText={(text) => setPassword2(text)}
             />
 
             <View style={[styles.row, styles.centeredRow]}>
@@ -48,7 +57,7 @@ export default function ForgotPassword() {
                     textDecorationLine: "underline",
                   }}
                 >
-                  Go back to Log in
+                  not received the code?
                 </Text>
               </Link>
             </View>

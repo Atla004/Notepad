@@ -12,7 +12,7 @@ export default function ForgotPassword() {
 
   const handleLoginClick = () => {
     console.log("User: ", gmail);
-    router.push("/EnterCode");
+    router.push("/ChangePassword");
   };
 
   return (
@@ -25,22 +25,22 @@ export default function ForgotPassword() {
                 variant="titleMedium"
                 style={{ color: theme.colors.primary }}
               >
-                Forgot your Password?
+                Enter your Code
               </Text>
               <Text variant="bodySmall">
-                Enter your email address to recover your information
+                Enter the code that was sent to your email address
               </Text>
             </View>
             <TextInput
               style={styles.input}
-              label="Email"
+              label="code"
               value={gmail}
               mode="outlined"
               onChangeText={(text) => setGmail(text)}
             />
 
             <View style={[styles.row, styles.centeredRow]}>
-              <Link href="./Login">
+              <Link href="./ForgotPassword">
                 <Text
                   variant="labelLarge"
                   style={{
@@ -48,7 +48,7 @@ export default function ForgotPassword() {
                     textDecorationLine: "underline",
                   }}
                 >
-                  Go back to Log in
+                  not received the code?
                 </Text>
               </Link>
             </View>
