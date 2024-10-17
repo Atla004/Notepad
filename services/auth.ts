@@ -1,5 +1,5 @@
 import { wrappedFetch } from "@/services/fetch"
-import { fetchData, setDataExpiryTime, storeExpiringData } from "@/services/localstorage";
+import { fetchData, removeData, setDataExpiryTime, storeExpiringData } from "@/services/localstorage";
 import { FetchError } from "./utils";
 import {config as dotenv} from 'dotenv'
 
@@ -63,7 +63,7 @@ export const getPasswordToken = async (email: string) => {
         throw new FetchError(errors.error);
     }
 
-    return;
+    return 'Token sent to user email!';
 };
 
 export const changePassword = async (newPasswordData: {email: string, newPassword: string, token: string}) => {
@@ -80,5 +80,10 @@ export const changePassword = async (newPasswordData: {email: string, newPasswor
 }
 
 export const logout = async () => {
-
+    try {
+        await removeData('jwt');
+    }
+    catch (error) {
+        // TODO: figure what to do here
+    }
 }
