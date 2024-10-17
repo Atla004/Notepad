@@ -46,6 +46,23 @@ export const fetchData = async (key: string) => {
     }
 }
 
+export const editData = async (key: string, value: string) => {
+    try {
+        await AsyncStorage.mergeItem(key, value);
+    }
+    catch (error) {
+        throw new Error(`Error at fetching data: ${(error as Error).message}`);
+    }
+}
+
+export const setDataExpiryTime = async (key: string, hours: number) => {
+    const now = new Date();
+    now.setHours(now.getHours() + hours);
+    const expirationTimestamp = Math.floor(now.getTime() / 1000);
+    const formattedEdit = {expiryTime: expirationTimestamp};
+    await editData(key, JSON.stringify(formattedEdit));
+}
+
 export const removeData = async (key: string) => {
     try {
         await AsyncStorage.removeItem(key);
