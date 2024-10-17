@@ -4,7 +4,6 @@ import { StyleSheet, View } from "react-native";
 import { Card, Text, TextInput, Button, useTheme } from "react-native-paper";
 import { Link, router, useFocusEffect } from "expo-router";
 import Background from "@/components/Background";
-import Toast from "react-native-toast-message";
 
 export default function Register() {
   const theme = useTheme(); // Obtener el tema actual
@@ -46,11 +45,6 @@ export default function Register() {
     if (valid) {
       // Lógica de registro aquí
       console.log("Registrado con éxito");
-      Toast.show({
-        type: "success",
-        text1: "Registro exitoso",
-        text2: "Te has registrado con éxito 👋",
-      });
       router.push("/Login");
     }
   };

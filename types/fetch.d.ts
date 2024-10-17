@@ -8,3 +8,8 @@ export interface FetchRequest {
 export interface FetchParams extends FetchRequest {
     route: string,
 }
+
+export interface ZodError extends object {
+    formErrors: string[],
+    fieldErrors: Record<string, string[]>
+}

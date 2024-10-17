@@ -1,7 +1,9 @@
 import { wrappedFetch } from "@/services/fetch"
-import { storeData } from "@/services/localstorage";
+import { storeData, storeExpiringData } from "@/services/localstorage";
+import { FetchError } from "./utils";
+import {config as dotenv} from 'dotenv'
 
-// TODO: Better error handling
+dotenv();
 
 export const login = async (userData: {username: string, password: string}) => {
     try {
@@ -10,11 +12,13 @@ export const login = async (userData: {username: string, password: string}) => {
             method: "POST",
             body: userData
         });
-        if (response.status !== 200)
-            throw new Error(`code ${response.status} at login`)
+        if (response.status !== 200) {
+            const errors = await response.json()
+            throw new FetchError(errors.error);
+        }
 
         const {user, token} = await response.json();
-        await storeData('jwtoken', token);
+        await storeExpiringData('jwtoken', token, Number(process.env.JWTOKEN_EXPIRATION_DAYS as string) * 24);
         return user;
     }
     catch (error) {
@@ -23,45 +27,47 @@ export const login = async (userData: {username: string, password: string}) => {
 }
 
 export const register = async (userData: {username: string, email: string, password: string}) => {
-    try {
-        const response = await wrappedFetch({
-            route: '/auth/register',
-            method: "POST",
-            body: userData
-        });
-        if (response.status !== 200)
-            throw new Error(`code ${response.status} at register`);
-        
-        const {username, password} = userData;
-        return await login({username, password});
+    const response = await wrappedFetch({
+        route: '/auth/register',
+        method: "POST",
+        body: userData
+    });
+    if (response.status !== 200) {
+        const errors = await response.json()
+        throw new FetchError(errors.error);
     }
-    catch (error) {
-        throw new Error(`Failed to register user: ${(error as Error).message}`)
-    }
+    
+    const {username, password} = userData;
+    return await login({username, password});  
 };
 
 export const getPasswordToken = async (email: string) => {
-    try {
-        const response = await wrappedFetch({
-            route: '/auth/send-reset-token',
-            method: "POST",
-            body: { email }
-        });
-        if (response.status !== 200)
-            throw new Error(`code ${response.status} at login`)
-
-        
+    const response = await wrappedFetch({
+        route: '/auth/send-reset-token',
+        method: "POST",
+        body: { email }
+    });
+    if (response.status !== 200) {
+        const errors = await response.json()
+        throw new FetchError(errors.error);
     }
-    catch (error) {
 
-    }
+    return;
 };
 
-export const changePassword = async (data: {email: string, newPassword: string, token: string}) => {
-    try {
+export const changePassword = async (newPasswordData: {email: string, newPassword: string, token: string}) => {
+    const response = await wrappedFetch({
+        route: '/auth/reset-password',
+        method: "PUT",
+        body: newPasswordData
+    });
+    if (response.status !== 200) {
+        const errors = await response.json()
+        throw new FetchError(errors.error);
+    };
 
-    }
-    catch (error) {
+}
 
-    }
+export const logout = async () => {
+
 }
