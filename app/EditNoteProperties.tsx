@@ -20,6 +20,7 @@ import { FavoritesIcon, TrashIcon } from "@/components/Icon";
 import CategorySheet from "@/components/CategorySheet";
 import DropdownPriority from "@/components/DropdownPriority"; // Ensure DropdownPriority accepts style prop
 import { Stack } from "expo-router";
+import { CloseIcon } from "@/components/Icon";
 
 const EditNoteProperties = () => {
   const theme = useTheme();
@@ -49,6 +50,9 @@ const EditNoteProperties = () => {
         options={{
           title: `Edit Note `,
           headerShown: true,
+          headerStyle: {
+            backgroundColor: theme.colors.primaryContainer, // Cambia este valor al color que desees
+          },
           headerRight: () => {
             return (
               <>
@@ -90,7 +94,10 @@ const EditNoteProperties = () => {
         }}
       />
 
-      <Divider style={styles.divider} />
+      <Divider
+        bold
+        style={[styles.divider, { backgroundColor: theme.colors.shadow }]}
+      />
       <Text style={styles.textCloseToDivider} variant="bodySmall">
         Note Name
       </Text>
@@ -101,7 +108,10 @@ const EditNoteProperties = () => {
         mode="outlined"
         onChangeText={(text) => setNoteName(text)}
       />
-      <Divider style={styles.divider} />
+      <Divider
+        bold
+        style={[styles.divider, { backgroundColor: theme.colors.shadow }]}
+      />
       <Text style={styles.textCloseToDivider} variant="bodySmall">
         Categories
       </Text>
@@ -140,18 +150,30 @@ const EditNoteProperties = () => {
         </View>
       </ScrollView>
       <CategorySheet />
-      <Divider style={styles.divider} />
-      <Text style={styles.textCloseToDivider} variant="bodySmall">
+      <Divider
+        bold
+        style={[styles.divider, { backgroundColor: theme.colors.shadow }]}
+      />
+      <Text
+        style={[styles.textCloseToDivider, { marginBottom: 10 }]}
+        variant="bodySmall"
+      >
         Priority
       </Text>
       <DropdownPriority />
 
-      <Button mode="contained"> Save </Button>
+      <Button mode="contained" style={styles.saveButton}>
+        {" "}
+        Save{" "}
+      </Button>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  saveButton: {
+    margin: 10,
+  },
   scrollView: {
     maxHeight: 100,
     marginBottom: 16,
@@ -193,9 +215,11 @@ const styles = StyleSheet.create({
   },
   divider: {
     marginVertical: 16, // Adjust the value to increase or decrease the space
+    marginHorizontal: 10,
   },
   textCloseToDivider: {
-    marginTop: -8, // Adjust the value to bring the text closer to the divider
+    marginTop: -8,
+    marginLeft: 16,
   },
   dialogTitle: {
     textAlign: "center",

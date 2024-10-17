@@ -1,6 +1,8 @@
+import Background from "@/components/Background";
 import SearchBar from "@/components/SearchBar";
 import { useState } from "react";
 import { FlatList, StyleSheet, StatusBar, View, Text } from "react-native";
+import { useTheme } from "react-native-paper";
 import { FlatGrid } from "react-native-super-grid";
 
 const data = [
@@ -46,8 +48,12 @@ export default function Categories() {
     item.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const theme = useTheme();
+
   return (
-    <>
+    <View
+      style={[{ backgroundColor: theme.colors.surface }, { height: "100%" }]}
+    >
       <SearchBar
         placeholder="Search Notes..."
         value={search}
@@ -66,7 +72,7 @@ export default function Categories() {
           </View>
         )}
       />
-    </>
+    </View>
   );
 }
 

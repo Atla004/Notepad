@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FlatList, StyleSheet, StatusBar, View, Pressable } from "react-native";
-import { Searchbar } from "react-native-paper";
+import { Searchbar, useTheme } from "react-native-paper";
 import FABNewNote from "@/components/FABNewNote";
 import CardNote from "@/components/CardNote";
 import SearchBar from "@/components/SearchBar";
@@ -26,9 +26,12 @@ export default function Home() {
       item.title.toLowerCase().includes(search.toLowerCase()) ||
       item.description.toLowerCase().includes(search.toLowerCase())
   );
+  const theme = useTheme();
 
   return (
-    <>
+    <View
+      style={[{ backgroundColor: theme.colors.surface }, { height: "100%" }]}
+    >
       <SearchBar
         placeholder="Search Notes..."
         value={search}
@@ -44,7 +47,7 @@ export default function Home() {
       />
 
       <FABNewNote />
-    </>
+    </View>
   );
 }
 

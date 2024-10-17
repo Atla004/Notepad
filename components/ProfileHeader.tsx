@@ -1,9 +1,15 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, Pressable, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
 import { Avatar } from "react-native-paper";
-
 
 const ProfileHeader = () => {
   return (
@@ -14,13 +20,13 @@ const ProfileHeader = () => {
         </View>
       </View>
       <View style={styles.headerBackground}>
-      <Pressable
-        style={styles.backButton}
-        onPress={() => router.push("./Home")}
-      >
-        <Ionicons name="arrow-back-sharp" size={24} color="black" />
-      </Pressable>
-        <Image 
+        <Pressable
+          style={styles.backButton}
+          onPress={() => router.push("./Home")}
+        >
+          <Ionicons name="arrow-back-sharp" size={24} color="black" />
+        </Pressable>
+        <Image
           style={styles.headerBackgroundImage}
           source={{ uri: "URL_DE_TU_IMAGEN" }}
         />
@@ -40,7 +46,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-end", // Alinea los elementos al final del contenedor
     height: 150, // Ajusta este valor según tus necesidades
-    backgroundColor: "rgb(177, 230, 156)", // Color del encabezado
+    backgroundColor: "white", // Color del encabezado
     paddingBottom: 10, // Ajusta este valor para mover el contenido hacia abajo
   },
   headerLeft: {
@@ -71,8 +77,8 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   backButton: {
-    marginLeft:25,       
-    marginTop: 40, 
+    marginLeft: 25,
+    marginTop: 40,
   },
 });
 
