@@ -1,12 +1,11 @@
-import { ReactNode } from "react";
+import React, { createContext, ReactNode, useState, useCallback } from "react";
 import {
   MD3LightTheme as DefaultTheme,
   PaperProvider,
-  shadow,
-  Surface,
+  Button,
 } from "react-native-paper";
 
-const theme = {
+const lightTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
@@ -17,14 +16,43 @@ const theme = {
     shadow: "#3C3C3B", // gris
     scrim: "#FDCDAC", //naranja claro
   },
-  roundness: 8, // Añadir más propiedades si es necesario
-  // Puedes añadir más propiedades según sea necesario
+};
+
+const darkTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: "#1E1E1E",
+    surface: "#121212",
+    primaryContainer: "#333333",
+    tertiary: "#BBBBBB",
+    shadow: "#000000",
+    scrim: "#444444",
+  },
 };
 
 interface LayoutProps {
   children: ReactNode;
 }
 
-export default function Container({ children }: LayoutProps) {
-  return <PaperProvider theme={theme}>{children}</PaperProvider>;
-}
+export const ThemeContext = createContext({
+  toggleTheme: () => {},
+});
+
+const Container = React.memo(({ children }: LayoutProps) => {
+  const [theme, setTheme] = useState(lightTheme);
+
+  const toggleTheme = useCallback(() => {
+    setTheme((prevTheme) =>
+      prevTheme === lightTheme ? darkTheme : lightTheme
+    );
+  }, []);
+
+  return (
+    <ThemeContext.Provider value={{ toggleTheme }}>
+      <PaperProvider theme={theme}>{children}</PaperProvider>
+    </ThemeContext.Provider>
+  );
+});
+
+export default Container;

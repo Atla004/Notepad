@@ -25,7 +25,11 @@ const FABNewNote = () => {
         onPress={() => showDialog()}
       />
       <Portal>
-        <Dialog visible={visible} onDismiss={hideDialog}>
+        <Dialog
+          visible={visible}
+          onDismiss={hideDialog}
+          style={{ borderRadius: 30 }}
+        >
           <Dialog.Title>
             <Text variant="titleMedium">New Note</Text>
           </Dialog.Title>

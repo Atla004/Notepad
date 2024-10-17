@@ -1,19 +1,19 @@
 import { router, Stack } from "expo-router";
-import React, { useState } from "react";
-import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useContext, useState } from "react";
+import { View, StyleSheet } from "react-native";
 import { Button, Divider, Text, useTheme } from "react-native-paper";
 import ProfileHeader from "@/components/ProfileHeader";
-import { PeopleIcon, PersonIcon } from "@/components/Icon";
 import { StatusBar } from "expo-status-bar";
+import { ThemeContext } from "@/components/Container";
 
 export default function Profile() {
+  const { toggleTheme } = useContext(ThemeContext);
+
   const LogOut = () => {
     console.log("Log out");
     router.push("/Login");
   };
   const theme = useTheme();
-
-  const [searchQuery, setSearchQuery] = useState("");
 
   const styles = StyleSheet.create({
     bnt: {
@@ -71,6 +71,7 @@ export default function Profile() {
         icon="theme-light-dark"
         textColor={theme.colors.shadow}
         style={styles.bnt}
+        onPress={toggleTheme}
       >
         Change Theme
       </Button>
