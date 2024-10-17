@@ -39,3 +39,29 @@ export const register = async (userData: {username: string, email: string, passw
         throw new Error(`Failed to register user: ${(error as Error).message}`)
     }
 };
+
+export const getPasswordToken = async (email: string) => {
+    try {
+        const response = await wrappedFetch({
+            route: '/auth/send-reset-token',
+            method: "POST",
+            body: { email }
+        });
+        if (response.status !== 200)
+            throw new Error(`code ${response.status} at login`)
+
+        
+    }
+    catch (error) {
+
+    }
+};
+
+export const changePassword = async (data: {email: string, newPassword: string, token: string}) => {
+    try {
+
+    }
+    catch (error) {
+
+    }
+}
