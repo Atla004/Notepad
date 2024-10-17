@@ -1,7 +1,7 @@
 import { wrappedFetch } from "@/services/fetch"
-import { fetchData, removeData, setDataExpiryTime, storeExpiringData } from "@/services/localstorage";
+import { fetchData, removeData, setDataExpiryTime, storeData, storeExpiringData } from "@/services/localstorage";
 import { FetchError } from "./utils";
-import {config as dotenv} from 'dotenv'
+import { config as dotenv } from 'dotenv'
 
 dotenv();
 
@@ -30,6 +30,7 @@ export const login = async (userData: {username: string, password: string}) => {
 
         const {user, token} = await response.json();
         await storeExpiringData('jwtoken', token, Number(process.env.JWTOKEN_EXPIRATION_DAYS as string) * 24);
+        await storeData('username', user.data.username);
         return user;
     }
     catch (error) {
@@ -82,6 +83,7 @@ export const changePassword = async (newPasswordData: {email: string, newPasswor
 export const logout = async () => {
     try {
         await removeData('jwt');
+        await removeData('username');
     }
     catch (error) {
         // TODO: figure what to do here

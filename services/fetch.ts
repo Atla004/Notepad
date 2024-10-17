@@ -26,18 +26,23 @@ export const wrappedFetch = async (params: FetchParams) => {
 }
 
 export const authorizedWrappedFetch = async (params: FetchParams) => {
-    const token = await fetchData('jwtoken');
-
-    const newParams: FetchParams = {
-        route: params.route,
-        method: params.method,
-        headers: {
-            ...params.headers,
-            Autorization: `Bearer ${token}`
-        },
-    } 
-    if (params.body) 
-        newParams.body = params.body;
-    
-    return await wrappedFetch(newParams);
+    try {
+        const token = await fetchData('jwtoken');
+        
+        const newParams: FetchParams = {
+            route: params.route,
+            method: params.method,
+            headers: {
+                ...params.headers,
+                Autorization: `Bearer ${token}`
+            },
+        } 
+        if (params.body) 
+            newParams.body = params.body;
+        
+        return await wrappedFetch(newParams);
+    }
+    catch (error) {
+        throw new Error('Please login')
+    }
 }
