@@ -65,8 +65,10 @@ export default function ForgotPassword() {
 
 const styles = StyleSheet.create({
   input: {
-    maxWidth: 200, // Set the maximum width to 300
+    maxWidth: 220, // Set the maximum width to 300
     width: "100%", // Ensure the input takes up the full width of its container
+    alignSelf: "center", // Center the input horizontally
+    marginVertical: 5, // Add margin to the top and bottom of the input
   },
   card: {
     width: 250,
