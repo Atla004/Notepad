@@ -3,10 +3,12 @@ import { StyleSheet, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 const data = [
+  { label: "ONE PIZZA", value: "0" },
   { label: "Very Important", value: "1" },
   { label: "Fairly important", value: "2" },
   { label: "Important", value: "3" },
   { label: "Slightly Important", value: "4" },
+  { label: "Not Important", value: "5" },
 ];
 
 const DropdownPriority = () => {
