@@ -15,6 +15,7 @@ export default function SearchBar({
 }: SearchBarProps) {
   return (
     <Searchbar
+      style={styles.searchBar}
       placeholder={placeholder}
       onChangeText={onChangeText}
       value={value}
@@ -36,5 +37,9 @@ const styles = StyleSheet.create({
   avatar: {
     marginRight: 15,
   },
-  
+  searchBar: {
+    marginTop: 10,
+    width: "96%",
+    alignSelf: "center",
+  },
 });
