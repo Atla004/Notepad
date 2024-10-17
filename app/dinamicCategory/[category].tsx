@@ -5,6 +5,8 @@ import { FavoritesIcon, SettingsIcon } from "@/components/Icon";
 import { Text, useTheme } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import CardNote from "@/components/CardNote";
+import SearchBar from "@/components/SearchBar";
+import { useState } from "react";
 
 const data = [
   {
@@ -22,6 +24,11 @@ const data = [
 const CategoryNotes = () => {
   const { category } = useLocalSearchParams();
   const theme = useTheme();
+  const [search, setSearch] = useState("");
+
+  const filteredData = data.filter((item) =>
+    item.title.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
@@ -30,14 +37,19 @@ const CategoryNotes = () => {
           title: `${category}`,
           headerShown: true,
           headerStyle: {
-            backgroundColor: theme.colors.primaryContainer, // Cambia este valor al color que desees
+            backgroundColor: theme.colors.primaryContainer,
           },
         }}
       />
       <StatusBar />
+      <SearchBar
+        placeholder="Search Notes..."
+        value={search}
+        onChangeText={(text) => setSearch(text)}
+      />
 
       <FlatList
-        data={data}
+        data={filteredData}
         renderItem={({ item }) => (
           <CardNote title={item.title} description={item.description} />
         )}
