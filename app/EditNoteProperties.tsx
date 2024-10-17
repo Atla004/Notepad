@@ -50,6 +50,9 @@ const EditNoteProperties = () => {
         options={{
           title: `Edit Note `,
           headerShown: true,
+          headerStyle: {
+            backgroundColor: theme.colors.primaryContainer, // Cambia este valor al color que desees
+          },
           headerRight: () => {
             return (
               <>
