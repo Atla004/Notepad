@@ -73,8 +73,8 @@ export default function Categories() {
               { backgroundColor: theme.colors.primaryContainer },
             ]}
             onPress={() => {
-              console.log(`./${item.name}`);
-              router.push({ pathname: `./dinamicCategory/${item.name}` });
+              console.log(`/${item.name}`);
+              router.push({ pathname: `/dinamicCategory/${item.name}` });
             }}
           >
             <Text style={styles.text}>
