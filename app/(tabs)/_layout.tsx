@@ -52,6 +52,7 @@ const Tabs = () => {
       onIndexChange={setIndex}
       renderScene={renderScene}
       activeIndicatorStyle={{ backgroundColor: thme.colors.scrim }}
+      barStyle={{ backgroundColor: thme.colors.primaryContainer }}
     />
   );
 };
@@ -61,7 +62,6 @@ export default function App() {
   const thme = useTheme();
   return (
     <>
-      <StatusBar backgroundColor={thme.colors.surface} />
       <SafeAreaView style={{ flex: 1, paddingBottom: insets.bottom }}>
         <Tabs />
       </SafeAreaView>

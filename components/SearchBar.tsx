@@ -45,5 +45,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     width: "96%",
     alignSelf: "center",
+    height: 50,
   },
 });

@@ -3,6 +3,7 @@ import { Button, Pressable, StyleSheet, View } from "react-native";
 import { NoteHtml } from "@/components/NoteHtml";
 import { FavoritesIcon, SettingsIcon } from "@/components/Icon";
 import { useTheme } from "react-native-paper";
+import { StatusBar } from "expo-status-bar";
 
 const NoteScreen = () => {
   const { noteId, description } = useLocalSearchParams();
@@ -36,6 +37,7 @@ const NoteScreen = () => {
           },
         }}
       />
+      <StatusBar />
 
       <View style={[styles.noteContainer]}>
         <NoteHtml />

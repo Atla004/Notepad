@@ -4,6 +4,7 @@ import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { Button, Divider, Text, useTheme } from "react-native-paper";
 import ProfileHeader from "@/components/ProfileHeader";
 import { PeopleIcon, PersonIcon } from "@/components/Icon";
+import { StatusBar } from "expo-status-bar";
 
 export default function Profile() {
   const LogOut = () => {
@@ -43,6 +44,7 @@ export default function Profile() {
     <View
       style={[{ backgroundColor: theme.colors.surface }, { height: "100%" }]}
     >
+      <StatusBar />
       <ProfileHeader />
 
       <Text variant="displaySmall" style={{ marginHorizontal: 10 }}>

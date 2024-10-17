@@ -21,6 +21,7 @@ import CategorySheet from "@/components/CategorySheet";
 import DropdownPriority from "@/components/DropdownPriority"; // Ensure DropdownPriority accepts style prop
 import { Stack } from "expo-router";
 import { CloseIcon } from "@/components/Icon";
+import { StatusBar } from "expo-status-bar";
 
 const EditNoteProperties = () => {
   const theme = useTheme();
@@ -56,6 +57,7 @@ const EditNoteProperties = () => {
           headerRight: () => {
             return (
               <>
+                <StatusBar />
                 <View style={styles.headersLeft}>
                   <Pressable onPress={() => console.log("Bookmark")}>
                     <FavoritesIcon />

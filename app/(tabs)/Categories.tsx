@@ -54,6 +54,7 @@ export default function Categories() {
     <View
       style={[{ backgroundColor: theme.colors.surface }, { height: "100%" }]}
     >
+      <StatusBar backgroundColor={theme.colors.surface} />
       <SearchBar
         placeholder="Search Notes..."
         value={search}
