@@ -47,18 +47,19 @@ const EditNoteProperties = () => {
     <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
       <Stack.Screen
         options={{
-          title: `Edit Note Properties`,
+          title: `Edit Note `,
           headerShown: true,
           headerRight: () => {
             return (
               <>
-                <Pressable onPress={() => console.log("Bookmark")}>
-                  <FavoritesIcon />
-                </Pressable>
-                <Pressable onPress={showDialog}>
-                  <TrashIcon />
-                </Pressable>
-
+                <View style={styles.headersLeft}>
+                  <Pressable onPress={() => console.log("Bookmark")}>
+                    <FavoritesIcon />
+                  </Pressable>
+                  <Pressable onPress={showDialog}>
+                    <TrashIcon />
+                  </Pressable>
+                </View>
                 <Portal>
                   <Dialog visible={visible} onDismiss={hideDialog}>
                     <Dialog.Icon icon="alert" />
@@ -212,6 +213,12 @@ const styles = StyleSheet.create({
   deleteButton: {
     backgroundColor: "red",
     borderRadius: 8,
+  },
+  headersLeft: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 10,
+    width: 80,
   },
 });
 
