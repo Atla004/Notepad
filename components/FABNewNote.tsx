@@ -7,6 +7,7 @@ import {
   Portal,
   Text,
   TextInput,
+  useTheme,
 } from "react-native-paper";
 
 const FABNewNote = () => {
@@ -14,10 +15,15 @@ const FABNewNote = () => {
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
   const [noteName, setNoteName] = useState("");
+  const theme = useTheme();
 
   return (
     <>
-      <FAB icon="plus" style={styles.fab} onPress={() => showDialog()} />
+      <FAB
+        icon="plus"
+        style={[styles.fab, { backgroundColor: theme.colors.primary }]}
+        onPress={() => showDialog()}
+      />
       <Portal>
         <Dialog visible={visible} onDismiss={hideDialog}>
           <Dialog.Title>
@@ -47,6 +53,7 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
+    borderRadius: 20,
   },
 
   input: {

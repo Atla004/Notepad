@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { Pressable } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import { Avatar, Searchbar } from "react-native-paper";
 
 interface SearchBarProps {
@@ -20,7 +20,10 @@ export default function SearchBar({
       value={value}
       right={() => (
         <>
-          <Pressable onPress={() => router.push({ pathname: `../Profile` })}>
+          <Pressable
+            style={styles.avatar}
+            onPress={() => router.push({ pathname: `../Profile` })}
+          >
             <Avatar.Text size={35} label="A" />
           </Pressable>
         </>
@@ -28,3 +31,10 @@ export default function SearchBar({
     />
   );
 }
+
+const styles = StyleSheet.create({
+  avatar: {
+    marginRight: 15,
+  },
+  
+});
