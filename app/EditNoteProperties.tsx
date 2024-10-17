@@ -20,6 +20,7 @@ import { FavoritesIcon, TrashIcon } from "@/components/Icon";
 import CategorySheet from "@/components/CategorySheet";
 import DropdownPriority from "@/components/DropdownPriority"; // Ensure DropdownPriority accepts style prop
 import { Stack } from "expo-router";
+import { CloseIcon } from "@/components/Icon";
 
 const EditNoteProperties = () => {
   const theme = useTheme();
@@ -90,7 +91,10 @@ const EditNoteProperties = () => {
         }}
       />
 
-      <Divider bold style={styles.divider} />
+      <Divider
+        bold
+        style={[styles.divider, { backgroundColor: theme.colors.shadow }]}
+      />
       <Text style={styles.textCloseToDivider} variant="bodySmall">
         Note Name
       </Text>
@@ -101,7 +105,10 @@ const EditNoteProperties = () => {
         mode="outlined"
         onChangeText={(text) => setNoteName(text)}
       />
-      <Divider bold style={styles.divider} />
+      <Divider
+        bold
+        style={[styles.divider, { backgroundColor: theme.colors.shadow }]}
+      />
       <Text style={styles.textCloseToDivider} variant="bodySmall">
         Categories
       </Text>
@@ -140,7 +147,10 @@ const EditNoteProperties = () => {
         </View>
       </ScrollView>
       <CategorySheet />
-      <Divider bold style={styles.divider} />
+      <Divider
+        bold
+        style={[styles.divider, { backgroundColor: theme.colors.shadow }]}
+      />
       <Text
         style={[styles.textCloseToDivider, { marginBottom: 10 }]}
         variant="bodySmall"

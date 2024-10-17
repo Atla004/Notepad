@@ -1,7 +1,12 @@
 import { RichText, Toolbar, useEditorBridge } from "@10play/tentap-editor";
-import { KeyboardAvoidingView, KeyboardAvoidingViewBase, StyleSheet, Text, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  KeyboardAvoidingViewBase,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 
 export const NoteHtml = () => {
   const editor = useEditorBridge({
@@ -11,14 +16,12 @@ export const NoteHtml = () => {
   });
 
   return (
-    <SafeAreaView style={exampleStyles.fullScreen}>
+    <>
       <RichText editor={editor} />
-      <KeyboardAvoidingView
-        style={exampleStyles.keyboardAvoidingView}
-      >
+      <KeyboardAvoidingView style={exampleStyles.keyboardAvoidingView}>
         <Toolbar editor={editor} />
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </>
   );
 };
 
@@ -27,8 +30,8 @@ const exampleStyles = StyleSheet.create({
     flex: 1,
   },
   keyboardAvoidingView: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     bottom: 0,
   },
 });

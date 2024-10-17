@@ -31,6 +31,7 @@ const NoteScreen = () => {
           },
         }}
       />
+
       <NoteHtml />
     </View>
   );

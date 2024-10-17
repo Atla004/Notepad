@@ -39,3 +39,7 @@ export const PeopleIcon = () => {
 export const PersonIcon = () => {
   <Ionicons name="person-sharp" size={24} color="black" />;
 };
+
+export const CloseIcon = () => {
+  <AntDesign name="close" size={24} color="black" />;
+};

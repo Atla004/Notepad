@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FlatList, StyleSheet, StatusBar, View } from "react-native";
 import CardNote from "@/components/CardNote";
 import SearchBar from "@/components/SearchBar";
+import { useTheme } from "react-native-paper";
 
 const data = [
   {
@@ -24,9 +25,12 @@ export default function Favorites() {
       item.title.toLowerCase().includes(search.toLowerCase()) ||
       item.description.toLowerCase().includes(search.toLowerCase())
   );
+  const theme = useTheme();
 
   return (
-    <>
+    <View
+      style={[{ backgroundColor: theme.colors.surface }, { height: "100%" }]}
+    >
       <SearchBar
         placeholder="Search Notes..."
         value={search}
@@ -40,7 +44,7 @@ export default function Favorites() {
         )}
         keyExtractor={(item) => item.id.toString()}
       />
-    </>
+    </View>
   );
 }
 

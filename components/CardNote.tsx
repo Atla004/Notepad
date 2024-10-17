@@ -1,4 +1,4 @@
-import { Card, Chip, Text } from "react-native-paper";
+import { Card, Chip, Text, useTheme } from "react-native-paper";
 import { CardNoteProps } from "@/types/types";
 import { router } from "expo-router";
 import { StyleSheet } from "react-native";
@@ -12,9 +12,13 @@ const CardNote = ({ title, description }: CardNoteProps) => {
       params: { title, description },
     });
   };
+  const theme = useTheme();
 
   return (
-    <Card style={styles.card} onPress={goToNote}>
+    <Card
+      style={[styles.card, { backgroundColor: theme.colors.primaryContainer }]}
+      onPress={goToNote}
+    >
       <Card.Title
         title={title}
         subtitle={description}

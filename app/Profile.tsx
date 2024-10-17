@@ -25,6 +25,7 @@ export default function Profile() {
     divider: {
       marginVertical: 16, // Adjust the value to increase or decrease the space
       marginHorizontal: 10,
+      backgroundColor: theme.colors.shadow,
     },
     textCloseToDivider: {
       marginTop: -8,
