@@ -22,9 +22,9 @@ export const autologin = async () => {
 };
 
 export const login = async (userData: {
-  username: string;
-  password: string;
-}) => {
+  username: string,
+  password: string,
+}, save: boolean = true) => {
   try {
 
     const response = await wrappedFetch({
@@ -41,12 +41,14 @@ export const login = async (userData: {
     const json = await response.json();
     const { user, token } = json.data;
    
-    await storeExpiringData(
-      "jwtoken",
-      token,
-      Number(process.env.EXPO_PUBLIC_JWTOKEN_EXPIRATION_DAYS as string) * 24
-    );
-    await storeData("username", user.username);
+    if (save) {
+      await storeExpiringData(
+        "jwtoken",
+        token,
+        Number(process.env.EXPO_PUBLIC_JWTOKEN_EXPIRATION_DAYS as string) * 24
+      );
+      await storeData("username", user.username);
+    }
     return user;
   } catch (error) {
     throw new Error(`Login failed: ${(error as Error).message}`);
@@ -67,8 +69,8 @@ export const register = async (userData: {
     const errors = await response.json();
     throw new FetchError(errors.error);
   }
-
-  const { username, password } = userData;
+  const json = await response.json();
+  const { username, password } = json;
   return await login({ username, password });
 };
 
