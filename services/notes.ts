@@ -21,7 +21,7 @@ export const createNote = async (username: string, note: Note) => {
         return json.success;
         
     } catch (error) {
-        throw new Error(`Error deleting note: ${(error as Error).message}`);
+        throw new Error(`Error creating note: ${(error as Error).message}`);
     }
 }
 
