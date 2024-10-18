@@ -7,11 +7,10 @@ export interface User {
 }
 
 export interface Note {
-    _id: string,
+    _id?: string,
     title: string,
     content: string,
-    categories: ObjectId[],
-    owner: ObjectId,
+    categories?: ObjectId[],
     priority: number,
     favorite: boolean,
     deleted: boolean,
