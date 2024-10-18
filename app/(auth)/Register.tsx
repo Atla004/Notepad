@@ -36,7 +36,29 @@ export default function Register() {
       };
       setErrors(newErrors);
 
-      const valid = !emailError && !userError && !passwordError;
+      let valid = !emailError && !userError && !passwordError;
+
+      const containsSpaces = (str: string) => {
+        return /\s/.test(str);
+      };
+
+      if (containsSpaces(user)) {
+        setErrors({ ...newErrors, user: "Username cannot contain spaces." });
+        valid = false;
+      }
+
+      if (containsSpaces(password)) {
+        setErrors({
+          ...newErrors,
+          password: "Password cannot contain spaces.",
+        });
+        valid = false;
+      }
+
+      if (containsSpaces(email)) {
+        setErrors({ ...newErrors, email: "Email cannot contain spaces." });
+        valid = false;
+      }
 
       if (!valid) {
         return;

@@ -4,27 +4,29 @@ import { Searchbar, useTheme } from "react-native-paper";
 import FABNewNote from "@/components/FABNewNote";
 import CardNote from "@/components/CardNote";
 import SearchBar from "@/components/SearchBar";
+import { getAllNotes } from "@/services/notes";
+import { fetchData } from "@/services/localstorage";
+import {Note } from "@/types/apiResponses";
 
-const data = [
-  {
-    id: 1,
-    title: "Sin ganas de vivir",
-    description: "porque...",
-  },
-  {
-    id: 2,
-    title: "a veces pienso...",
-    description: "es mentira",
-  },
-];
+
+
 
 export default function Home() {
   const [search, setSearch] = useState("");
+  const [data, setData] = useState<Note[]>([]);
+
+  const getData = async () => {
+    const username = await fetchData("username");
+    const data: Note[] = await getAllNotes(username);
+    setData(data);
+    return data;
+  }
+
 
   const filteredData = data.filter(
     (item) =>
       item.title.toLowerCase().includes(search.toLowerCase()) ||
-      item.description.toLowerCase().includes(search.toLowerCase())
+      item.content.toLowerCase().includes(search.toLowerCase())
   );
   const theme = useTheme();
 
@@ -42,9 +44,9 @@ export default function Home() {
       <FlatList
         data={filteredData}
         renderItem={({ item }) => (
-          <CardNote title={item.title} description={item.description} />
+          <CardNote title={item.title} description={item.content} />
         )}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item._id.toString()}
       />
 
       <FABNewNote />

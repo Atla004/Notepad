@@ -1,20 +1,33 @@
-import { Link, router } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { useState } from "react";
 import { Card, Text, useTheme, Button, TextInput } from "react-native-paper";
 import { RadioButton } from "react-native-paper";
 import Background from "@/components/Background";
 import Toast from "react-native-simple-toast";
+import { changePassword } from "@/services/auth";
+
+type NewPasswordData = {
+  email: string;
+  newPassword: string;
+  token: string;
+};
 
 export default function ForgotPassword() {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const { token, email } = useLocalSearchParams();
 
   const theme = useTheme();
 
-  const handleLoginClick = () => {
+  const containsSpaces = (str: string) => {
+    return /\s/.test(str);
+  };
+
+  const handleLoginClick = async () => {
     const isPasswordValid = validatePassword(password);
+
     if (!isPasswordValid) {
       return;
     }
@@ -22,13 +35,33 @@ export default function ForgotPassword() {
       setPasswordError("Passwords do not match.");
       return;
     }
+
+    const newPasswordData: NewPasswordData = {
+      email: `${email}`,
+      newPassword: password,
+      token: `${token}`,
+    };
+
+    const isValid = await changePassword(newPasswordData);
+    if (isValid == "valid") {
+      router.push({
+        pathname: "/Login",
+        params: { token },
+      });
+    } else {
+      setPasswordError(isValid);
+    }
+
     Toast.show("passwords changed with success", Toast.LONG);
-    router.push("/Login");
   };
 
   const validatePassword = (password: string) => {
     if (password.length < 8) {
       setPasswordError("Password must be at least 8 characters long.");
+      return false;
+    }
+    if (containsSpaces(password)) {
+      setPasswordError("Password cannot contain spaces.");
       return false;
     }
     setPasswordError("");

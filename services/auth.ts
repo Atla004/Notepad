@@ -71,33 +71,52 @@ export const register = async (userData: {
     if (response.status !== 200) {
       const errors = await response.json();
       return errors.error;
-
     }
     const json = await response.json();
     const { username, password } = json;
     console.log(`User ${username} registered with password ${password}`);
     console.log("with ", json);
 
-
     return "registered";
-
   } catch (error) {
     return (error as Error).message;
   }
 };
 
 export const getPasswordToken = async (email: string) => {
-  const response = await wrappedFetch({
-    route: "/auth/send-reset-token",
-    method: "POST",
-    body: { email },
-  });
-  if (response.status !== 200) {
-    const errors = await response.json();
-    throw new FetchError(errors.error);
-  }
+  try {
+    const response = await wrappedFetch({
+      route: "/auth/send-reset-token",
+      method: "POST",
+      body: { email },
+    });
+    if (response.status !== 200) {
+      const errors = await response.json();
+      return errors.error;
+    }
 
-  return "Token sent to user email!";
+    return "Token sent to user email!";
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const checkResetToken = async (token: string) => {
+  try {
+    const response = await wrappedFetch({
+      route: "/auth/check-reset-token",
+      method: "POST",
+      body: { token },
+    });
+    if (response.status !== 200) {
+      const errors = await response.json();
+      return errors.error;
+    }
+
+    return "valid";
+  } catch (error) {
+    return (error as Error).message;
+  }
 };
 
 export const changePassword = async (newPasswordData: {
@@ -105,14 +124,19 @@ export const changePassword = async (newPasswordData: {
   newPassword: string;
   token: string;
 }) => {
-  const response = await wrappedFetch({
-    route: "/auth/reset-password",
-    method: "PUT",
-    body: newPasswordData,
-  });
-  if (response.status !== 200) {
-    const errors = await response.json();
-    throw new FetchError(errors.error);
+  try {
+    const response = await wrappedFetch({
+      route: "/auth/reset-password",
+      method: "PUT",
+      body: newPasswordData,
+    });
+    if (response.status !== 200) {
+      const errors = await response.json();
+      return errors.error;
+    }
+    return "valid";
+  } catch (error) {
+    return (error as Error).message;
   }
 };
 

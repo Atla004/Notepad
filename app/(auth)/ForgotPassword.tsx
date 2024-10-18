@@ -24,7 +24,10 @@ export default function ForgotPassword() {
       "If your email matches an existing account we will send you a code to reset your password.",
       Toast.LONG
     );
-    router.push("/EnterCode");
+    router.push({
+      pathname: "/EnterCode",
+      params: { email: gmail },
+    });
     return;
   };
 
@@ -84,6 +87,20 @@ export default function ForgotPassword() {
                   }}
                 >
                   Go back to Log in
+                </Text>
+              </Link>
+            </View>
+
+            <View style={[styles.row, styles.centeredRow]}>
+              <Link href="./EnterCode">
+                <Text
+                  variant="labelLarge"
+                  style={{
+                    color: theme.colors.primary,
+                    textDecorationLine: "underline",
+                  }}
+                >
+                  Already have a code?
                 </Text>
               </Link>
             </View>

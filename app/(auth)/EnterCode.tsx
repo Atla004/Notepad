@@ -1,18 +1,28 @@
-import { Link, router } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { useState } from "react";
 import { Card, Text, useTheme, Button, TextInput } from "react-native-paper";
 import { RadioButton } from "react-native-paper";
 import Background from "@/components/Background";
+import { checkResetToken } from "@/services/auth";
 
 export default function ForgotPassword() {
-  const [gmail, setGmail] = useState("");
+  const [token, setToken] = useState("");
+  const [error, setError] = useState("");
+  const { email } = useLocalSearchParams();
 
   const theme = useTheme();
 
-  const handleLoginClick = () => {
-    console.log("User: ", gmail);
-    router.push("/ChangePassword");
+  const handleLoginClick = async () => {
+    const isValid = await checkResetToken(token);
+    if (isValid == "valid") {
+      router.push({
+        pathname: '/ChangePassword',
+        params: { token,email }
+      });
+    } else {
+      setError("Invalid token");
+    }
   };
 
   return (
@@ -34,10 +44,15 @@ export default function ForgotPassword() {
             <TextInput
               style={styles.input}
               label="code"
-              value={gmail}
+              value={token}
               mode="outlined"
-              onChangeText={(text) => setGmail(text)}
+              onChangeText={(text) => setToken(text)}
             />
+            {error ? (
+              <Text variant="labelSmall" style={styles.errorText}>
+                {error}
+              </Text>
+            ) : null}
 
             <View style={[styles.row, styles.centeredRow]}>
               <Link href="./ForgotPassword">
@@ -64,6 +79,10 @@ export default function ForgotPassword() {
 }
 
 const styles = StyleSheet.create({
+  errorText: {
+    color: "red",
+    marginBottom: 8,
+  },
   input: {
     maxWidth: 220,
     width: "100%",

@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { Card, Text, useTheme, Button, TextInput } from "react-native-paper";
 import { RadioButton } from "react-native-paper";
 import Background from "@/components/Background";
-import { login } from "@/services/auth";
+import { autologin, login } from "@/services/auth";
 
 export default function Login() {
   const [user, setUser] = useState("");
@@ -18,17 +18,37 @@ export default function Login() {
     setChecked(!isChecked);
   };
 
+  const goToLogin = async() => {
+    const logger= await autologin()
+    if(logger){
+      router.push("/Home") 
+    }
+
+  };
+  goToLogin();
+
   const handleLoginClick = async () => {
     try {
       const isUserValid = validateUser(user);
       const isPasswordValid = validatePassword(password);
+      let spacesUser = true;
+      let spacesPassword = true;
 
-      if (!isUserValid || !isPasswordValid) {
+      if (containsSpaces(user)) {
+        setUserError("Username cannot contain spaces.");
+        spacesUser = false;
+      }
+      if (containsSpaces(password)) {
+        setPasswordError("Password cannot contain spaces.");
+        spacesPassword = false;
+      }
+
+      if (!isUserValid || !isPasswordValid || !spacesUser || !spacesPassword) {
         return;
       }
 
       const userData = { username: user, password: password };
-      const awaitedUser = await login(userData);
+      const awaitedUser = await login(userData, isChecked);
 
       if (awaitedUser) {
         console.log("User: ", userData);
@@ -51,6 +71,10 @@ export default function Login() {
 
     setUserError("");
     return true;
+  };
+
+  const containsSpaces = (str: string) => {
+    return /\s/.test(str);
   };
 
   const validatePassword = (password: string) => {
