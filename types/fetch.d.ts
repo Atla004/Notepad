@@ -1,7 +1,7 @@
 
 export interface FetchRequest {
     method: "GET" | "POST" | "PUT" | "DELETE" ,
-    body?: Record<string, string | number | object> | string,
+    body?: any,
     headers?: Record<string, string>
 }
 

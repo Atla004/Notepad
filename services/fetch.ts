@@ -5,19 +5,20 @@ import { FetchParams } from "@/types/fetch";
 const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL as string;
 
 export const wrappedFetch = async (params: FetchParams) => {
-  try {
+  
     const { route, method, body, headers } = params;
-
     const url = `${backendUrl}${route}`;
     const request: RequestInit = { method };
-    if (body) request.body = JSON.stringify(body);
+    request.body = body ? JSON.stringify(body) : "";
 
-    if (headers) request.headers = headers;
+    request.headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        ...headers
+    };
 
-    return await fetch(url, request);
-  } catch (error) {
-    throw new Error(`Failed to fetch data`);
-  }
+    return await fetch(url, {...request});
+  
 };
 
 export const authorizedWrappedFetch = async (params: FetchParams) => {

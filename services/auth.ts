@@ -26,6 +26,7 @@ export const login = async (userData: {
   password: string;
 }) => {
   try {
+
     const response = await wrappedFetch({
       route: "/auth/login",
       method: "POST",
@@ -33,19 +34,22 @@ export const login = async (userData: {
     });
     if (response.status !== 200) {
       const errors = await response.json();
+      console.error(errors.error);
       throw new FetchError(errors.error);
     }
 
-    const { user, token } = await response.json();
+    const json = await response.json();
+    const { user, token } = json.data;
+   
     await storeExpiringData(
       "jwtoken",
       token,
       Number(process.env.EXPO_PUBLIC_JWTOKEN_EXPIRATION_DAYS as string) * 24
     );
-    await storeData("username", user.data.username);
+    await storeData("username", user.username);
     return user;
   } catch (error) {
-    throw new Error(`Failed to fetch user`);
+    throw new Error(`Login failed: ${(error as Error).message}`);
   }
 };
 
