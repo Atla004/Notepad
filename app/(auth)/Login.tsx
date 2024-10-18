@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { Card, Text, useTheme, Button, TextInput } from "react-native-paper";
 import { RadioButton } from "react-native-paper";
 import Background from "@/components/Background";
+import { login } from "@/services/auth";
 
 export default function Login() {
   const [user, setUser] = useState("");
@@ -17,16 +18,29 @@ export default function Login() {
     setChecked(!isChecked);
   };
 
-  const handleLoginClick = () => {
-    const isUserValid = validateUser(user);
-    const isPasswordValid = validatePassword(password);
+  const handleLoginClick = async () => {
+    try {
+      const isUserValid = validateUser(user);
+      const isPasswordValid = validatePassword(password);
 
-    if (!isUserValid || !isPasswordValid) {
-      return;
+      if (!isUserValid || !isPasswordValid) {
+        return;
+      }
+
+      const userData = { username: user, password: password };
+      const awaitedUser = await login(userData);
+
+      if (awaitedUser) {
+        console.log("User: ", userData);
+        router.push("/Home");
+        return;
+      } else {
+        throw new Error("Invalid username or password.");
+      }
+    } catch (error) {
+      setPasswordError((error as Error).message);
+      console.error(error);
     }
-
-    console.log("User: ", user);
-    router.push("/Home");
   };
 
   const validateUser = (email: string) => {
