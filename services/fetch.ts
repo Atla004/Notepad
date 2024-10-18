@@ -1,7 +1,8 @@
+import Config from 'react-native-config';
 import { fetchData } from './localstorage';
-import { FetchParams, FetchRequest } from '@/types/fetch';
+import { FetchParams } from '@/types/fetch';
 
-const backendUrl = process.env.BACKEND_URL as string;
+const backendUrl = Config.BACKEND_URL as string;
 
 export const wrappedFetch = async (params: FetchParams) => {
     try {
