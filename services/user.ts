@@ -1,3 +1,4 @@
+import { logout } from "./auth";
 import { wrappedFetch } from "./fetch";
 import { storeData, storeExpiringData } from "./localstorage";
 import { FetchError } from "./utils";
@@ -32,8 +33,8 @@ export const deleteUser = async (userData: {username: string}) => {
             const errors = await response.json();
             throw new FetchError(errors.error);
         }
+        await logout();
         return;
-        
     } 
     catch (error) {
         throw new Error(`Failed to delete user`);
