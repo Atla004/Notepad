@@ -4,6 +4,8 @@ import { useCallback, useState } from "react";
 import { Card, Text, useTheme, Button, TextInput } from "react-native-paper";
 import { RadioButton } from "react-native-paper";
 import Background from "@/components/Background";
+import { getPasswordToken } from "@/services/auth";
+import Toast from "react-native-simple-toast";
 
 export default function ForgotPassword() {
   const [gmail, setGmail] = useState("");
@@ -11,15 +13,19 @@ export default function ForgotPassword() {
 
   const theme = useTheme();
 
-  const handleLoginClick = () => {
+  const handleLoginClick = async () => {
     const isEmailValid = validateEmail(gmail);
 
     if (!isEmailValid) {
       return;
     }
-
-    console.log("User: ", gmail);
+    await getPasswordToken(gmail);
+    Toast.show(
+      "If your email matches an existing account we will send you a code to reset your password.",
+      Toast.LONG
+    );
     router.push("/EnterCode");
+    return;
   };
 
   const validateEmail = (email: string) => {

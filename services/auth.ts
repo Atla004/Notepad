@@ -21,12 +21,14 @@ export const autologin = async () => {
   }
 };
 
-export const login = async (userData: {
-  username: string,
-  password: string,
-}, save: boolean = true) => {
+export const login = async (
+  userData: {
+    username: string;
+    password: string;
+  },
+  save: boolean = true
+) => {
   try {
-
     const response = await wrappedFetch({
       route: "/auth/login",
       method: "POST",
@@ -40,7 +42,7 @@ export const login = async (userData: {
 
     const json = await response.json();
     const { user, token } = json.data;
-   
+
     if (save) {
       await storeExpiringData(
         "jwtoken",
@@ -60,18 +62,28 @@ export const register = async (userData: {
   email: string;
   password: string;
 }) => {
-  const response = await wrappedFetch({
-    route: "/auth/register",
-    method: "POST",
-    body: userData,
-  });
-  if (response.status !== 200) {
-    const errors = await response.json();
-    throw new FetchError(errors.error);
+  try {
+    const response = await wrappedFetch({
+      route: "/auth/register",
+      method: "POST",
+      body: userData,
+    });
+    if (response.status !== 200) {
+      const errors = await response.json();
+      return errors.error;
+
+    }
+    const json = await response.json();
+    const { username, password } = json;
+    console.log(`User ${username} registered with password ${password}`);
+    console.log("with ", json);
+
+
+    return "registered";
+
+  } catch (error) {
+    return (error as Error).message;
   }
-  const json = await response.json();
-  const { username, password } = json;
-  return await login({ username, password });
 };
 
 export const getPasswordToken = async (email: string) => {

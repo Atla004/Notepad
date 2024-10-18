@@ -5,6 +5,7 @@ import { Card, Text, TextInput, Button, useTheme } from "react-native-paper";
 import { Link, router, useFocusEffect } from "expo-router";
 import Background from "@/components/Background";
 import Toast from "react-native-simple-toast";
+import { register } from "@/services/auth";
 
 export default function Register() {
   const theme = useTheme();
@@ -22,26 +23,57 @@ export default function Register() {
     }, [])
   );
 
-  const handleRegisterClick = () => {
-    const emailError = validateEmail(email);
-    const userError = validateUser(user);
-    const passwordError = validatePassword(password);
+  const handleRegisterClick = async () => {
+    try {
+      const emailError = validateEmail(email);
+      const userError = validateUser(user);
+      const passwordError = validatePassword(password);
 
-    const newErrors = {
-      email: emailError,
-      user: userError,
-      password: passwordError,
-    };
-    setErrors(newErrors);
+      const newErrors = {
+        email: emailError,
+        user: userError,
+        password: passwordError,
+      };
+      setErrors(newErrors);
 
-    const valid = !emailError && !userError && !passwordError;
+      const valid = !emailError && !userError && !passwordError;
 
-    if (valid) {
-      // Lógica de registro aquí
-      console.log("Registrado con éxito");
-      Toast.show("Registrado con éxito", Toast.LONG);
+      if (!valid) {
+        return;
+      }
 
-      router.push("/Login");
+      const response = await register({ email, username: user, password });
+      console.log("dsdsdddd", response);
+
+      if (response == "registered") {
+        console.log("Registrado con éxito");
+        Toast.show("Registrado con éxito", Toast.LONG);
+        router.push("/Login");
+        return;
+      } else {
+        if (response === "Email already in use") {
+          setErrors({
+            email: "Email already in use",
+            user: "",
+            password: "",
+          });
+        } else if (response === "Username already in use") {
+          setErrors({
+            email: "",
+            user: "Username already in use",
+            password: "",
+          });
+          return;
+        }
+      }
+    } catch (error) {
+      console.error("dsdsd", error);
+      console.log("dsdsdddd", errors);
+      setErrors({
+        email: "",
+        user: "hola",
+        password: (error as Error).message,
+      });
     }
   };
 
