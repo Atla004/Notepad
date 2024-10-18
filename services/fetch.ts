@@ -8,14 +8,14 @@ export const wrappedFetch = async (params: FetchParams) => {
         const {route, method, body, headers} = params;
         
         const url = `${backendUrl}${route}`;
-        const request: FetchRequest = { method };
+        const request: RequestInit = { method };
         if (body)
             request.body = JSON.stringify(body);
 
         if (headers)
             request.headers = headers;
 
-        return await fetch(url, request as object);
+        return await fetch(url, request);
     }
     catch (error) {
         throw new Error(`Failed to fetch data`)
