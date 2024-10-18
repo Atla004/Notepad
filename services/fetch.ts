@@ -1,8 +1,5 @@
-import {config as dotenv} from 'dotenv';
 import { fetchData } from './localstorage';
 import { FetchParams, FetchRequest } from '@/types/fetch';
-
-dotenv();
 
 const backendUrl = process.env.BACKEND_URL as string;
 
@@ -21,7 +18,7 @@ export const wrappedFetch = async (params: FetchParams) => {
         return await fetch(url, request as object);
     }
     catch (error) {
-        throw new Error(`Failed to fetch: ${(error as Error).message}`)
+        throw new Error(`Failed to fetch data`)
     }
 }
 

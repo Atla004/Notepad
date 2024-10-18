@@ -7,16 +7,15 @@ import {
   storeExpiringData,
 } from "@/services/localstorage";
 import { FetchError } from "./utils";
-import { config as dotenv } from "dotenv";
 
-dotenv();
+import Config from "react-native-config";
 
 export const autologin = async () => {
   try {
     const token = await fetchData("jwtoken");
     await setDataExpiryTime(
       "jwtoken",
-      Number(process.env.JWTOKEN_EXPIRATION_DAYS as string) * 24
+      Number(Config.JWTOKEN_EXPIRATION_DAYS as string) * 24
     );
     return token;
   } catch {
@@ -43,7 +42,7 @@ export const login = async (userData: {
     await storeExpiringData(
       "jwtoken",
       token,
-      Number(process.env.JWTOKEN_EXPIRATION_DAYS as string) * 24
+      Number(Config.JWTOKEN_EXPIRATION_DAYS as string) * 24
     );
     await storeData("username", user.data.username);
     return user;
