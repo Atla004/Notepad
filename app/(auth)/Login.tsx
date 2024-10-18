@@ -1,8 +1,6 @@
-import * as React from "react";
-
-import { Link, router } from "expo-router";
-import { StyleSheet, View } from "react-native";
-import { useState } from "react";
+import { Link, router, useFocusEffect } from "expo-router";
+import { StyleSheet, View, Alert } from "react-native";
+import { useCallback, useState } from "react";
 import { Card, Text, useTheme, Button, TextInput } from "react-native-paper";
 import { RadioButton } from "react-native-paper";
 import Background from "@/components/Background";
@@ -11,7 +9,8 @@ export default function Login() {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
   const [isChecked, setChecked] = useState(true);
-
+  const [userError, setUserError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const theme = useTheme();
 
   const staySignedIn = () => {
@@ -19,9 +18,45 @@ export default function Login() {
   };
 
   const handleLoginClick = () => {
+    const isUserValid = validateUser(user);
+    const isPasswordValid = validatePassword(password);
+
+    if (!isUserValid || !isPasswordValid) {
+      return;
+    }
+
     console.log("User: ", user);
     router.push("/Home");
   };
+
+  const validateUser = (email: string) => {
+    if (user.length < 3) {
+      setUserError("Username must be at least 3 characters.");
+      return false;
+    }
+
+    setUserError("");
+    return true;
+  };
+
+  const validatePassword = (password: string) => {
+    if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters long.");
+      return false;
+    }
+    setPasswordError("");
+    return true;
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        setPassword("");
+        setUserError("");
+        setPasswordError("");
+      };
+    }, [])
+  );
 
   return (
     <Background>
@@ -39,19 +74,29 @@ export default function Login() {
             </View>
             <TextInput
               style={styles.input}
-              label="Email"
+              label="Username"
               value={user}
               mode="outlined"
+              error={!!userError}
               onChangeText={(text) => setUser(text)}
             />
+            {userError ? (
+              <Text style={styles.errorText}>{userError}</Text>
+            ) : null}
 
             <TextInput
               style={styles.input}
-              label="password"
+              label="Password"
               value={password}
               mode="outlined"
+              secureTextEntry
+              error={!!passwordError}
               onChangeText={(text) => setPassword(text)}
             />
+            {passwordError ? (
+              <Text style={styles.errorText}>{passwordError}</Text>
+            ) : null}
+
             <Link href="./ForgotPassword">
               <Text
                 variant="labelMedium"
@@ -83,7 +128,7 @@ export default function Login() {
               </Link>
             </View>
 
-            <Button mode="contained" onPressOut={handleLoginClick}>
+            <Button mode="contained" onPress={handleLoginClick}>
               Login
             </Button>
           </Card.Content>
@@ -95,10 +140,10 @@ export default function Login() {
 
 const styles = StyleSheet.create({
   input: {
-    maxWidth: 220, // Set the maximum width to 300
-    width: "100%", // Ensure the input takes up the full width of its container
-    alignSelf: "center", // Center the input horizontally
-    marginVertical: 5, // Add margin to the top and bottom of the input
+    maxWidth: 220,
+    width: "100%",
+    alignSelf: "center",
+    marginVertical: 5,
   },
   card: {
     width: 250,
@@ -125,6 +170,11 @@ const styles = StyleSheet.create({
     marginLeft: -10,
   },
   centeredRow: {
-    justifyContent: "center", // Centrar horizontalmente
+    justifyContent: "center",
+  },
+  errorText: {
+    color: "red",
+    alignSelf: "center",
+    marginBottom: 5,
   },
 });

@@ -4,9 +4,10 @@ import { StyleSheet, View } from "react-native";
 import { Card, Text, TextInput, Button, useTheme } from "react-native-paper";
 import { Link, router, useFocusEffect } from "expo-router";
 import Background from "@/components/Background";
+import Toast from "react-native-simple-toast";
 
 export default function Register() {
-  const theme = useTheme(); // Obtener el tema actual
+  const theme = useTheme();
   const [email, setEmail] = useState("");
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
@@ -14,39 +15,56 @@ export default function Register() {
 
   useFocusEffect(
     useCallback(() => {
-      // Limpiar los errores cuando la pantalla se enfoque
       setErrors({ email: "", user: "", password: "" });
       setEmail("");
       setUser("");
       setPassword("");
     }, [])
   );
+
   const handleRegisterClick = () => {
-    let valid = true;
-    let newErrors = { email: "", user: "", password: "" };
+    const emailError = validateEmail(email);
+    const userError = validateUser(user);
+    const passwordError = validatePassword(password);
 
-    /*     if (!email.includes("@")) {
-      newErrors.email = "Invalid email address";
-      valid = false;
-    }
-
-    if (user.length < 3) {
-      newErrors.user = "Username must be at least 3 characters";
-      valid = false;
-    }
-
-    if (password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
-      valid = false;
-    } */
-
+    const newErrors = {
+      email: emailError,
+      user: userError,
+      password: passwordError,
+    };
     setErrors(newErrors);
+
+    const valid = !emailError && !userError && !passwordError;
 
     if (valid) {
       // Lógica de registro aquí
       console.log("Registrado con éxito");
+      Toast.show("Registrado con éxito", Toast.LONG);
+
       router.push("/Login");
     }
+  };
+
+  const validateEmail = (email: string) => {
+    const re = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    if (!re.test(email)) {
+      return "Please enter a valid email address.";
+    }
+    return "";
+  };
+
+  const validateUser = (user: string) => {
+    if (user.length < 3) {
+      return "Username must be at least 3 characters";
+    }
+    return "";
+  };
+
+  const validatePassword = (password: string) => {
+    if (password.length < 8) {
+      return "Password must be at least 8 characters";
+    }
+    return "";
   };
 
   return (
@@ -140,10 +158,10 @@ const styles = StyleSheet.create({
     width: 250,
   },
   input: {
-    maxWidth: 220, // Set the maximum width to 300
-    width: "100%", // Ensure the input takes up the full width of its container
-    alignSelf: "center", // Center the input horizontally
-    marginVertical: 5, // Add margin to the top and bottom of the input
+    maxWidth: 220,
+    width: "100%",
+    alignSelf: "center",
+    marginVertical: 5,
   },
   errorText: {
     color: "red",

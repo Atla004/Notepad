@@ -4,16 +4,35 @@ import { useState } from "react";
 import { Card, Text, useTheme, Button, TextInput } from "react-native-paper";
 import { RadioButton } from "react-native-paper";
 import Background from "@/components/Background";
+import Toast from "react-native-simple-toast";
 
 export default function ForgotPassword() {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const theme = useTheme();
 
   const handleLoginClick = () => {
-    console.log("User: ", password);
+    const isPasswordValid = validatePassword(password);
+    if (!isPasswordValid) {
+      return;
+    }
+    if (password !== password2) {
+      setPasswordError("Passwords do not match.");
+      return;
+    }
+    Toast.show("passwords changed with success", Toast.LONG);
     router.push("/Login");
+  };
+
+  const validatePassword = (password: string) => {
+    if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters long.");
+      return false;
+    }
+    setPasswordError("");
+    return true;
   };
 
   return (
@@ -36,6 +55,7 @@ export default function ForgotPassword() {
               style={styles.input}
               label="password"
               value={password}
+              secureTextEntry
               mode="outlined"
               onChangeText={(text) => setPassword(text)}
             />
@@ -44,25 +64,19 @@ export default function ForgotPassword() {
               style={styles.input}
               label="confirm password"
               value={password2}
+              secureTextEntry
               mode="outlined"
               onChangeText={(text) => setPassword2(text)}
             />
+            {passwordError ? (
+              <Text style={styles.errorText}>{passwordError}</Text>
+            ) : null}
 
-            <View style={[styles.row, styles.centeredRow]}>
-              <Link href="./Login">
-                <Text
-                  variant="labelLarge"
-                  style={{
-                    color: theme.colors.primary,
-                    textDecorationLine: "underline",
-                  }}
-                >
-                  not received the code?
-                </Text>
-              </Link>
-            </View>
-
-            <Button mode="contained" onPressOut={handleLoginClick}>
+            <Button
+              mode="contained"
+              style={styles.btn}
+              onPressOut={handleLoginClick}
+            >
               Continue
             </Button>
           </Card.Content>
@@ -73,11 +87,19 @@ export default function ForgotPassword() {
 }
 
 const styles = StyleSheet.create({
+  errorText: {
+    color: "red",
+    alignSelf: "center",
+    marginBottom: 5,
+  },
+  btn: {
+    marginTop: 10,
+  },
   input: {
-    maxWidth: 220, // Set the maximum width to 300
-    width: "100%", // Ensure the input takes up the full width of its container
-    alignSelf: "center", // Center the input horizontally
-    marginVertical: 5, // Add margin to the top and bottom of the input
+    maxWidth: 220,
+    width: "100%",
+    alignSelf: "center",
+    marginVertical: 5,
   },
   card: {
     width: 250,

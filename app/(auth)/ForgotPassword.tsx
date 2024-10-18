@@ -1,19 +1,45 @@
-import { Link, router } from "expo-router";
+import { Link, router, useFocusEffect } from "expo-router";
 import { StyleSheet, View } from "react-native";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Card, Text, useTheme, Button, TextInput } from "react-native-paper";
 import { RadioButton } from "react-native-paper";
 import Background from "@/components/Background";
 
 export default function ForgotPassword() {
   const [gmail, setGmail] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   const theme = useTheme();
 
   const handleLoginClick = () => {
+    const isEmailValid = validateEmail(gmail);
+
+    if (!isEmailValid) {
+      return;
+    }
+
     console.log("User: ", gmail);
     router.push("/EnterCode");
   };
+
+  const validateEmail = (email: string) => {
+    const re = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    if (!re.test(email)) {
+      setEmailError("Please enter a valid email address.");
+      return false;
+    }
+    setEmailError("");
+    return true;
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        setEmailError("");
+        setGmail("");
+      };
+    }, [])
+  );
 
   return (
     <Background>
@@ -38,6 +64,9 @@ export default function ForgotPassword() {
               mode="outlined"
               onChangeText={(text) => setGmail(text)}
             />
+            {emailError ? (
+              <Text style={styles.errorText}>{emailError}</Text>
+            ) : null}
 
             <View style={[styles.row, styles.centeredRow]}>
               <Link href="./Login">
@@ -64,11 +93,16 @@ export default function ForgotPassword() {
 }
 
 const styles = StyleSheet.create({
+  errorText: {
+    color: "red",
+    alignSelf: "center",
+    marginBottom: 5,
+  },
   input: {
-    maxWidth: 220, // Set the maximum width to 300
-    width: "100%", // Ensure the input takes up the full width of its container
-    alignSelf: "center", // Center the input horizontally
-    marginVertical: 5, // Add margin to the top and bottom of the input
+    maxWidth: 220,
+    width: "100%",
+    alignSelf: "center",
+    marginVertical: 5,
   },
   card: {
     width: 250,
