@@ -8,11 +8,7 @@ import { NoteContext } from "@/app/NoteContext";
 import { fetchData } from "@/services/localstorage";
 import { editNote } from "@/services/notes";
 
-interface NoteHtmlProps {
-  setContent: (value: string) => void;
-}
-
-export const NoteHtml = ({ setContent }: NoteHtmlProps) => {
+export const NoteHtml = () => {
   const { noteData, setNoteData } = useContext(NoteContext);
   const [editorContent, setEditorContent] = useState<String>();
   const navigation = useNavigation();
@@ -32,7 +28,7 @@ export const NoteHtml = ({ setContent }: NoteHtmlProps) => {
       } catch (error) {
         console.log("Error al obtener el contenido de la nota");
       }
-    }, 
+    },
   });
 
   useFocusEffect(
@@ -48,7 +44,6 @@ export const NoteHtml = ({ setContent }: NoteHtmlProps) => {
 
   useFocusEffect(
     useCallback(() => {
-      const { title, _id, favorite, categories, priority } = noteData;
       cambiostate((noteData.description as string) ?? "");
     }, [])
   );
@@ -57,10 +52,12 @@ export const NoteHtml = ({ setContent }: NoteHtmlProps) => {
     try {
       const username = await fetchData("username");
       const { title, _id, favorite, categories, priority } = noteData;
+      console.log("NOteHTML", JSON.stringify(noteData, null, 2));
+
       const dataToSave = {
         title,
         _id: _id ?? "",
-        favorite,
+        favorite: favorite,
         categories: categories ?? [],
         content: (editorContent as string) ?? "",
         priority,

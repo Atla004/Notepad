@@ -31,7 +31,7 @@ export const authorizedWrappedFetch = async (params: FetchParams) => {
     };
 
     if (params.body)  newParams.body = params.body;
-    console.log(newParams)
+    console.log(JSON.stringify(newParams, null, 2))
     return await wrappedFetch(newParams);
   } catch (error) {
     console.error("authorizedWrappedFetch error", (error as Error).message);

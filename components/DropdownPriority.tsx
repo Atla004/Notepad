@@ -1,19 +1,46 @@
-import { useState } from "react";
+import { NoteContext } from "@/app/NoteContext";
+import { fetchData } from "@/services/localstorage";
+import { editNote } from "@/services/notes";
+import { Note } from "@/types/apiResponses";
+import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 const data = [
-  { label: "ONE PIZZA", value: "0" },
-  { label: "Very Important", value: "1" },
-  { label: "Fairly important", value: "2" },
-  { label: "Important", value: "3" },
-  { label: "Slightly Important", value: "4" },
-  { label: "Not Important", value: "5" },
+  { label: "Decoupled", value: "5" },
+  { label: "Very Important", value: "4" },
+  { label: "Fairly important", value: "3" },
+  { label: "Important", value: "2" },
+  { label: "Slightly Important", value: "1" },
+  { label: "Not Important", value: "0" },
 ];
 
 const DropdownPriority = () => {
   const [value, setValue] = useState<string | null>(null);
   const [isFocus, setIsFocus] = useState(false);
+
+  const { noteData, setNoteData } = useContext(NoteContext);
+
+  useEffect(() => {
+    console.log("Priority", value);
+    guardarPrioridad();
+  }, [value]);
+
+  const guardarPrioridad = async () => {
+    console.log("Priority", value);
+    setNoteData({ ...noteData, priority: Number(value) });
+
+    const dataToSave = {
+      ...(noteData as Note),
+      priority: Number(value),
+    };
+
+    console.log("DataToSave dropdown", dataToSave);
+    const username = await fetchData("username");
+    await editNote(username, dataToSave);
+    console.log("Priority", value);
+    console.log("NoteData", noteData);
+  };
 
   return (
     <View style={styles.container}>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -19,9 +19,12 @@ import { Pressable } from "react-native";
 import { FavoritesIcon, TrashIcon } from "@/components/Icon";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import DropdownPriority from "@/components/DropdownPriority"; // Ensure DropdownPriority accepts style prop
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import { CloseIcon } from "@/components/Icon";
 import { StatusBar } from "expo-status-bar";
+import { deleteNote } from "@/services/notes";
+import { fetchData } from "@/services/localstorage";
+import { NoteContext } from "./NoteContext";
 
 const EditNoteProperties = () => {
   const theme = useTheme();
@@ -29,6 +32,16 @@ const EditNoteProperties = () => {
   const [visible, setVisible] = useState(false);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
+
+  const { noteData, setNoteData } = useContext(NoteContext);
+
+  const borrarNota = async () => {
+    const username = await fetchData("username");
+    const noteId = noteData._id ?? "";
+    deleteNote(username, noteId);
+    router.push("/Home");
+    hideDialog();
+  };
 
   const data = [
     { id: 1, title: " 1" },
@@ -41,8 +54,6 @@ const EditNoteProperties = () => {
     { id: 8, title: "Category 8" },
     { id: 9, title: "Category 9" },
     { id: 10, title: "Category 10" },
-
-    // Agrega más elementos según sea necesario
   ];
 
   return (
@@ -82,8 +93,12 @@ const EditNoteProperties = () => {
                         Cancel
                       </Button>
                       <Button
-                        onPress={() => console.log("Nota borrada")}
-                        style={[styles.dialogButton, styles.deleteButton]}
+                        onPress={() => borrarNota()}
+                        style={[
+                          styles.dialogButton,
+                          styles.deleteButton,
+                          { backgroundColor: theme.colors.primary },
+                        ]}
                       >
                         <Text style={{ color: "white" }}>Delete</Text>
                       </Button>
@@ -109,6 +124,9 @@ const EditNoteProperties = () => {
         value={noteName}
         mode="outlined"
         onChangeText={(text) => setNoteName(text)}
+        theme={{
+          roundness: 8,
+        }}
       />
       <Divider
         bold
@@ -165,11 +183,6 @@ const EditNoteProperties = () => {
         Priority
       </Text>
       <DropdownPriority />
-
-      <Button mode="contained" style={styles.saveButton}>
-        {" "}
-        Save{" "}
-      </Button>
     </View>
   );
 };
@@ -188,6 +201,7 @@ const styles = StyleSheet.create({
     maxWidth: 320,
     width: "100%",
     alignSelf: "center",
+    borderRadius: 40,
   },
   card: {
     width: 250,
@@ -239,7 +253,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   deleteButton: {
-    backgroundColor: "red",
     borderRadius: 8,
   },
   headersLeft: {

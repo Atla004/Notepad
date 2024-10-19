@@ -7,18 +7,21 @@ import SearchBar from "@/components/SearchBar";
 import { getAllNotes } from "@/services/notes";
 import { fetchData } from "@/services/localstorage";
 import { Note } from "@/types/apiResponses";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, useNavigation } from "expo-router";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export default function Home() {
   const [search, setSearch] = useState("");
   const [data, setData] = useState<Note[]>([]);
+  const navigator = useNavigation();
 
   const getData = async () => {
+    console.log("getData");
     const username = await fetchData("username");
     try {
       const dataNotes = await getAllNotes(username);
       if (dataNotes !== undefined) setData(dataNotes);
+      console.log(JSON.stringify(data, null, 2));
     } catch (error) {
       console.log("error al agarrarmela ", error);
     }
@@ -27,6 +30,7 @@ export default function Home() {
 
   useFocusEffect(
     useCallback(() => {
+      
       getData();
     }, [])
   );

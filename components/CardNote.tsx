@@ -6,6 +6,7 @@ import { tags } from "react-native-svg/lib/typescript/xmlTags";
 import Categories from "@/app/(tabs)/Categories";
 import { useContext } from "react";
 import { NoteContext } from "@/app/NoteContext";
+import HTMLView from 'react-native-htmlview'
 
 const priorities = [
   { name: "", color: "#" },
@@ -49,7 +50,11 @@ const CardNote = ({ title, description, priority, favorite, _id, categories}: Ca
     >
       <Card.Title
         title={title}
-        subtitle={description}
+        subtitle={
+          <HTMLView
+            value={`${(description ?? "").replace('\n', '').replace('<p>', '').replace('</p>', '').slice(0, 25)}${(description ?? "").length > 25 ? "..." : ""}`}
+          />
+        }
         right={(props) => (
           priority !== 0 ? (
             <Chip style={styles.importanceTag}>

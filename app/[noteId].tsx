@@ -16,7 +16,12 @@ import { useTheme } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useContext, useState } from "react";
 import { editNote } from "@/services/notes";
-import { fetchData } from "@/services/localstorage";
+import {
+  fetchData,
+  getJSONData,
+  removeData,
+  storeJSONData,
+} from "@/services/localstorage";
 import { NoteContext } from "./NoteContext";
 
 const NoteScreen = () => {
@@ -29,65 +34,57 @@ const NoteScreen = () => {
     categories,
   } = useLocalSearchParams();
 
-  // console.log("title", title);
+  const theme = useTheme();
+  const [textContent, setTextContent] = useState("");
 
   const { noteData, setNoteData } = useContext(NoteContext);
+  const [favoriteBool, setFavorite] = useState(false);
 
-  const datas = {
-    title: title ? title.toString() : "",
-    description: description ? description.toString() : "",
-    priority: Number(priority?.toString()),
-    favorite: Boolean(favorite?.toString()),
-    _id: _id?.toString(),
-    categories: categories as string[],
+  useFocusEffect(
+    useCallback(() => {
+      console.log("noteData Favorite?", noteData.favorite);
+      setFavorite(noteData.favorite);
+      console.log("favorite?", favoriteBool);
+      saveLocalNote();
+    }, [])
+  );
+
+  const getFavorite = async () => {
+    return favoriteBool;
   };
 
-  const theme = useTheme();
-  const navigation = useNavigation();
-  const [favoriteBool, setFavorite] = useState(true);
-  const [textContent, setTextContent] = useState("");
+  const saveLocalNote = async () => {
+    await storeJSONData("active-note", noteData);
+    const a = await getJSONData("active-note");
+    console.log("localStorage: ", a);
+  };
 
   const guardarNota = async () => {
     try {
-      const {title, description, priority, _id, categories} = noteData;
       const username = await fetchData("username");
-      editNote(username, {
-        title: title.toString(),
-        content: description? description.toString() : "Esta vacio...",
-        priority: Number(priority),
-        _id: _id? _id.toString() : "",
-        favorite: favoriteBool,
-        categories: categories ? categories : [],
-      });
-      console.log("Nota guardada");
+      const { title, _id, categories, priority, description } = noteData;
+      const dataToSave = {
+        title,
+        _id: _id ?? "",
+        favorite: !favoriteBool,
+        categories: categories ?? [],
+        content: (description as string) ?? "",
+        priority,
+      };
+
+      setFavorite(!favoriteBool);
+      const data = { ...noteData };
+      data.favorite = !data.favorite;
+      setNoteData(data);
+      await removeData("active-note");
+
+      //console.log("dataToSave", JSON.stringify(dataToSave, null, 2));
+      editNote(username, dataToSave);
+      console.log("Nota guardada idid");
     } catch (error) {
       console.log("Error al guardar la nota", error);
     }
   };
-
-/*   useFocusEffect(
-    useCallback(() => {
-      const unsubscribe = navigation.addListener("beforeRemove", (e) => {
-        guardarNota();
-        console.log("Nota guardadanoteid"); 
-      });
-
-      return unsubscribe;
-    }, [navigation])
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      setFavorite(favorite === "true");
-    }, [])
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      console.log("datas", datas);
-      setNoteData(datas);
-    }, [])
-  ); */
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
@@ -102,17 +99,17 @@ const NoteScreen = () => {
             return (
               <View style={styles.headersLeft}>
                 <Pressable
-                  onPress={() => {
-                    setFavorite(!favoriteBool);
+                  onPress={async () => {
+                    await guardarNota();
                   }}
                 >
                   {favoriteBool ? <FilledFavoritesIcon /> : <FavoritesIcon />}
                 </Pressable>
                 <Pressable
                   style={{ marginTop: 2 }}
-                  onPress={() =>
-                    router.push({ pathname: `./EditNoteProperties` })
-                  }
+                  onPress={() => {
+                    router.push({ pathname: `./EditNoteProperties` });
+                  }}
                 >
                   <SettingsIcon />
                 </Pressable>
@@ -124,7 +121,7 @@ const NoteScreen = () => {
       <StatusBar />
 
       <View style={[styles.noteContainer]}>
-        <NoteHtml setContent={setTextContent} />
+        <NoteHtml />
       </View>
     </View>
   );
