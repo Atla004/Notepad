@@ -1,3 +1,6 @@
+import { fetchData } from "@/services/localstorage";
+import { createNote } from "@/services/notes";
+import { Note } from "@/types/apiResponses";
 import { useState } from "react";
 import { StyleSheet } from "react-native";
 import {
@@ -16,6 +19,20 @@ const FABNewNote = () => {
   const hideDialog = () => setVisible(false);
   const [noteName, setNoteName] = useState("");
   const theme = useTheme();
+
+  const newNote = async (noteName: string) => {
+    const username = await fetchData("username");
+    console.log("este es el username",username);
+    const note: Note = {
+      title: noteName,
+      content: "",
+      categories: [],
+      priority: 0,
+      favorite: false,
+    };
+    await createNote(username, note);
+    hideDialog();
+  };
 
   return (
     <>
@@ -44,7 +61,7 @@ const FABNewNote = () => {
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={hideDialog}>Cancel</Button>
-            <Button onPress={hideDialog}>Done</Button>
+            <Button onPress={() => newNote(noteName)}>Done</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

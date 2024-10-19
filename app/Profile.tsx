@@ -5,12 +5,13 @@ import { Button, Divider, Text, useTheme } from "react-native-paper";
 import ProfileHeader from "@/components/ProfileHeader";
 import { StatusBar } from "expo-status-bar";
 import { ThemeContext } from "@/components/Container";
+import { logout } from "@/services/auth";
 
 export default function Profile() {
   const { toggleTheme } = useContext(ThemeContext);
 
-  const LogOut = () => {
-    console.log("Log out");
+  const LogOut = async () => {
+    await logout();
     router.push("/Login");
   };
   const theme = useTheme();

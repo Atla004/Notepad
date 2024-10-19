@@ -7,14 +7,14 @@ export interface User {
 }
 
 export interface Note {
-    _id: string,
+    _id?: string,
     title: string,
     content: string,
     categories: string[],
-    owner: string,
+    owner?: string,
     priority: number,
     favorite: boolean,
-    deleted: boolean,
+    deleted?: boolean,
 }
 
 export interface Category {
