@@ -13,7 +13,11 @@ import {
   useTheme,
 } from "react-native-paper";
 
-const FABNewNote = () => {
+interface FABNewNoteProps {
+  onNewNote: () => void;
+}
+
+const FABNewNote = ( {onNewNote}: FABNewNoteProps) => {
   const [visible, setVisible] = useState(false);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
@@ -32,6 +36,7 @@ const FABNewNote = () => {
     };
     await createNote(username, note);
     hideDialog();
+    onNewNote();
   };
 
   return (

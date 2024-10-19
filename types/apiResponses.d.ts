@@ -18,8 +18,8 @@ export interface Note {
 }
 
 export interface Category {
-    _id: string,
+    _id?: string,
     title: string,
-    owner: ObjectId,
+    owner?: string,
     emoji: string
 }

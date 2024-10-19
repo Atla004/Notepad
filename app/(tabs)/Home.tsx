@@ -18,9 +18,7 @@ export default function Home() {
     const username = await fetchData("username");
     try {
       const dataNotes = await getAllNotes(username);
-      console.log("esperando la dataaaaaa", dataNotes);
-      if (dataNotes !== undefined)
-      setData(dataNotes);
+      if (dataNotes !== undefined) setData(dataNotes);
     } catch (error) {
       console.log("error al agarrarmela ", error);
     }
@@ -33,10 +31,12 @@ export default function Home() {
     }, [])
   );
 
-  const filteredData = data.filter(
-    (item) =>
-      item.title.toLowerCase().includes(search.toLowerCase()) ||
-      item.content.toLowerCase().includes(search.toLowerCase())
+  const handleNewNote = () => {
+    getData(); // Actualiza los datos después de crear una nueva nota
+  };
+
+  const filteredData = data.filter((item) =>
+    item.title.toLowerCase().includes(search.toLowerCase())
   );
   const theme = useTheme();
 
@@ -54,14 +54,20 @@ export default function Home() {
       <FlatList
         data={filteredData}
         renderItem={({ item }) => (
-          <CardNote title={item.title} description={item.content} />
+          <CardNote
+            _id={item._id}
+            title={item.title}
+            description={item.content}
+            priority={item.priority}
+            favorite={item.favorite}
+          />
         )}
         keyExtractor={(item) => {
           return item._id ? item._id.toString() : "UNDEFINED";
         }}
       />
 
-      <FABNewNote />
+      <FABNewNote onNewNote={handleNewNote} />
     </View>
   );
 }

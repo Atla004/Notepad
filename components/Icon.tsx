@@ -4,6 +4,10 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
+export const FilledFavoritesIcon = () => {
+  return <Entypo name="star" size={24} color="black" />
+}
+
 export const FavoritesIcon = () => {
   return <Entypo name="star-outlined" size={24} color="black" />;
 };

@@ -41,7 +41,7 @@ export default function Favorites() {
       <FlatList
         data={filteredData}
         renderItem={({ item }) => (
-          <CardNote title={item.title} description={item.description} />
+          <CardNote title={item.title} description={item.description} priority={item.priority}/>
         )}
         keyExtractor={(item) => item.id.toString()}
       />
