@@ -1,34 +1,56 @@
 import { RichText, Toolbar, useEditorBridge } from "@10play/tentap-editor";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { KeyboardAvoidingView, StyleSheet, View } from "react-native";
+import { Alert, KeyboardAvoidingView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import { NoteContext } from "@/app/NoteContext";
-import { fetchData } from "@/services/localstorage";
+import { editJSONData, fetchData, getJSONData } from "@/services/localstorage";
 import { editNote } from "@/services/notes";
+import { Text } from "react-native-paper";
 
 export const NoteHtml = () => {
   const { noteData, setNoteData } = useContext(NoteContext);
-  const [editorContent, setEditorContent] = useState<String>();
+  const [editorContent, setEditorContent] = useState<string>(
+    noteData.description ?? ""
+  );
+  const [remainingChars, setRemainingChars] = useState<number>(
+    100 - (noteData.description?.length ?? 0)
+  );
   const navigation = useNavigation();
 
   const cambiostate = (content: string) => {
     setEditorContent(content);
   };
 
+  const handleEditorChange = async () => {
+    try {
+      const content = await editor.getHTML();
+      const text = await editor.getText();
+      if (text.length <= 250) {
+        setEditorContent(content);
+        cambiostate(content);
+        console.log("content", content);
+        console.log("content.length", content.length);
+        setRemainingChars(250 - text.length);
+        console.log("remainingChars", remainingChars);
+      } else {
+        Alert.alert(
+          "Character Limit Exceeded",
+          "You can only enter up to 250 characters."
+        );
+        await editor.setContent(editorContent); // Revertir al contenido anterior
+      }
+    } catch (error) {
+      console.log("Error al obtener el contenido de la nota", error);
+    }
+  };
+
   const editor = useEditorBridge({
     autofocus: true,
     avoidIosKeyboard: true,
     initialContent: noteData.description,
-    onChange: async () => {
-      try {
-        const content = await editor.getHTML();
-        cambiostate(content);
-      } catch (error) {
-        console.log("Error al obtener el contenido de la nota");
-      }
-    },
+    onChange: handleEditorChange,
   });
 
   useFocusEffect(
@@ -51,19 +73,14 @@ export const NoteHtml = () => {
   const guardarNota = async () => {
     try {
       const username = await fetchData("username");
-      const { title, _id, favorite, categories, priority } = noteData;
       console.log("NOteHTML", JSON.stringify(noteData, null, 2));
-
-      const dataToSave = {
-        title,
-        _id: _id ?? "",
-        favorite: favorite,
-        categories: categories ?? [],
-        content: (editorContent as string) ?? "",
-        priority,
-      };
+      await editJSONData("active-note", { content: editorContent });
+      const dataToSave = await getJSONData("active-note");
+      console.log("dataToSave", editorContent);
       console.log("dataToSave", dataToSave);
+
       editNote(username, dataToSave);
+
       console.log("Nota guardada");
     } catch (error) {
       console.log("Error al guardar la nota", error);
@@ -72,15 +89,24 @@ export const NoteHtml = () => {
 
   return (
     <>
+      <Text style={styles.charCount}>
+        Characters remaining: {remainingChars}
+      </Text>
       <RichText editor={editor} />
-      <KeyboardAvoidingView style={exampleStyles.keyboardAvoidingView}>
+      <KeyboardAvoidingView style={styles.keyboardAvoidingView}>
         <Toolbar editor={editor} />
       </KeyboardAvoidingView>
     </>
   );
 };
 
-const exampleStyles = StyleSheet.create({
+const styles = StyleSheet.create({
+  charCount: {
+    textAlign: "right",
+    marginRight: 10,
+    marginTop: 5,
+    color: "gray",
+  },
   fullScreen: {
     flex: 1,
   },

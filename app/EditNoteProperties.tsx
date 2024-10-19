@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -19,11 +19,16 @@ import { Pressable } from "react-native";
 import { FavoritesIcon, TrashIcon } from "@/components/Icon";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import DropdownPriority from "@/components/DropdownPriority"; // Ensure DropdownPriority accepts style prop
-import { router, Stack } from "expo-router";
+import { router, Stack, useFocusEffect } from "expo-router";
 import { CloseIcon } from "@/components/Icon";
 import { StatusBar } from "expo-status-bar";
 import { deleteNote } from "@/services/notes";
-import { fetchData } from "@/services/localstorage";
+import {
+  editJSONData,
+  fetchData,
+  getJSONData,
+  removeData,
+} from "@/services/localstorage";
 import { NoteContext } from "./NoteContext";
 
 const EditNoteProperties = () => {
@@ -38,6 +43,7 @@ const EditNoteProperties = () => {
   const borrarNota = async () => {
     const username = await fetchData("username");
     const noteId = noteData._id ?? "";
+    await removeData("active-note");
     deleteNote(username, noteId);
     router.push("/Home");
     hideDialog();
@@ -56,6 +62,22 @@ const EditNoteProperties = () => {
     { id: 10, title: "Category 10" },
   ];
 
+  const [favoriteState, setFavoriteState] = useState(false);
+  const [priorityState, setPriorityState] = useState(0);
+  const [titleState, setTitleState] = useState("");
+
+  useFocusEffect(
+    useCallback(() => {
+      saveNote();
+    }, [])
+  );
+
+  const saveNote = async () => {
+    const data = await getJSONData("active-note");
+    setFavoriteState(data.favorite);
+    setPriorityState(data.priority);
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
       <Stack.Screen
@@ -70,7 +92,14 @@ const EditNoteProperties = () => {
               <>
                 <StatusBar />
                 <View style={styles.headersLeft}>
-                  <Pressable onPress={() => console.log("Bookmark")}>
+                  <Pressable
+                    onPress={async () => {
+                      setFavoriteState(!favoriteState);
+                      await editJSONData("active-note", {
+                        favorite: !favoriteState,
+                      });
+                    }}
+                  >
                     <FavoritesIcon />
                   </Pressable>
                   <Pressable onPress={showDialog}>

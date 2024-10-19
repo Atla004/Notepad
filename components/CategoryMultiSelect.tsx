@@ -4,6 +4,7 @@ import { MultiSelect } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import AddCategoryDialog from "./AddCategoryDialog";
 import Emoji from "./Emoji";
+import { editJSONData } from "@/services/localstorage";
 
 const data = [
   { label: "Item 1", value: "1", code: 0x1f60a },
@@ -36,12 +37,13 @@ const CategoryMultiSelect = () => {
     );
   };
 
-  const handleChange = (items: string[]) => {
+  const handleChange = async (items: string[]) => {
     if (items.length > 5) {
       Alert.alert("Limit reached", "You can only select up to 5 items.");
       return;
     }
     setSelected(items);
+    await editJSONData("active-sheet", { categories: selected });
   };
 
   return (

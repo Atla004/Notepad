@@ -17,6 +17,7 @@ import { StatusBar } from "expo-status-bar";
 import { useCallback, useContext, useState } from "react";
 import { editNote } from "@/services/notes";
 import {
+  editJSONData,
   fetchData,
   getJSONData,
   removeData,
@@ -42,9 +43,7 @@ const NoteScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
-      console.log("noteData Favorite?", noteData.favorite);
       setFavorite(noteData.favorite);
-      console.log("favorite?", favoriteBool);
       saveLocalNote();
     }, [])
   );
@@ -54,7 +53,16 @@ const NoteScreen = () => {
   };
 
   const saveLocalNote = async () => {
-    await storeJSONData("active-note", noteData);
+    await removeData("active-note");
+    const data = {
+      content: noteData.description,
+      title: noteData.title,
+      categories: noteData.categories,
+      favorite: noteData.favorite,
+      priority: noteData.priority,
+      _id: noteData._id,
+    };
+    await storeJSONData("active-note", data);
     const a = await getJSONData("active-note");
     console.log("localStorage: ", a);
   };
@@ -62,25 +70,28 @@ const NoteScreen = () => {
   const guardarNota = async () => {
     try {
       const username = await fetchData("username");
-      const { title, _id, categories, priority, description } = noteData;
+      const { title, _id, categories, priority, content } = await getJSONData(
+        "active-note"
+      );
       const dataToSave = {
         title,
         _id: _id ?? "",
         favorite: !favoriteBool,
         categories: categories ?? [],
-        content: (description as string) ?? "",
+        content: (content as string) ?? "",
         priority,
       };
 
       setFavorite(!favoriteBool);
-      const data = { ...noteData };
-      data.favorite = !data.favorite;
-      setNoteData(data);
-      await removeData("active-note");
 
+      await editJSONData("active-note", dataToSave);
+
+      // await removeData("active-note");
       //console.log("dataToSave", JSON.stringify(dataToSave, null, 2));
+      const updatedData = await getJSONData("active-note");
+
       editNote(username, dataToSave);
-      console.log("Nota guardada idid");
+      console.log("Nota guardada noteId");
     } catch (error) {
       console.log("Error al guardar la nota", error);
     }

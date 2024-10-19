@@ -6,7 +6,7 @@ import { tags } from "react-native-svg/lib/typescript/xmlTags";
 import Categories from "@/app/(tabs)/Categories";
 import { useContext } from "react";
 import { NoteContext } from "@/app/NoteContext";
-import HTMLView from 'react-native-htmlview'
+import HTMLView from "react-native-htmlview";
 
 const priorities = [
   { name: "", color: "#" },
@@ -14,31 +14,64 @@ const priorities = [
   { name: "Important", color: "#" },
   { name: "Fairly Important", color: "#" },
   { name: "Very Important", color: "#" },
-  { name: "Decoupled", color: "#",},
+  { name: "Decoupled", color: "#" },
 ];
 
+const CardNote = ({
+  title,
+  description,
+  priority,
+  favorite,
+  _id,
+  categories,
+}: CardNoteProps) => {
+  const { noteData, setNoteData } = useContext(NoteContext);
 
-
-const CardNote = ({ title, description, priority, favorite, _id, categories}: CardNoteProps) => {
-  const {noteData, setNoteData} = useContext(NoteContext);
-
-  const waitForContext = async ({ title, description, priority, favorite, _id, categories}: CardNoteProps) => {
+  const waitForContext = async ({
+    title,
+    description,
+    priority,
+    favorite,
+    _id,
+    categories,
+  }: CardNoteProps) => {
     return new Promise((rs, rj) => {
       try {
-        setNoteData({ title, description, priority, favorite, _id, categories});
+        setNoteData({
+          title,
+          description,
+          priority,
+          favorite,
+          _id,
+          categories,
+        });
         rs(true);
-      }
-      catch (error) {
+      } catch (error) {
         rj();
       }
-    })
-  }
+    });
+  };
+
   const goToNote = async () => {
     console.log("Go to Note");
-    await waitForContext({ title, description, priority, favorite, _id, categories})
+    await waitForContext({
+      title,
+      description,
+      priority,
+      favorite,
+      _id,
+      categories,
+    });
     router.push({
       pathname: `/${title}`,
-      params: { title, description, priority, _id, favorite: favorite ? "true" : "false",categories },
+      params: {
+        title,
+        description,
+        priority,
+        _id,
+        favorite: favorite ? "true" : "false",
+        categories,
+      },
     });
   };
   const theme = useTheme();
@@ -52,16 +85,22 @@ const CardNote = ({ title, description, priority, favorite, _id, categories}: Ca
         title={title}
         subtitle={
           <HTMLView
-            value={`${(description ?? "").replace('\n', '').replace('<p>', '').replace('</p>', '').slice(0, 25)}${(description ?? "").length > 25 ? "..." : ""}`}
+            value={`${(description ?? "").slice(0, 25)}${
+              (description ?? "").length > 25 ? "..." : ""
+            }`
+              .replace("\n", " ")
+              .replace("<p>", " ")
+              .replace("</p>", " ")
+              .replace("<br>", " ")}
           />
         }
-        right={(props) => (
+        right={(props) =>
           priority !== 0 ? (
             <Chip style={styles.importanceTag}>
               <Text variant="labelSmall">{priorities[priority].name}</Text>
             </Chip>
           ) : null
-        )}
+        }
       />
     </Card>
   );

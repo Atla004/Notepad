@@ -13,6 +13,7 @@ const defaultNoteData: CardNoteProps = {
   priority: 0,
   favorite: false,
   _id: "",
+  categories: [],
 };
 
 export const NoteContext = createContext<NoteDataContext>({

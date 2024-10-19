@@ -34,6 +34,7 @@ export const createNote = async (username: string, note: Note) => {
 
 export const editNote = async (username: string, note: Note) => {
   try {
+    note.categories = note.categories ? note.categories : [];
     const response = await authorizedWrappedFetch({
       route: `/user/${username}/note/${note?._id}`,
       method: "PUT",
@@ -50,7 +51,7 @@ export const editNote = async (username: string, note: Note) => {
     const json = await response?.json();
     return json.success;
   } catch (error) {
-    console.error(error)
+    console.error(error);
     throw new Error(`Error deleting note: ${(error as Error).message}`);
   }
 };

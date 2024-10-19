@@ -1,5 +1,5 @@
 import { NoteContext } from "@/app/NoteContext";
-import { fetchData } from "@/services/localstorage";
+import { editJSONData, fetchData } from "@/services/localstorage";
 import { editNote } from "@/services/notes";
 import { Note } from "@/types/apiResponses";
 import { useContext, useEffect, useState } from "react";
@@ -58,7 +58,8 @@ const DropdownPriority = () => {
         value={value}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
-        onChange={(item) => {
+        onChange={async (item) => {
+          await editJSONData("active-sheet", { priority: value });
           setValue(item.value);
           setIsFocus(false);
         }}
