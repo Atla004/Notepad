@@ -11,15 +11,25 @@ export interface Note {
     title: string,
     content: string,
     categories: string[],
-    owner?: string,
     priority: number,
     favorite: boolean,
+    owner?: string,
     deleted?: boolean,
 }
 
-export interface Category {
+export interface NoteRequest {
     _id: string,
+    title?: string,
+    content?: string,
+    categories?: string[],
+    priority?: number,
+    favorite?: boolean,
+}
+
+
+export interface Category {
+    _id?: string,
     title: string,
-    owner: ObjectId,
+    owner?: string,
     emoji: string
 }

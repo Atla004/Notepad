@@ -1,29 +1,40 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { FlatList, StyleSheet, StatusBar, View } from "react-native";
 import CardNote from "@/components/CardNote";
 import SearchBar from "@/components/SearchBar";
 import { useTheme } from "react-native-paper";
-
-const data = [
-  {
-    id: 1,
-    title: "Sin ganas de vivir",
-    description: "porque...",
-  },
-  {
-    id: 2,
-    title: "a veces pienso...",
-    description: "es mentira",
-  },
-];
+import { fetchData } from "@/services/localstorage";
+import { Note } from "@/types/apiResponses";
+import { getAllNotes } from "@/services/notes";
+import { useFocusEffect } from "expo-router";
 
 export default function Favorites() {
   const [search, setSearch] = useState("");
+  const [data, setData] = useState<Note[]>([]);
+
+  const getNotes = async (): Promise<Note[]> => {
+    console.log("getNotes(favorites)");
+    const username = await fetchData("username");
+    try {
+      const dataNotes = await getAllNotes(username);
+      if (dataNotes !== undefined) setData(dataNotes);
+      //console.log("dataNotes(favorites): ", JSON.stringify(dataNotes, null, 2));
+    } catch (error) {
+      console.error("error retrieving the notes ", error);
+    }
+    return data;
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getNotes();
+    }, [])
+  );
 
   const filteredData = data.filter(
     (item) =>
-      item.title.toLowerCase().includes(search.toLowerCase()) ||
-      item.description.toLowerCase().includes(search.toLowerCase())
+      item.favorite === true &&
+      item.title.toLowerCase().includes(search.toLowerCase())
   );
   const theme = useTheme();
 
@@ -41,9 +52,18 @@ export default function Favorites() {
       <FlatList
         data={filteredData}
         renderItem={({ item }) => (
-          <CardNote title={item.title} description={item.description} />
+          <CardNote
+            _id={item._id}
+            title={item.title}
+            content={item.content}
+            priority={item.priority}
+            favorite={item.favorite}
+            categories={item.categories}
+          />
         )}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => {
+          return item._id ? item._id.toString() : "UNDEFINED";
+        }}
       />
     </View>
   );

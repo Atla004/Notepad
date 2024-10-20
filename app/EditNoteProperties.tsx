@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -19,9 +19,16 @@ import { Pressable } from "react-native";
 import { FavoritesIcon, TrashIcon } from "@/components/Icon";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import DropdownPriority from "@/components/DropdownPriority"; // Ensure DropdownPriority accepts style prop
-import { Stack } from "expo-router";
+import { router, Stack, useFocusEffect } from "expo-router";
 import { CloseIcon } from "@/components/Icon";
 import { StatusBar } from "expo-status-bar";
+import { deleteNote } from "@/services/notes";
+import {
+  editJSONData,
+  fetchData,
+  getJSONData,
+  removeData,
+} from "@/services/localstorage";
 
 const EditNoteProperties = () => {
   const theme = useTheme();
@@ -29,6 +36,16 @@ const EditNoteProperties = () => {
   const [visible, setVisible] = useState(false);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
+
+
+  const borrarNota = async () => {
+    const username = await fetchData("username");
+    // const noteId = noteData._id ?? "";
+    await removeData("active-note");
+    // deleteNote(username, noteId);
+    router.push("/Home");
+    hideDialog();
+  };
 
   const data = [
     { id: 1, title: " 1" },
@@ -41,9 +58,24 @@ const EditNoteProperties = () => {
     { id: 8, title: "Category 8" },
     { id: 9, title: "Category 9" },
     { id: 10, title: "Category 10" },
-
-    // Agrega más elementos según sea necesario
   ];
+
+  const [favoriteState, setFavoriteState] = useState(false);
+  const [priorityState, setPriorityState] = useState(0);
+  const [titleState, setTitleState] = useState("");
+
+  useFocusEffect(
+    useCallback(() => {
+      //saveNote();
+    }, [])
+  );
+
+  const saveNote = async () => {
+    const data = await getJSONData("active-note");
+    console.log("data", data);
+    setFavoriteState(data.favorite);
+    setPriorityState(data.priority);
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
@@ -59,7 +91,14 @@ const EditNoteProperties = () => {
               <>
                 <StatusBar />
                 <View style={styles.headersLeft}>
-                  <Pressable onPress={() => console.log("Bookmark")}>
+                  <Pressable
+                    onPress={async () => {
+                      setFavoriteState(!favoriteState);
+                      await editJSONData("active-note", {
+                        favorite: !favoriteState,
+                      });
+                    }}
+                  >
                     <FavoritesIcon />
                   </Pressable>
                   <Pressable onPress={showDialog}>
@@ -82,8 +121,12 @@ const EditNoteProperties = () => {
                         Cancel
                       </Button>
                       <Button
-                        onPress={() => console.log("Nota borrada")}
-                        style={[styles.dialogButton, styles.deleteButton]}
+                        onPress={() => borrarNota()}
+                        style={[
+                          styles.dialogButton,
+                          styles.deleteButton,
+                          { backgroundColor: theme.colors.primary },
+                        ]}
                       >
                         <Text style={{ color: "white" }}>Delete</Text>
                       </Button>
@@ -109,6 +152,9 @@ const EditNoteProperties = () => {
         value={noteName}
         mode="outlined"
         onChangeText={(text) => setNoteName(text)}
+        theme={{
+          roundness: 8,
+        }}
       />
       <Divider
         bold
@@ -165,11 +211,6 @@ const EditNoteProperties = () => {
         Priority
       </Text>
       <DropdownPriority />
-
-      <Button mode="contained" style={styles.saveButton}>
-        {" "}
-        Save{" "}
-      </Button>
     </View>
   );
 };
@@ -188,6 +229,7 @@ const styles = StyleSheet.create({
     maxWidth: 320,
     width: "100%",
     alignSelf: "center",
+    borderRadius: 40,
   },
   card: {
     width: 250,
@@ -239,7 +281,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   deleteButton: {
-    backgroundColor: "red",
     borderRadius: 8,
   },
   headersLeft: {

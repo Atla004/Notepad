@@ -51,7 +51,7 @@ const CategoryNotes = () => {
       <FlatList
         data={filteredData}
         renderItem={({ item }) => (
-          <CardNote title={item.title} description={item.description} />
+          <CardNote title={item.title} content={item.description} />
         )}
         keyExtractor={(item) => item.id.toString()}
       />

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FlatList, StyleSheet, StatusBar, View, Pressable } from "react-native";
 import { Searchbar, useTheme } from "react-native-paper";
 import FABNewNote from "@/components/FABNewNote";
@@ -6,27 +6,42 @@ import CardNote from "@/components/CardNote";
 import SearchBar from "@/components/SearchBar";
 import { getAllNotes } from "@/services/notes";
 import { fetchData } from "@/services/localstorage";
-import {Note } from "@/types/apiResponses";
-
-
-
+import { Note } from "@/types/apiResponses";
+import { router, useFocusEffect, useNavigation } from "expo-router";
 
 export default function Home() {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState<string>("");
   const [data, setData] = useState<Note[]>([]);
+  const navigator = useNavigation();
 
-  const getData = async () => {
+  useFocusEffect(
+    useCallback(() => {
+      
+      getNotes();
+      
+      return () => {};
+    }, [])
+  );
+
+  const getNotes = async (): Promise<Note[]> => {
+    console.log("getNotes");
     const username = await fetchData("username");
-    const data: Note[] = await getAllNotes(username);
-    setData(data);
+    try {
+      const dataNotes = await getAllNotes(username);
+      if (dataNotes !== undefined) setData(dataNotes);
+      //console.log("dataNotes: ", JSON.stringify(dataNotes, null, 2));
+    } catch (error) {
+      console.error("error retrieving the notes ", error);
+    }
     return data;
-  }
+  };
 
+  const handleNewNote = (): void => {
+    getNotes();
+  };
 
-  const filteredData = data.filter(
-    (item) =>
-      item.title.toLowerCase().includes(search.toLowerCase()) ||
-      item.content.toLowerCase().includes(search.toLowerCase())
+  const filteredData = data.filter((item) =>
+    item.title.toLowerCase().includes(search.toLowerCase())
   );
   const theme = useTheme();
 
@@ -44,12 +59,21 @@ export default function Home() {
       <FlatList
         data={filteredData}
         renderItem={({ item }) => (
-          <CardNote title={item.title} description={item.content} />
+          <CardNote
+            _id={item._id}
+            title={item.title}
+            content={item.content}
+            priority={item.priority}
+            favorite={item.favorite}
+            categories={item.categories}
+          />
         )}
-        keyExtractor={(item) => item._id.toString()}
+        keyExtractor={(item) => {
+          return item._id ? item._id.toString() : "UNDEFINED";
+        }}
       />
 
-      <FABNewNote />
+      <FABNewNote onNewNote={handleNewNote} />
     </View>
   );
 }

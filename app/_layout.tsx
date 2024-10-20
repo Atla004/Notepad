@@ -6,7 +6,7 @@ import { StatusBar } from "expo-status-bar";
 export default function Layout() {
   return (
     <Container>
-      <Stack screenOptions={{ headerShown: false }} />
+        <Stack screenOptions={{ headerShown: false }} />
     </Container>
   );
 }

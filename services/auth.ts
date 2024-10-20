@@ -16,9 +16,7 @@ export const autologin = async () => {
       Number(process.env.EXPO_PUBLIC_JWTOKEN_EXPIRATION_DAYS as string) * 24
     );
     return token;
-  } catch {
-    throw new Error("Please login");
-  }
+  } catch (e) {}
 };
 
 export const login = async (
@@ -34,15 +32,14 @@ export const login = async (
       method: "POST",
       body: userData,
     });
+    console.log("user");
     if (response.status !== 200) {
       const errors = await response.json();
-      console.error(errors.error);
       throw new FetchError(errors.error);
     }
 
     const json = await response.json();
     const { user, token } = json.data;
-
     if (save) {
       await storeExpiringData(
         "jwtoken",
@@ -97,7 +94,7 @@ export const getPasswordToken = async (email: string) => {
 
     return "Token sent to user email!";
   } catch (error) {
-    console.error(error);
+    console.error("error getPasswordToken", error);
   }
 };
 
@@ -142,7 +139,7 @@ export const changePassword = async (newPasswordData: {
 
 export const logout = async () => {
   try {
-    await removeData("jwt");
+    await removeData("jwtoken");
     await removeData("username");
   } catch (error) {
     // TODO: figure what to do here

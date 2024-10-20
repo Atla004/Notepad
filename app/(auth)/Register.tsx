@@ -65,10 +65,8 @@ export default function Register() {
       }
 
       const response = await register({ email, username: user, password });
-      console.log("dsdsdddd", response);
 
       if (response == "registered") {
-        console.log("Registrado con éxito");
         Toast.show("Registrado con éxito", Toast.LONG);
         router.push("/Login");
         return;
@@ -89,8 +87,6 @@ export default function Register() {
         }
       }
     } catch (error) {
-      console.error("dsdsd", error);
-      console.log("dsdsdddd", errors);
       setErrors({
         email: "",
         user: "hola",

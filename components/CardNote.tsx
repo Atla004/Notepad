@@ -2,14 +2,37 @@ import { Card, Chip, Text, useTheme } from "react-native-paper";
 import { CardNoteProps } from "@/types/types";
 import { router } from "expo-router";
 import { StyleSheet } from "react-native";
-import { tags } from "react-native-svg/lib/typescript/xmlTags";
+import HTMLView from "react-native-htmlview";
 
-const CardNote = ({ title, description }: CardNoteProps) => {
-  const goToNote = () => {
-    console.log("Go to Note");
+const priorities = [
+  { name: "", color: "#" },
+  { name: "Slightly important", color: "#" },
+  { name: "Important", color: "#" },
+  { name: "Fairly Important", color: "#" },
+  { name: "Very Important", color: "#" },
+  { name: "Decoupled", color: "#" },
+];
+
+const CardNote = ({
+  title,
+  content,
+  priority,
+  favorite,
+  _id,
+  categories,
+}: CardNoteProps) => {
+  const goToNote = async () => {
+    console.log("Go to Note with id: ", _id);
     router.push({
       pathname: `/${title}`,
-      params: { title, description },
+      params: {
+        title,
+        content,
+        priority,
+        _id,
+        favorite: favorite ? "true" : "false",
+        categories,
+      },
     });
   };
   const theme = useTheme();
@@ -21,12 +44,24 @@ const CardNote = ({ title, description }: CardNoteProps) => {
     >
       <Card.Title
         title={title}
-        subtitle={description}
-        right={(props) => (
-          <Chip style={styles.importanceTag}>
-            <Text variant="labelSmall">ONEPIZZA</Text>
-          </Chip>
-        )}
+        subtitle={
+          <HTMLView
+            value={`${(content ?? "").slice(0, 25)}${
+              (content ?? "").length > 25 ? "..." : ""
+            }`
+              .replace("\n", " ")
+              .replace("<p>", " ")
+              .replace("</p>", " ")
+              .replace("<br>", " ")}
+          />
+        }
+        right={(props) =>
+          priority !== 0 ? (
+            <Chip style={styles.importanceTag}>
+              <Text variant="labelSmall">{priorities[priority].name}</Text>
+            </Chip>
+          ) : null
+        }
       />
     </Card>
   );
