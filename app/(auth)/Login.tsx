@@ -1,6 +1,6 @@
 import { Link, router, useFocusEffect } from "expo-router";
 import { StyleSheet, View, Alert } from "react-native";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Card, Text, useTheme, Button, TextInput } from "react-native-paper";
 import { RadioButton } from "react-native-paper";
 import Background from "@/components/Background";
@@ -18,14 +18,13 @@ export default function Login() {
     setChecked(!isChecked);
   };
 
-  const goToLogin = async() => {
-    const logger= await autologin()
-    if(logger){
-      router.push("/Home") 
+  const goToLogin = async () => {
+    console.log("goToLogin");
+    const logger = await autologin();
+    if (logger) {
+      router.push("/Home");
     }
-
   };
-  goToLogin();
 
   const handleLoginClick = async () => {
     try {
@@ -59,7 +58,6 @@ export default function Login() {
       }
     } catch (error) {
       setPasswordError((error as Error).message);
-      console.error(error);
     }
   };
 
@@ -88,10 +86,14 @@ export default function Login() {
 
   useFocusEffect(
     useCallback(() => {
+      goToLogin();
+
       return () => {
+        console.log("unmounting");
         setPassword("");
         setUserError("");
         setPasswordError("");
+  
       };
     }, [])
   );

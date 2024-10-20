@@ -27,30 +27,6 @@ const CardNote = ({
 }: CardNoteProps) => {
   const { noteData, setNoteData } = useContext(NoteContext);
 
-  const waitForContext = async ({
-    title,
-    description,
-    priority,
-    favorite,
-    _id,
-    categories,
-  }: CardNoteProps) => {
-    return new Promise((rs, rj) => {
-      try {
-        setNoteData({
-          title,
-          description,
-          priority,
-          favorite,
-          _id,
-          categories,
-        });
-        rs(true);
-      } catch (error) {
-        rj();
-      }
-    });
-  };
 
   const goToNote = async () => {
     console.log("Go to Note");
