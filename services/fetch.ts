@@ -14,6 +14,7 @@ export const wrappedFetch = async (params: FetchParams) => {
     "Content-Type": "application/json",
     ...headers,
   };
+  console.log("fetch: ", JSON.stringify(request, null, 2));
 
   return await fetch(url, { ...request });
 };
@@ -30,8 +31,7 @@ export const authorizedWrappedFetch = async (params: FetchParams) => {
       },
     };
 
-    if (params.body)  newParams.body = params.body;
-    console.log(JSON.stringify(newParams, null, 2))
+    if (params.body) newParams.body = params.body;
     return await wrappedFetch(newParams);
   } catch (error) {
     console.error("authorizedWrappedFetch error", (error as Error).message);

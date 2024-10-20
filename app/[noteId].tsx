@@ -69,6 +69,7 @@ const NoteScreen = () => {
 
   const guardarNota = async () => {
     try {
+      console.log("Guardando note id");
       const username = await fetchData("username");
       const { title, _id, categories, priority, content } = await getJSONData(
         "active-note"

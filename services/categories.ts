@@ -1,4 +1,6 @@
 import { Category } from "@/types/apiResponses";
+import { authorizedWrappedFetch } from "./fetch";
+import { FetchError } from "./utils";
 
 export const createCategory = async (username: string, category: Category) => {
   try {
@@ -10,7 +12,6 @@ export const createCategory = async (username: string, category: Category) => {
 
     if (response?.status !== 200) {
       const errors = await response?.json();
-      console.error(errors.error);
       console.log("Response0.1: ");
       throw new FetchError(errors.error);
     }
@@ -30,7 +31,6 @@ export const deleteCategory = async (username: string, _id: string) => {
 
     if (response?.status !== 200) {
       const errors = await response?.json();
-      console.error(errors.error);
       console.log("Response0.1: ");
       throw new FetchError(errors.error);
     }
@@ -50,7 +50,6 @@ export const getAllCategories = async (username: string) => {
 
     if (response?.status !== 200) {
       const errors = await response?.json();
-      console.error(errors.error);
       console.log("Response0.1: ");
       throw new FetchError(errors.error);
     }

@@ -16,9 +16,7 @@ export const autologin = async () => {
       Number(process.env.EXPO_PUBLIC_JWTOKEN_EXPIRATION_DAYS as string) * 24
     );
     return token;
-  } catch (e) {
-    
-  }
+  } catch (e) {}
 };
 
 export const login = async (
@@ -37,7 +35,6 @@ export const login = async (
     console.log("user");
     if (response.status !== 200) {
       const errors = await response.json();
-      console.error(errors.error);
       throw new FetchError(errors.error);
     }
 
@@ -53,7 +50,6 @@ export const login = async (
     }
     return user;
   } catch (error) {
-    console.error("erorr en funcion");
     throw new Error(`Login failed: ${(error as Error).message}`);
   }
 };
@@ -98,7 +94,7 @@ export const getPasswordToken = async (email: string) => {
 
     return "Token sent to user email!";
   } catch (error) {
-    console.error(error);
+    console.error("error getPasswordToken", error);
   }
 };
 

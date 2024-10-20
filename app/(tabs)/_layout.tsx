@@ -4,11 +4,9 @@ import Categories from "./Categories";
 import Favorites from "./Favorites";
 import Home from "./Home";
 import {
-  SafeAreaProvider,
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
 
 const TCategories = () => <Categories />;
 
@@ -59,7 +57,6 @@ const Tabs = () => {
 
 export default function App() {
   const insets = useSafeAreaInsets();
-  const thme = useTheme();
   return (
     <>
       <SafeAreaView style={{ flex: 1, paddingBottom: insets.bottom }}>

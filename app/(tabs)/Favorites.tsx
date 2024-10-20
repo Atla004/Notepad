@@ -12,27 +12,24 @@ export default function Favorites() {
   const [search, setSearch] = useState("");
   const [data, setData] = useState<Note[]>([]);
 
-  const getData = async () => {
+  const getNotes = async ():Promise<Note[]> => {
+    console.log("getData(favorites)");
     const username = await fetchData("username");
     try {
       const dataNotes = await getAllNotes(username);
       if (dataNotes !== undefined) setData(dataNotes);
-      console.log(JSON.stringify(data, null, 2));
+      console.log("dataNotes(favorites): ", JSON.stringify(dataNotes, null, 2));
     } catch (error) {
-      console.log("error al agarrarmela ", error);
+      console.error("error retrieving the notes ", error);
     }
     return data;
   };
 
   useFocusEffect(
     useCallback(() => {
-      getData();
+      getNotes();
     }, [])
   );
-
-  const handleNewNote = () => {
-    getData(); // Actualiza los datos después de crear una nueva nota
-  };
 
   const filteredData = data.filter(
     (item) =>

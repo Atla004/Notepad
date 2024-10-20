@@ -68,12 +68,13 @@ const EditNoteProperties = () => {
 
   useFocusEffect(
     useCallback(() => {
-      saveNote();
+      //saveNote();
     }, [])
   );
 
   const saveNote = async () => {
     const data = await getJSONData("active-note");
+    console.log("data", data);
     setFavoriteState(data.favorite);
     setPriorityState(data.priority);
   };

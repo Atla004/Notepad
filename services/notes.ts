@@ -11,23 +11,18 @@ export const createNote = async (username: string, note: Note) => {
         ...note,
       },
     });
-    console.log("Response0: ");
 
     if (response?.status !== 200) {
       const errors = await response?.json();
       console.error(errors.error);
-      console.log("Response0.1: ");
       throw new FetchError(errors.error);
     }
 
-    console.log("Response0.2: ");
-    console.log("Response: ", response);
     const json = await response?.json();
     console.log("JSON:", json);
-    console.log("Response0.4: ");
     return json.success;
   } catch (error) {
-    console.log("Response1:");
+    console.error("(createNote)error creating the note", error);
     throw new Error(`Error creating note: ${(error as Error).message}`);
   }
 };
@@ -51,7 +46,7 @@ export const editNote = async (username: string, note: Note) => {
     const json = await response?.json();
     return json.success;
   } catch (error) {
-    console.error(error);
+    console.error("(editNote)error editing the note", error);
     throw new Error(`Error deleting note: ${(error as Error).message}`);
   }
 };
@@ -71,6 +66,7 @@ export const deleteNote = async (username: string, title: string) => {
     const json = await response.json();
     return json.success;
   } catch (error) {
+    console.error("(deleteNote)error deleting the note", error);
     throw new Error(`Error deleting note: ${(error as Error).message}`);
   }
 };
@@ -90,6 +86,7 @@ export const getAllNotes = async (username: string) => {
     const json = await response.json();
     return json.notes;
   } catch (error) {
+    console.error("(getAllNotes)error getting the notes", error);
     throw new Error(`Error getting notes: ${(error as Error).message}`);
   }
 };

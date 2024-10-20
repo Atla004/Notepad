@@ -7,36 +7,37 @@ import SearchBar from "@/components/SearchBar";
 import { getAllNotes } from "@/services/notes";
 import { fetchData } from "@/services/localstorage";
 import { Note } from "@/types/apiResponses";
-import { useFocusEffect, useNavigation } from "expo-router";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { router, useFocusEffect, useNavigation } from "expo-router";
 
 export default function Home() {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState<string>("");
   const [data, setData] = useState<Note[]>([]);
   const navigator = useNavigation();
 
-  const getData = async () => {
+  useFocusEffect(
+    useCallback(() => {
+      getNotes();
+      return () => {};
+    }, [])
+  );
+
+  const getNotes = async ():Promise<Note[]> => {
     console.log("getData");
     const username = await fetchData("username");
     try {
       const dataNotes = await getAllNotes(username);
       if (dataNotes !== undefined) setData(dataNotes);
-      console.log(JSON.stringify(data, null, 2));
+      console.log("dataNotes: ", JSON.stringify(dataNotes, null, 2));
     } catch (error) {
-      console.log("error al agarrarmela ", error);
+      console.error("error retrieving the notes ", error);
     }
     return data;
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      
-      getData();
-    }, [])
-  );
 
-  const handleNewNote = () => {
-    getData(); // Actualiza los datos después de crear una nueva nota
+
+  const handleNewNote = (): void => {
+    getNotes();
   };
 
   const filteredData = data.filter((item) =>
