@@ -14,7 +14,7 @@ import {
 } from "@/components/Icon";
 import { useTheme } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { editNote } from "@/services/notes";
 import {
   editJSONData,
@@ -23,7 +23,7 @@ import {
   removeData,
   storeJSONData,
 } from "@/services/localstorage";
-import { Note } from "@/types/apiResponses";
+import { Note, NoteRequest } from "@/types/apiResponses";
 
 const NoteScreen = () => {
   const theme = useTheme();
@@ -37,7 +37,7 @@ const NoteScreen = () => {
   const favorite = data.favorite === "true" ? true : false;
   const categories = [...data.categories];
 
-  const [favoriteBool, setFavorite] = useState<boolean>(favorite);
+  const [favoriteBool, setFavoriteBool] = useState<boolean>(favorite);
 
   useFocusEffect(
     useCallback(() => {
@@ -45,6 +45,12 @@ const NoteScreen = () => {
       console.log("content  id",content);
     }, [])
   );
+
+  useEffect(() => {
+    saveFavorite();
+    return () => {
+    };
+  }, [favoriteBool]);
 
   const saveLocalNote = async () => {
     try {
@@ -59,6 +65,7 @@ const NoteScreen = () => {
         priority,
         _id,
       };
+      
       await storeJSONData("active-note", data);
       const a = await getJSONData("active-note");
       console.log("localStorage: ", a);
@@ -67,32 +74,30 @@ const NoteScreen = () => {
     }
   };
 
+  const changeFavorite = async () => {
+    try {
+      setFavoriteBool(!favoriteBool);
+    } catch (error) {
+      console.log("Error al cambiar el estado de favorito", error);
+    }
+  } 
+
   const saveFavorite = async () => {
     try {
-      console.log("saveFavorite method");
       const username = await fetchData("username");
-      const { title, _id, categories, priority, content } = await getJSONData(
+      const {_id} = await getJSONData(
         "active-note"
       );
-      const dataToSave: Note = {
-        title,
-        _id,
-        favorite: !favoriteBool,
-        categories,
-        content,
-        priority,
-      };
 
-      setFavorite(!favoriteBool);
+      const dataToSave: NoteRequest = {
+        _id,
+        favorite: favoriteBool,
+      };
 
       await editJSONData("active-note", dataToSave);
 
-      // await removeData("active-note");
-      //console.log("dataToSave", JSON.stringify(dataToSave, null, 2));
-      const updatedData = await getJSONData("active-note");
-
-      editNote(username, dataToSave);
-      console.log("saveFavorite method Finished");
+      await editNote(username, dataToSave);
+      console.log("saveFavorite method Finished?",favoriteBool);
     } catch (error) {
       console.log("Error al guardar la nota", error);
     }
@@ -112,7 +117,8 @@ const NoteScreen = () => {
               <View style={styles.headersLeft}>
                 <Pressable
                   onPress={async () => {
-                    await saveFavorite();
+                    await changeFavorite();
+
                   }}
                 >
                   {favoriteBool ? <FilledFavoritesIcon /> : <FavoritesIcon />}

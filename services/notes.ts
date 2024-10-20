@@ -1,6 +1,7 @@
-import { Note } from "@/types/apiResponses";
+import { NoteRequest,Note } from "@/types/apiResponses";
 import { authorizedWrappedFetch } from "./fetch";
 import { FetchError } from "./utils";
+
 
 export const createNote = async (username: string, note: Note) => {
   try {
@@ -27,7 +28,7 @@ export const createNote = async (username: string, note: Note) => {
   }
 };
 
-export const editNote = async (username: string, note: Note) => {
+export const editNote = async (username: string, note: NoteRequest) => {
   try {
     note.categories = note.categories ? note.categories : [];
     const response = await authorizedWrappedFetch({
@@ -50,7 +51,7 @@ export const editNote = async (username: string, note: Note) => {
   }
 };
 
-export const deleteNote = async (username: string, title: string) => {
+export const deleteNote = async (username: string, title: NoteRequest) => {
   try {
     const response = await authorizedWrappedFetch({
       route: `/user/${username}/note/${title}`,
