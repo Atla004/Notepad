@@ -29,7 +29,6 @@ import {
   getJSONData,
   removeData,
 } from "@/services/localstorage";
-import { NoteContext } from "./NoteContext";
 
 const EditNoteProperties = () => {
   const theme = useTheme();
@@ -38,13 +37,12 @@ const EditNoteProperties = () => {
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
-  const { noteData, setNoteData } = useContext(NoteContext);
 
   const borrarNota = async () => {
     const username = await fetchData("username");
-    const noteId = noteData._id ?? "";
+    // const noteId = noteData._id ?? "";
     await removeData("active-note");
-    deleteNote(username, noteId);
+    // deleteNote(username, noteId);
     router.push("/Home");
     hideDialog();
   };

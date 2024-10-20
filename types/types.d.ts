@@ -1,8 +1,8 @@
 export interface CardNoteProps {
-  _id?: string;
+  _id: string;
   title: string;
-  description?: string;
+  content: string;
   priority: number;
   favorite: boolean;
-  categories?: string[];
+  categories: string[];
 }

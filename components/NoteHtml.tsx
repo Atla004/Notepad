@@ -2,24 +2,19 @@ import { RichText, Toolbar, useEditorBridge } from "@10play/tentap-editor";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Alert, KeyboardAvoidingView, StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
-import { NoteContext } from "@/app/NoteContext";
 import { editJSONData, fetchData, getJSONData } from "@/services/localstorage";
 import { editNote } from "@/services/notes";
 import { Text } from "react-native-paper";
 
-export const NoteHtml = () => {
-  const { noteData, setNoteData } = useContext(NoteContext);
-  const [editorContent, setEditorContent] = useState<string>(
-    noteData.description ?? ""
-  );
-  const [remainingChars, setRemainingChars] = useState<number>(
-    100 - (noteData.description?.length ?? 0)
-  );
-  const navigation = useNavigation();
+interface NoteHtmlProps {
+  content: string;
+}
 
-  const cambiostate = (content: string) => {
+export const NoteHtml = ({content}:NoteHtmlProps ) => {
+  const [editorContent, setEditorContent] = useState<string>("");
+  const [remainingChars, setRemainingChars] = useState<number>( );
+
+  const setContent = (content: string) => {
     setEditorContent(content);
   };
 
@@ -29,7 +24,7 @@ export const NoteHtml = () => {
       const text = await editor.getText();
       if (text.length <= 250) {
         setEditorContent(content);
-        cambiostate(content);
+        setContent(content);
         console.log("content", content);
         console.log("content.length", content.length);
         setRemainingChars(250 - text.length);
@@ -49,39 +44,34 @@ export const NoteHtml = () => {
   const editor = useEditorBridge({
     autofocus: true,
     avoidIosKeyboard: true,
-    initialContent: noteData.description,
+    initialContent: editorContent,
     onChange: handleEditorChange,
+    
   });
 
   useFocusEffect(
     useCallback(() => {
-      const unsubscribe = navigation.addListener("beforeRemove", async (e) => {
-        console.log("lo que se va a guardar", editorContent);
-        await guardarNota();
-      });
+      setContent();
 
-      return unsubscribe;
-    }, [navigation, editorContent])
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      cambiostate((noteData.description as string) ?? "");
+      return async() => {
+        await saveNoteContent();
+      }
     }, [])
   );
 
-  const guardarNota = async () => {
+
+  const saveNoteContent = async () => {
     try {
+      console.log("saveNoteContent method");
       const username = await fetchData("username");
-      console.log("NOteHTML", JSON.stringify(noteData, null, 2));
       await editJSONData("active-note", { content: editorContent });
       const dataToSave = await getJSONData("active-note");
-      console.log("dataToSave", editorContent);
+
       console.log("dataToSave", dataToSave);
 
-      editNote(username, dataToSave);
+      await editNote(username, dataToSave);
 
-      console.log("Nota guardada");
+      console.log("saveNoteContent method Finished");
     } catch (error) {
       console.log("Error al guardar la nota", error);
     }

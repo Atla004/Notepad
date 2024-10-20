@@ -12,13 +12,13 @@ export default function Favorites() {
   const [search, setSearch] = useState("");
   const [data, setData] = useState<Note[]>([]);
 
-  const getNotes = async ():Promise<Note[]> => {
-    console.log("getData(favorites)");
+  const getNotes = async (): Promise<Note[]> => {
+    console.log("getNotes(favorites)");
     const username = await fetchData("username");
     try {
       const dataNotes = await getAllNotes(username);
       if (dataNotes !== undefined) setData(dataNotes);
-      console.log("dataNotes(favorites): ", JSON.stringify(dataNotes, null, 2));
+      //console.log("dataNotes(favorites): ", JSON.stringify(dataNotes, null, 2));
     } catch (error) {
       console.error("error retrieving the notes ", error);
     }
@@ -55,9 +55,10 @@ export default function Favorites() {
           <CardNote
             _id={item._id}
             title={item.title}
-            description={item.content}
+            content={item.content}
             priority={item.priority}
             favorite={item.favorite}
+            categories={item.categories}
           />
         )}
         keyExtractor={(item) => {

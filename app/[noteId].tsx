@@ -23,63 +23,62 @@ import {
   removeData,
   storeJSONData,
 } from "@/services/localstorage";
-import { NoteContext } from "./NoteContext";
+import { Note } from "@/types/apiResponses";
 
 const NoteScreen = () => {
-  const {
-    noteId: title,
-    description,
-    priority,
-    _id,
-    favorite,
-    categories,
-  } = useLocalSearchParams();
-
   const theme = useTheme();
-  const [textContent, setTextContent] = useState("");
 
-  const { noteData, setNoteData } = useContext(NoteContext);
-  const [favoriteBool, setFavorite] = useState(false);
+  const data = useLocalSearchParams();
+
+  const title = data.title.toString();
+  const content = data.content.toString();
+  const priority = Number(data.priority);
+  const _id = data._id.toString();
+  const favorite = data.favorite === "true" ? true : false;
+  const categories = [...data.categories];
+
+  const [favoriteBool, setFavorite] = useState<boolean>(favorite);
 
   useFocusEffect(
     useCallback(() => {
-      setFavorite(noteData.favorite);
       saveLocalNote();
     }, [])
   );
 
-  const getFavorite = async () => {
-    return favoriteBool;
-  };
-
   const saveLocalNote = async () => {
-    await removeData("active-note");
-    const data = {
-      content: noteData.description,
-      title: noteData.title,
-      categories: noteData.categories,
-      favorite: noteData.favorite,
-      priority: noteData.priority,
-      _id: noteData._id,
-    };
-    await storeJSONData("active-note", data);
-    const a = await getJSONData("active-note");
-    console.log("localStorage: ", a);
+    try {
+      console.log("saveLocalNote method");
+      await removeData("active-note");
+
+      const data: Note = {
+        content,
+        title,
+        categories,
+        favorite,
+        priority,
+        _id,
+      };
+      await storeJSONData("active-note", data);
+      const a = await getJSONData("active-note");
+      console.log("localStorage: ", a);
+    } catch (error) {
+      console.log("Error al guardar la nota localmente", error);
+    }
   };
 
-  const guardarNota = async () => {
+  const saveFavorite = async () => {
     try {
-      console.log("Guardando note id");
+      console.log("saveFavorite method");
       const username = await fetchData("username");
       const { title, _id, categories, priority, content } = await getJSONData(
         "active-note"
       );
-      const dataToSave = {
+      const dataToSave: Note = {
         title,
-        _id: _id ?? "",
+        _id,
         favorite: !favoriteBool,
-        categories: categories ?? [],
-        content: (content as string) ?? "",
+        categories,
+        content,
         priority,
       };
 
@@ -92,7 +91,7 @@ const NoteScreen = () => {
       const updatedData = await getJSONData("active-note");
 
       editNote(username, dataToSave);
-      console.log("Nota guardada noteId");
+      console.log("saveFavorite method Finished");
     } catch (error) {
       console.log("Error al guardar la nota", error);
     }
@@ -105,14 +104,14 @@ const NoteScreen = () => {
           title: `${title}`,
           headerShown: true,
           headerStyle: {
-            backgroundColor: theme.colors.primaryContainer, // Cambia este valor al color que desees
+            backgroundColor: theme.colors.primaryContainer,
           },
           headerRight: () => {
             return (
               <View style={styles.headersLeft}>
                 <Pressable
                   onPress={async () => {
-                    await guardarNota();
+                    await saveFavorite();
                   }}
                 >
                   {favoriteBool ? <FilledFavoritesIcon /> : <FavoritesIcon />}
@@ -133,7 +132,7 @@ const NoteScreen = () => {
       <StatusBar />
 
       <View style={[styles.noteContainer]}>
-        <NoteHtml />
+        <NoteHtml content={content} />
       </View>
     </View>
   );

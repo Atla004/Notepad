@@ -16,25 +16,25 @@ export default function Home() {
 
   useFocusEffect(
     useCallback(() => {
+      
       getNotes();
+      
       return () => {};
     }, [])
   );
 
-  const getNotes = async ():Promise<Note[]> => {
-    console.log("getData");
+  const getNotes = async (): Promise<Note[]> => {
+    console.log("getNotes");
     const username = await fetchData("username");
     try {
       const dataNotes = await getAllNotes(username);
       if (dataNotes !== undefined) setData(dataNotes);
-      console.log("dataNotes: ", JSON.stringify(dataNotes, null, 2));
+      //console.log("dataNotes: ", JSON.stringify(dataNotes, null, 2));
     } catch (error) {
       console.error("error retrieving the notes ", error);
     }
     return data;
   };
-
-
 
   const handleNewNote = (): void => {
     getNotes();
@@ -62,9 +62,10 @@ export default function Home() {
           <CardNote
             _id={item._id}
             title={item.title}
-            description={item.content}
+            content={item.content}
             priority={item.priority}
             favorite={item.favorite}
+            categories={item.categories}
           />
         )}
         keyExtractor={(item) => {

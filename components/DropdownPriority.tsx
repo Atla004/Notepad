@@ -1,4 +1,4 @@
-import { NoteContext } from "@/app/NoteContext";
+
 import { editJSONData, fetchData } from "@/services/localstorage";
 import { editNote } from "@/services/notes";
 import { Note } from "@/types/apiResponses";
@@ -19,7 +19,7 @@ const DropdownPriority = () => {
   const [value, setValue] = useState<string | null>(null);
   const [isFocus, setIsFocus] = useState(false);
 
-  const { noteData, setNoteData } = useContext(NoteContext);
+  //const { noteData, setNoteData } = useContext(NoteContext);
 
   useEffect(() => {
     console.log("Priority", value);
@@ -28,18 +28,18 @@ const DropdownPriority = () => {
 
   const guardarPrioridad = async () => {
     console.log("Priority", value);
-    setNoteData({ ...noteData, priority: Number(value) });
+    //setNoteData({ ...noteData, priority: Number(value) });
 
     const dataToSave = {
-      ...(noteData as Note),
+  //    ...(noteData as Note),
       priority: Number(value),
     };
 
     console.log("DataToSave dropdown", dataToSave);
     const username = await fetchData("username");
-    await editNote(username, dataToSave);
+    //await editNote(username, dataToSave);
     console.log("Priority", value);
-    console.log("NoteData", noteData);
+    //console.log("NoteData", noteData);
   };
 
   return (

@@ -15,20 +15,19 @@ const priorities = [
 
 const CardNote = ({
   title,
-  description,
+  content,
   priority,
   favorite,
   _id,
   categories,
 }: CardNoteProps) => {
   const goToNote = async () => {
-    console.log("Go to Note");
-
+    console.log("Go to Note with id: ", _id);
     router.push({
       pathname: `/${title}`,
       params: {
         title,
-        description,
+        content,
         priority,
         _id,
         favorite: favorite ? "true" : "false",
@@ -47,8 +46,8 @@ const CardNote = ({
         title={title}
         subtitle={
           <HTMLView
-            value={`${(description ?? "").slice(0, 25)}${
-              (description ?? "").length > 25 ? "..." : ""
+            value={`${(content ?? "").slice(0, 25)}${
+              (content ?? "").length > 25 ? "..." : ""
             }`
               .replace("\n", " ")
               .replace("<p>", " ")

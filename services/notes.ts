@@ -31,20 +31,19 @@ export const editNote = async (username: string, note: Note) => {
   try {
     note.categories = note.categories ? note.categories : [];
     const response = await authorizedWrappedFetch({
-      route: `/user/${username}/note/${note?._id}`,
+      route: `/user/${username}/note/${note._id}`,
       method: "PUT",
       body: {
         ...note,
       },
     });
-    if (response?.status !== 200) {
-      const errors = await response?.json();
-      console.error(errors.error);
-      throw new FetchError(errors.error);
+    const message = await response.json();
+    if (response.status !== 200) {
+      console.error(message.error);
+      throw new FetchError(message.error);
     }
 
-    const json = await response?.json();
-    return json.success;
+    return message.success;
   } catch (error) {
     console.error("(editNote)error editing the note", error);
     throw new Error(`Error deleting note: ${(error as Error).message}`);
