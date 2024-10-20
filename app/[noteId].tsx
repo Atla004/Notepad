@@ -14,8 +14,8 @@ import {
 } from "@/components/Icon";
 import { useTheme } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
-import { useCallback, useContext, useEffect, useState } from "react";
-import { editNote } from "@/services/notes";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { editNote, getNote } from "@/services/notes";
 import {
   editJSONData,
   fetchData,
@@ -29,79 +29,54 @@ const NoteScreen = () => {
   const theme = useTheme();
 
   const data = useLocalSearchParams();
+  const isFirstRender = useRef<boolean>(true);
+  const [favoriteBool, setFavoriteBool] = useState<boolean>();
+  const [content, setContent] = useState<string>("");
 
-  const title = data.title.toString();
-  const content = data.content.toString();
-  const priority = Number(data.priority);
   const _id = data._id.toString();
-  const favorite = data.favorite === "true" ? true : false;
-  const categories = [...data.categories];
-
-  const [favoriteBool, setFavoriteBool] = useState<boolean>(favorite);
+  const title = data.title.toString();
 
   useFocusEffect(
     useCallback(() => {
-      saveLocalNote();
-      console.log("content  id",content);
+      getNoteData();
+      return 
     }, [])
   );
 
   useEffect(() => {
-    saveFavorite();
-    return () => {
-    };
+    if (!(favoriteBool === undefined)) {
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+      } else {
+        saveFavorite();
+      }
+    }
   }, [favoriteBool]);
 
-  const saveLocalNote = async () => {
-    try {
-      console.log("saveLocalNote method");
-      await removeData("active-note");
+  
 
-      const data: Note = {
-        content,
-        title,
-        categories,
-        favorite,
-        priority,
-        _id,
-      };
-      
-      await storeJSONData("active-note", data);
-      const a = await getJSONData("active-note");
-      console.log("localStorage: ", a);
+  const getNoteData = async () => {
+    try {
+      const username = await fetchData('username');
+      const noteData = await getNote(username,_id);
+      setContent(noteData.content);
+      setFavoriteBool(noteData.favorite);
     } catch (error) {
-      console.log("Error al guardar la nota localmente", error);
+      console.log("(getNoteData)Error al obtener info de la nota", error);
     }
   };
 
-  const changeFavorite = async () => {
-    try {
-      setFavoriteBool(!favoriteBool);
-    } catch (error) {
-      console.log("Error al cambiar el estado de favorito", error);
-    }
-  } 
 
   const saveFavorite = async () => {
     try {
-      const username = await fetchData("username");
-      const {_id} = await getJSONData(
-        "active-note"
-      );
-
-      const dataToSave: NoteRequest = {
-        _id,
-        favorite: favoriteBool,
-      };
-
-      await editJSONData("active-note", dataToSave);
-
-      await editNote(username, dataToSave);
-      console.log("saveFavorite method Finished?",favoriteBool);
+      console.log("saveFavorite method");
+      const username = await fetchData('username');
+      await editNote(username, {_id, favorite: favoriteBool });
     } catch (error) {
-      console.log("Error al guardar la nota", error);
+      console.log("(saveFavorite)Error al guardar favorito", error);
     }
   };
+
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
@@ -116,9 +91,8 @@ const NoteScreen = () => {
             return (
               <View style={styles.headersLeft}>
                 <Pressable
-                  onPress={async () => {
-                    await changeFavorite();
-
+                  onPress={() => {
+                    setFavoriteBool(!favoriteBool);
                   }}
                 >
                   {favoriteBool ? <FilledFavoritesIcon /> : <FavoritesIcon />}
@@ -139,7 +113,7 @@ const NoteScreen = () => {
       <StatusBar />
 
       <View style={[styles.noteContainer]}>
-        <NoteHtml content={content} />
+        <NoteHtml content={content} _id={_id} />
       </View>
     </View>
   );

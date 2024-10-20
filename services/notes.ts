@@ -71,14 +71,14 @@ export const deleteNote = async (username: string, title: NoteRequest) => {
   }
 };
 
-export const getAllNotes = async (username: string) => {
+export const getAllNotes = async (username: string):Promise<Note[]> => {
   try {
     const response = await authorizedWrappedFetch({
       route: `/user/${username}/notes`,
       method: "GET",
     });
     if (response?.status !== 200) {
-      const errors = await response?.json();
+      const errors = await response.json();
       console.error(errors.error);
       throw new FetchError(errors.error);
     }
@@ -90,3 +90,23 @@ export const getAllNotes = async (username: string) => {
     throw new Error(`Error getting notes: ${(error as Error).message}`);
   }
 };
+
+export const getNote = async (username: string, _id: string):Promise<Note> => {
+  try {
+    const response = await authorizedWrappedFetch({
+      route: `/user/${username}/note/${_id}`,
+      method: "GET",
+    });
+    if (response?.status !== 200) {
+      const errors = await response.json();
+      console.error(errors.error);
+      throw new FetchError(errors.error);
+    }
+
+    const json = await response.json();
+    return json.data;
+  } catch (error) {
+    console.error("(getNote)error getting the note", error);
+    throw new Error(`Error getting note: ${(error as Error).message}`);
+  }
+}

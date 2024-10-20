@@ -15,7 +15,7 @@ export const wrappedFetch = async (params: FetchParams):Promise<Response>  => {
     "Content-Type": "application/json",
     ...headers,
   };
-  console.log("url: ", url);
+  //console.log("url: ", url);
   console.log("fetch: ", JSON.stringify(request, null, 2));
 
 

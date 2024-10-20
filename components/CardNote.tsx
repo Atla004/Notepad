@@ -25,14 +25,7 @@ const CardNote = ({
     console.log("Go to Note with id: ", _id);
     router.push({
       pathname: `/${title}`,
-      params: {
-        title,
-        content,
-        priority,
-        _id,
-        favorite: favorite ? "true" : "false",
-        categories,
-      },
+      params: { _id , title},
     });
   };
   const theme = useTheme();
