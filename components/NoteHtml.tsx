@@ -10,12 +10,50 @@ interface NoteHtmlProps {
   content: string;
 }
 
-export const NoteHtml = ({content}:NoteHtmlProps ) => {
+export const NoteHtml = ({ content }: NoteHtmlProps) => {
   const [editorContent, setEditorContent] = useState<string>("");
-  const [remainingChars, setRemainingChars] = useState<number>( );
+  const [remainingChars, setRemainingChars] = useState<number>();
 
-  const setContent = (content: string) => {
-    setEditorContent(content);
+  useFocusEffect(
+    useCallback(() => {
+      console.log(`conntent props, ${content}`);
+      //setEditorContent(content);
+      editorReady();
+
+      return async () => {
+        await saveNoteContent();
+        setRemainingChars(0);
+      };
+    }, [])
+  );
+
+  const editorReady = async () => {
+    console.log("editorReady method");
+    // Función para esperar hasta que el editor esté listo
+    const waitForEditor = async () => {
+      while (!editor.getEditorState().isReady) {
+        await new Promise((resolve) => setTimeout(resolve, 100)); // Esperar 100ms antes de volver a verificar
+      }
+    };
+
+    const waitForset = async () => {
+      while (!(editorContent === "content")) {
+        console.log("waiting for setEditorContent");
+        setEditorContent("content")
+        
+        await new Promise((resolve) => setTimeout(resolve, 10)); // Esperar 100ms antes de volver a verificar
+      }
+    };
+
+    setEditorContent("content");
+    await waitForset()
+    
+    await waitForEditor(); // Esperar hasta que el editor esté listo
+    console.log("editorReady method after waitForEditor", content ,"aaaa", editorContent);
+    editor.setContent(editorContent);
+    editor.setEditable(true);
+    console.log(" ready editorContent", editorContent);
+    setRemainingChars(250 - (await editor.getText()).length);
   };
 
   const handleEditorChange = async () => {
@@ -24,9 +62,7 @@ export const NoteHtml = ({content}:NoteHtmlProps ) => {
       const text = await editor.getText();
       if (text.length <= 250) {
         setEditorContent(content);
-        setContent(content);
-        console.log("content", content);
-        console.log("content.length", content.length);
+        console.log("content", content, "length", content.length);
         setRemainingChars(250 - text.length);
         console.log("remainingChars", remainingChars);
       } else {
@@ -34,7 +70,7 @@ export const NoteHtml = ({content}:NoteHtmlProps ) => {
           "Character Limit Exceeded",
           "You can only enter up to 250 characters."
         );
-        await editor.setContent(editorContent); // Revertir al contenido anterior
+        editor.setContent(editorContent); // Revertir al contenido anterior
       }
     } catch (error) {
       console.log("Error al obtener el contenido de la nota", error);
@@ -44,28 +80,19 @@ export const NoteHtml = ({content}:NoteHtmlProps ) => {
   const editor = useEditorBridge({
     autofocus: true,
     avoidIosKeyboard: true,
-    initialContent: editorContent,
+    initialContent: "Loading...",
     onChange: handleEditorChange,
-    
+    editable: false,
   });
-
-  useFocusEffect(
-    useCallback(() => {
-      setContent();
-
-      return async() => {
-        await saveNoteContent();
-      }
-    }, [])
-  );
-
 
   const saveNoteContent = async () => {
     try {
       console.log("saveNoteContent method");
       const username = await fetchData("username");
+      console.log("before editorContent", editorContent);
       await editJSONData("active-note", { content: editorContent });
       const dataToSave = await getJSONData("active-note");
+      console.log("editor contet after ", editorContent);
 
       console.log("dataToSave", dataToSave);
 

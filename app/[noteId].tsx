@@ -42,6 +42,7 @@ const NoteScreen = () => {
   useFocusEffect(
     useCallback(() => {
       saveLocalNote();
+      console.log("content  id",content);
     }, [])
   );
 
