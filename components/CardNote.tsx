@@ -2,10 +2,6 @@ import { Card, Chip, Text, useTheme } from "react-native-paper";
 import { CardNoteProps } from "@/types/types";
 import { router } from "expo-router";
 import { StyleSheet } from "react-native";
-import { tags } from "react-native-svg/lib/typescript/xmlTags";
-import Categories from "@/app/(tabs)/Categories";
-import { useContext } from "react";
-import { NoteContext } from "@/app/NoteContext";
 import HTMLView from "react-native-htmlview";
 
 const priorities = [
@@ -25,19 +21,9 @@ const CardNote = ({
   _id,
   categories,
 }: CardNoteProps) => {
-  const { noteData, setNoteData } = useContext(NoteContext);
-
-
   const goToNote = async () => {
     console.log("Go to Note");
-    await waitForContext({
-      title,
-      description,
-      priority,
-      favorite,
-      _id,
-      categories,
-    });
+
     router.push({
       pathname: `/${title}`,
       params: {
