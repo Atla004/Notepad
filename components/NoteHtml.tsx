@@ -9,23 +9,34 @@ import { NoteRequest } from "@/types/apiResponses";
 
 interface NoteHtmlProps {
   content: string;
+  _id: string;
 }
 
-export const NoteHtml = ({ content }: NoteHtmlProps) => {
+export const NoteHtml = ({ content,_id }: NoteHtmlProps) => {
+  const isFirstRender = useRef<boolean>(true);
   const editorContent = useRef<string>("");
   const [remainingChars, setRemainingChars] = useState<number>(0);
 
 
   useFocusEffect(
     useCallback(() => {
-      console.log(`conntent props, ${content}`);
+
+      console.log("(NoteHtml)content", content);
       editorReady();
+      
+    }, [content])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
       return async () => {
+        console.log("NoteHtml return");
         await saveNoteContent();
         setRemainingChars(0);
       };
     }, [])
   );
+
 
 
   const editorReady = async () => {
@@ -42,9 +53,8 @@ export const NoteHtml = ({ content }: NoteHtmlProps) => {
     editor.setContent(editorContent.current);
     editor.setEditable(true);
     
-    console.log("ready editorContent:", editorContent.current);
+    console.log("ready editorContent:", editorContent.current ,"remaining:" ,remainingChars);
     setRemainingChars(250 - (await editor.getText()).length);
-    console.log("ready content:", remainingChars);
   };
 
   const handleEditorChange = async () => {
@@ -81,17 +91,19 @@ export const NoteHtml = ({ content }: NoteHtmlProps) => {
       console.log("saveNoteContent method");
       const username = await fetchData("username");
 
-      await editJSONData("active-note", { content: editorContent.current });
-      const {_id} = await getJSONData("active-note");
+    
+
       const dataToSave: NoteRequest = {
         _id,
-        content,
+        content :editorContent.current,
       }
 
       console.log("dataToSave", dataToSave);
 
-
+      //local
+      await editJSONData("active-note", { content: editorContent.current });
       await editNote(username, dataToSave);
+      //
 
       console.log("saveNoteContent method Finished");
     } catch (error) {
