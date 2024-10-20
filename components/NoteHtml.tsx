@@ -27,9 +27,13 @@ export const NoteHtml = ({ content }: NoteHtmlProps) => {
     }, [])
   );
 
+  useEffect(() => {
+    console.log("editorContent before", editorContent);
+    setEditorContent(content);
+    console.log("editorContent after", editorContent);
+  }, []);
+
   const editorReady = async () => {
-    console.log("editorReady method");
-    // Función para esperar hasta que el editor esté listo
     const waitForEditor = async () => {
       while (!editor.getEditorState().isReady) {
         await new Promise((resolve) => setTimeout(resolve, 100)); // Esperar 100ms antes de volver a verificar
@@ -39,17 +43,24 @@ export const NoteHtml = ({ content }: NoteHtmlProps) => {
     const waitForset = async () => {
       while (!(editorContent === "content")) {
         console.log("waiting for setEditorContent");
-        setEditorContent("content")
-        
-        await new Promise((resolve) => setTimeout(resolve, 10)); // Esperar 100ms antes de volver a verificar
+        console.log("wait editorContent before", editorContent);
+        setEditorContent(content);
+        console.log("wait editorContent after", editorContent);
+
+        await new Promise((resolve) => setTimeout(resolve, 2000)); // Esperar 100ms antes de volver a verificar
       }
     };
 
     setEditorContent("content");
-    await waitForset()
-    
+    await waitForset();
+
     await waitForEditor(); // Esperar hasta que el editor esté listo
-    console.log("editorReady method after waitForEditor", content ,"aaaa", editorContent);
+    console.log(
+      "editorReady method after waitForEditor",
+      content,
+      "aaaa",
+      editorContent
+    );
     editor.setContent(editorContent);
     editor.setEditable(true);
     console.log(" ready editorContent", editorContent);
