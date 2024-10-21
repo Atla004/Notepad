@@ -1,20 +1,50 @@
-import { router, Stack } from "expo-router";
-import React, { useContext, useState } from "react";
+import { router, Stack, useFocusEffect } from "expo-router";
+import React, { useCallback, useContext, useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { Button, Divider, Text, useTheme } from "react-native-paper";
+import { Button, Dialog, Divider, Portal, Text, useTheme } from "react-native-paper";
 import ProfileHeader from "@/components/ProfileHeader";
 import { StatusBar } from "expo-status-bar";
 import { ThemeContext } from "@/components/Container";
 import { logout } from "@/services/auth";
+import { deleteUser, getUserEmail } from "@/services/user";
+import { fetchData } from "@/services/localstorage";
 
 export default function Profile() {
   const { toggleTheme } = useContext(ThemeContext);
 
+  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+
+  const [visibleDialog, setVisible] = useState<boolean>(false);
+
+  const showDialog = () => setVisible(true);
+  const hideDialog = () => setVisible(false);
+
   const LogOut = async () => {
     await logout();
-    router.push("/Login");
+    // router.dismissAll();
+    router.replace("/Login");
   };
+
+  const deleteAccount = async () => {
+    await deleteUser({ username });
+    await logout();
+  }
+
   const theme = useTheme();
+
+  const getUserData = async () => {
+    const userName = await fetchData('username');
+    const userEmail = await getUserEmail({username});
+    setUsername(userName);
+    setEmail(userEmail);
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      getUserData();
+    },[])
+  )
 
   const styles = StyleSheet.create({
     bnt: {
@@ -39,7 +69,24 @@ export default function Profile() {
       backgroundColor: theme.colors.primary,
       borderRadius: 8,
     },
+    dialogTitle: {
+      textAlign: "center",
+      fontWeight: "bold",
+      fontSize: 18,
+      color: "red",
+    },
+    dialogContent: {
+      textAlign: "center",
+      fontSize: 16,
+    },
+    dialogButton: {
+      marginHorizontal: 10,
+    },
+    deleteButton: {
+      borderRadius: 8,
+    },
   });
+
 
   return (
     <View
@@ -49,10 +96,10 @@ export default function Profile() {
       <ProfileHeader />
 
       <Text variant="displaySmall" style={{ marginHorizontal: 10 }}>
-        Atlassss
+        {username}
       </Text>
       <Text variant="labelLarge" style={{ marginHorizontal: 10 }}>
-        avecespienso@yahoo.com
+        {email}
       </Text>
       <Divider bold style={styles.divider} />
       <Text variant="bodySmall" style={styles.textCloseToDivider}>
@@ -110,9 +157,39 @@ export default function Profile() {
         icon="delete"
         textColor={theme.colors.primaryContainer}
         style={styles.deleteBnt}
+        onPress={showDialog}
       >
         Delete account
       </Button>
+      <Portal>
+        <Dialog visible={visibleDialog} onDismiss={hideDialog}>
+          <Dialog.Icon icon="alert" />
+          <Dialog.Title style={styles.dialogTitle}>
+            Confirm
+          </Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyMedium" style={styles.dialogContent}>
+              Are you sure you want to delete your account?
+            </Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={hideDialog} style={styles.dialogButton}>
+              Cancel
+            </Button>
+            <Button
+              onPress={async () => await deleteAccount()}
+              style={[
+                styles.dialogButton,
+                styles.deleteButton,
+                { backgroundColor: theme.colors.primary },
+              ]}
+            >
+              <Text style={{ color: "white" }}>Delete</Text>
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </View>
+    
   );
 }

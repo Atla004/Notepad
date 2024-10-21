@@ -21,7 +21,7 @@ export default function ForgotPassword() {
     }
     await getPasswordToken(gmail);
     Toast.show(
-      "If your email matches an existing account we will send you a code to reset your password.",
+      "We will send you a code to reset your password.",
       Toast.LONG
     );
     router.push({
