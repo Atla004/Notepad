@@ -6,7 +6,7 @@ import AddCategoryDialog from "./AddCategoryDialog";
 import Emoji from "./Emoji";
 import { editJSONData } from "@/services/localstorage";
 
-const data = [
+const categories = [
   { label: "Item 1", value: "1", code: 0x1f60a },
   { label: "Item 2", value: "2", code: 0x1f60a },
   { label: "Item 3", value: "3", code: 0x1f60a },
@@ -18,6 +18,7 @@ const data = [
   { label: "Item 9", value: "9", code: 0x1f60a },
   { label: "Item 10", value: "10", code: 0x1f60a },
 ];
+
 
 type ItemType = {
   label: string;
@@ -53,7 +54,7 @@ const CategoryMultiSelect = () => {
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.input}
-        data={data}
+        data={categories}
         labelField="label"
         valueField="value"
         placeholder="Select categories"

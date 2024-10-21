@@ -51,10 +51,10 @@ export const editNote = async (username: string, note: NoteRequest) => {
   }
 };
 
-export const deleteNote = async (username: string, title: NoteRequest) => {
+export const deleteNote = async (username: string, _id: string ) => {
   try {
     const response = await authorizedWrappedFetch({
-      route: `/user/${username}/note/${title}`,
+      route: `/user/${username}/note/${_id}`,
       method: "DELETE",
     });
     if (response?.status !== 200) {

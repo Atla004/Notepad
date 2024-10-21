@@ -26,15 +26,16 @@ import {
 import { Note, NoteRequest } from "@/types/apiResponses";
 
 const NoteScreen = () => {
-  const theme = useTheme();
-
   const data = useLocalSearchParams();
-  const isFirstRender = useRef<boolean>(true);
-  const [favoriteBool, setFavoriteBool] = useState<boolean>();
-  const [content, setContent] = useState<string>("");
-
+  console.log("NoteScreen");
+  const theme = useTheme();
   const _id = data._id.toString();
   const title = data.title.toString();
+
+  const [favoriteBool, setFavoriteBool] = useState<boolean>(false);
+  const [content, setContent] = useState<string>("");
+  const priority = useRef<number>(0);
+
 
   useFocusEffect(
     useCallback(() => {
@@ -43,37 +44,15 @@ const NoteScreen = () => {
     }, [])
   );
 
-  useEffect(() => {
-    if (!(favoriteBool === undefined)) {
-      if (isFirstRender.current) {
-        isFirstRender.current = false;
-      } else {
-        saveFavorite();
-      }
-    }
-  }, [favoriteBool]);
-
-  
-
   const getNoteData = async () => {
     try {
       const username = await fetchData('username');
       const noteData = await getNote(username,_id);
       setContent(noteData.content);
       setFavoriteBool(noteData.favorite);
+      priority.current = noteData.priority;
     } catch (error) {
       console.log("(getNoteData)Error al obtener info de la nota", error);
-    }
-  };
-
-
-  const saveFavorite = async () => {
-    try {
-      console.log("saveFavorite method");
-      const username = await fetchData('username');
-      await editNote(username, {_id, favorite: favoriteBool });
-    } catch (error) {
-      console.log("(saveFavorite)Error al guardar favorito", error);
     }
   };
 
@@ -100,7 +79,7 @@ const NoteScreen = () => {
                 <Pressable
                   style={{ marginTop: 2 }}
                   onPress={() => {
-                    router.push({ pathname: `./EditNoteProperties` });
+                    router.push({ pathname: `./EditNoteProperties`,params:{_id, title, priority: priority.current}});
                   }}
                 >
                   <SettingsIcon />
@@ -113,7 +92,7 @@ const NoteScreen = () => {
       <StatusBar />
 
       <View style={[styles.noteContainer]}>
-        <NoteHtml content={content} _id={_id} />
+        <NoteHtml content={content} _id={_id}  favorite ={favoriteBool}/>
       </View>
     </View>
   );

@@ -18,8 +18,8 @@ import {
 import { Pressable } from "react-native";
 import { FavoritesIcon, TrashIcon } from "@/components/Icon";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
-import DropdownPriority from "@/components/DropdownPriority"; // Ensure DropdownPriority accepts style prop
-import { router, Stack, useFocusEffect } from "expo-router";
+import DropdownPriority from "@/components/DropdownPriority";
+import { router, Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { CloseIcon } from "@/components/Icon";
 import { StatusBar } from "expo-status-bar";
 import { deleteNote } from "@/services/notes";
@@ -32,37 +32,25 @@ import {
 
 const EditNoteProperties = () => {
   const theme = useTheme();
-  const [noteName, setNoteName] = useState("");
   const [visible, setVisible] = useState(false);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
+  
+  const {_id,priority, title } = useLocalSearchParams();
+  
+  
+  console.log("editNoteProperties", _id, priority, title);
+  
+  const [titleState, setTitleState] = useState<string>(title.toString());
 
-
-  const borrarNota = async () => {
+  const deleteNoteById = async () => {
     const username = await fetchData("username");
-    // const noteId = noteData._id ?? "";
-    await removeData("active-note");
-    // deleteNote(username, noteId);
+    const id = _id.toString();
+
+    await deleteNote(username ,id);
     router.push("/Home");
     hideDialog();
-  };
-
-  const data = [
-    { id: 1, title: " 1" },
-    { id: 2, title: "Category 2" },
-    { id: 3, title: "Category 3" },
-    { id: 4, title: "Category 4ffff" },
-    { id: 5, title: "Category 5" },
-    { id: 6, title: "Category 6" },
-    { id: 7, title: "Category 7" },
-    { id: 8, title: "Category 8" },
-    { id: 9, title: "Category 9" },
-    { id: 10, title: "Category 10" },
-  ];
-
-  const [favoriteState, setFavoriteState] = useState(false);
-  const [priorityState, setPriorityState] = useState(0);
-  const [titleState, setTitleState] = useState("");
+  };  
 
   useFocusEffect(
     useCallback(() => {
@@ -70,12 +58,8 @@ const EditNoteProperties = () => {
     }, [])
   );
 
-  const saveNote = async () => {
-    const data = await getJSONData("active-note");
-    console.log("data", data);
-    setFavoriteState(data.favorite);
-    setPriorityState(data.priority);
-  };
+  console.log("EditNoteProperties", _id, priority, title);
+
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
@@ -91,16 +75,6 @@ const EditNoteProperties = () => {
               <>
                 <StatusBar />
                 <View style={styles.headersLeft}>
-                  <Pressable
-                    onPress={async () => {
-                      setFavoriteState(!favoriteState);
-                      await editJSONData("active-note", {
-                        favorite: !favoriteState,
-                      });
-                    }}
-                  >
-                    <FavoritesIcon />
-                  </Pressable>
                   <Pressable onPress={showDialog}>
                     <TrashIcon />
                   </Pressable>
@@ -121,7 +95,7 @@ const EditNoteProperties = () => {
                         Cancel
                       </Button>
                       <Button
-                        onPress={() => borrarNota()}
+                        onPress={() => deleteNoteById()}
                         style={[
                           styles.dialogButton,
                           styles.deleteButton,
@@ -149,9 +123,9 @@ const EditNoteProperties = () => {
       <TextInput
         style={styles.input}
         label="name"
-        value={noteName}
+        value={titleState}
         mode="outlined"
-        onChangeText={(text) => setNoteName(text)}
+        onChangeText={(text) => setTitleState(text)}
         theme={{
           roundness: 8,
         }}
@@ -164,41 +138,6 @@ const EditNoteProperties = () => {
         Categories
       </Text>
 
-      {/*       <ScrollView
-        style={[
-          styles.scrollView,
-          { backgroundColor: theme.colors.primaryContainer },
-        ]}
-      >
-        <View
-          style={[
-            styles.chipContainer,
-            { backgroundColor: theme.colors.primaryContainer },
-          ]}
-        >
-          {data.map((item) => (
-            <Chip
-              key={item.id}
-              icon="close"
-              onPress={() => console.log("close")}
-              style={[styles.chips, { backgroundColor: theme.colors.tertiary }]}
-            >
-              <Text
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                variant="bodySmall"
-                style={[
-                  styles.chipText,
-                  { color: theme.colors.primaryContainer },
-                ]}
-              >
-                {item.title}
-              </Text>
-            </Chip>
-          ))}
-        </View>
-      </ScrollView> */}
-
       <CategoryMultiSelect />
       <Divider
         bold
@@ -210,7 +149,7 @@ const EditNoteProperties = () => {
       >
         Priority
       </Text>
-      <DropdownPriority />
+      <DropdownPriority  priority={priority.toString()}   _id ={_id.toString()}/>
     </View>
   );
 };

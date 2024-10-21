@@ -15,31 +15,29 @@ const data = [
   { label: "Not Important", value: "0" },
 ];
 
-const DropdownPriority = () => {
-  const [value, setValue] = useState<string | null>(null);
+interface DropdownPriorityProps {
+  priority: string;
+  _id: string;
+}
+
+const DropdownPriority = ({priority,_id}: DropdownPriorityProps) => {
+  const [notePriority, setNotePriority] = useState<string | null>(priority);
   const [isFocus, setIsFocus] = useState(false);
 
-  //const { noteData, setNoteData } = useContext(NoteContext);
-
   useEffect(() => {
-    console.log("Priority", value);
-    guardarPrioridad();
-  }, [value]);
+    updateNotePriority();
+  }, [notePriority]);
 
-  const guardarPrioridad = async () => {
-    console.log("Priority", value);
-    //setNoteData({ ...noteData, priority: Number(value) });
+  const updateNotePriority = async () => {
+    console.log("Priority", priority);
+    console.log("NotePriority", notePriority);
 
     const dataToSave = {
-  //    ...(noteData as Note),
-      priority: Number(value),
+      priority: Number(notePriority),
     };
-
-    console.log("DataToSave dropdown", dataToSave);
-    const username = await fetchData("username");
-    //await editNote(username, dataToSave);
-    console.log("Priority", value);
-    //console.log("NoteData", noteData);
+    const username =await fetchData("username");
+    editNote(username,{_id, ...dataToSave});
+    console.log ("Priority object", dataToSave);
   };
 
   return (
@@ -55,13 +53,14 @@ const DropdownPriority = () => {
         valueField="value"
         placeholder={!isFocus ? "Select item" : "..."}
         searchPlaceholder="Search..."
-        value={value}
+        value={priority}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={async (item) => {
-          await editJSONData("active-sheet", { priority: value });
-          setValue(item.value);
+          setNotePriority(item.value);
           setIsFocus(false);
+          await updateNotePriority();
+
         }}
       />
     </View>
