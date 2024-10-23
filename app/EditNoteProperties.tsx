@@ -1,12 +1,15 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   View,
-  StyleSheet,
-  KeyboardAvoidingView,
-  ScrollView,
+  StyleSheet
 } from "react-native";
 import {
-  Chip,
   TextInput,
   Divider,
   Dialog,
@@ -16,50 +19,109 @@ import {
   useTheme,
 } from "react-native-paper";
 import { Pressable } from "react-native";
-import { FavoritesIcon, TrashIcon } from "@/components/Icon";
+import { TrashIcon } from "@/components/Icon";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import DropdownPriority from "@/components/DropdownPriority";
-import { router, Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { CloseIcon } from "@/components/Icon";
-import { StatusBar } from "expo-status-bar";
-import { deleteNote } from "@/services/notes";
 import {
-  editJSONData,
-  fetchData,
-  getJSONData,
-  removeData,
+  router,
+  Stack,
+  useLocalSearchParams,
+  useNavigation,
+} from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { deleteNote, editNote } from "@/services/notes";
+import {
+  fetchData
 } from "@/services/localstorage";
+import { editLocalNote, getLocalNote } from "@/services/notelocalstorage";
+import { NoteRequest } from "@/types/apiResponses";
 
 const EditNoteProperties = () => {
   const theme = useTheme();
   const [visible, setVisible] = useState(false);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
-  
-  const {_id,priority, title } = useLocalSearchParams();
-  
-  
-  console.log("editNoteProperties", _id, priority, title);
-  
+  const listenerRef = useRef<((e: any) => void) | null>(null);
+  const { _id, priority, title } = useLocalSearchParams();
+
   const [titleState, setTitleState] = useState<string>(title.toString());
 
   const deleteNoteById = async () => {
     const username = await fetchData("username");
     const id = _id.toString();
 
-    await deleteNote(username ,id);
+    await deleteNote(username, id);
     router.push("/Home");
     hideDialog();
-  };  
+  };
 
-  useFocusEffect(
-    useCallback(() => {
-      //saveNote();
-    }, [])
-  );
+  const navigation = useNavigation();
 
-  console.log("EditNoteProperties", _id, priority, title);
+  const saveNoteProperties = async () => {
+    try {
+      console.log("saveNoteContent method");
+      const username = await fetchData("username");
+      const data = await getLocalNote();
+      const dataToSave: NoteRequest = {
+        _id: data._id,
+        title: titleState,
+        categories: data.categories,
+      };
+      console.log("dataToSave", dataToSave);
 
+      await editNote(username, dataToSave);
+      await editLocalNote(dataToSave);
+
+      console.log("saveNoteContent method Finished");
+    } catch (error) {
+      console.log("Error al guardar la nota", error);
+    }
+  };
+
+
+  useEffect(() => {
+    const onBeforeRemove = (e: { preventDefault: () => void }) => {
+      // Prevent default behavior of leaving the screen
+      e.preventDefault();
+
+      //guardar los cambios
+      saveNoteProperties();
+
+
+
+      // Redirigir a la pantalla deseada
+      router.push({
+        pathname: `/${titleState}`,
+        params: { _id, title: titleState },
+      });
+    };
+
+    // Eliminar el listener existente si hay uno
+    if (listenerRef.current) {
+      console.log("Removing existing beforeRemove listener");
+      navigation.removeListener("beforeRemove", listenerRef.current);
+    }
+
+    // Añadir el nuevo listener y almacenarlo en la referencia
+    navigation.addListener("beforeRemove", onBeforeRemove);
+    listenerRef.current = onBeforeRemove;
+
+    // Eliminar el listener cuando el componente se desmonta
+    return () => {
+      if (listenerRef.current) {
+        navigation.removeListener("beforeRemove", listenerRef.current);
+        listenerRef.current = null;
+      }
+
+      
+    };
+  }, [navigation, _id, titleState]);
+
+
+
+  const handleChangeText = useCallback((text: string) => {
+    setTitleState(text);
+  }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
@@ -125,7 +187,7 @@ const EditNoteProperties = () => {
         label="name"
         value={titleState}
         mode="outlined"
-        onChangeText={(text) => setTitleState(text)}
+        onChangeText={(text) => handleChangeText(text)}
         theme={{
           roundness: 8,
         }}
@@ -149,7 +211,7 @@ const EditNoteProperties = () => {
       >
         Priority
       </Text>
-      <DropdownPriority  priority={priority.toString()}   _id ={_id.toString()}/>
+      <DropdownPriority priority={priority.toString()} _id={_id.toString()} />
     </View>
   );
 };

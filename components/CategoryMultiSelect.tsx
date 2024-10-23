@@ -1,50 +1,92 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, TouchableOpacity, Text, Alert } from "react-native";
 import { MultiSelect } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import AddCategoryDialog from "./AddCategoryDialog";
 import Emoji from "./Emoji";
-import { editJSONData } from "@/services/localstorage";
-
-const categories = [
-  { label: "Item 1", value: "1", code: 0x1f60a },
-  { label: "Item 2", value: "2", code: 0x1f60a },
-  { label: "Item 3", value: "3", code: 0x1f60a },
-  { label: "Item 4", value: "4", code: 0x1f60a },
-  { label: "Item 5", value: "5", code: 0x1f60a },
-  { label: "Item 6", value: "6", code: 0x1f60a },
-  { label: "Item 7", value: "7", code: 0x1f60a },
-  { label: "Item 8", value: "8", code: 0x1f60a },
-  { label: "Item 9", value: "9", code: 0x1f60a },
-  { label: "Item 10", value: "10", code: 0x1f60a },
-];
+import { fetchData } from "@/services/localstorage";
+import { getAllCategories } from "@/services/categories";
+import { Category } from "@/types/apiResponses";
+import { editLocalNote, getLocalNote } from "@/services/notelocalstorage";
 
 
-type ItemType = {
-  label: string;
-  value: string;
-  code: number;
-};
+
+
 
 const CategoryMultiSelect = () => {
-  const [selected, setSelected] = useState<string[]>([]);
 
-  const renderItem = (item: ItemType) => {
+
+  const userCategories = [
+    { title: "Item 1", _id: "1", emoji: 0x1f60a },
+    { title: "Item 2", _id: "2", emoji: 0x1f60a },
+    { title: "Item 3", _id: "3", emoji: 0x1f60a },
+    { title: "Item 4", _id: "4", emoji: 0x1f60a },
+    { title: "Item 5", _id: "5", emoji: 0x1f60a },
+    { title: "Item 6", _id: "6", emoji: 0x1f60a },
+    { title: "Item 7", _id: "7", emoji: 0x1f60a },
+    { title: "Item 8", _id: "8", emoji: 0x1f60a },
+    { title: "Item 9", _id: "9", emoji: 0x1f60a },
+    { title: "Item 10", _id: "10", emoji: 0x1f60a },
+  ];
+  
+
+  
+  const [selected, setSelected] = useState<string[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  const getUserCategories = async () => {
+    const username = await fetchData("username")
+    const [categoriesData, data] = await Promise.all([
+      getAllCategories(username),
+      getLocalNote()
+    ]);
+    setSelected(data.categories);
+    //console.log("categoriesData", categoriesData);
+    setCategories(userCategories);
+
+
+  }
+
+
+  useEffect(() => {
+    getUserCategories();
+    return () => {
+
+    }
+
+  } , []);
+
+  
+
+  const categoryChip = (chip: Category) => {
     return (
       <View style={styles.categoriesItem}>
-        <Text style={styles.selectedTextStyle}>{item.label}</Text>
-        <Emoji symbol={item.code} />
+        <Text style={styles.selectedTextStyle}>{chip.title}</Text>
+        <Emoji symbol={chip.emoji} />
       </View>
     );
   };
 
-  const handleChange = async (items: string[]) => {
-    if (items.length > 5) {
+  const tinyCategoryChip = ({item , unSelect}: {item: Category, unSelect: any}  ) => {
+    return (
+      <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
+        <View style={styles.tagsStyles}>
+          <AntDesign color="black" name="close" size={17} />
+          <Text>{item.title}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  const handleChange = async (selectedItems: string[]) => {
+    console.log("selectedItems", selectedItems);
+    if (selectedItems.length > 5) {
       Alert.alert("Limit reached", "You can only select up to 5 items.");
       return;
     }
-    setSelected(items);
-    await editJSONData("active-sheet", { categories: selected });
+    setSelected(selectedItems);
+    await editLocalNote({ categories: selectedItems });
+    console.log("selectedItems", selectedItems);
   };
 
   return (
@@ -54,23 +96,16 @@ const CategoryMultiSelect = () => {
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.input}
-        data={categories}
-        labelField="label"
-        valueField="value"
+        data={userCategories}
+        labelField="title"
+        valueField="_id"
         placeholder="Select categories"
         value={selected}
         search
         searchPlaceholder="Search..."
         onChange={handleChange}
-        renderItem={renderItem}
-        renderSelectedItem={(item, unSelect) => (
-          <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
-            <View style={styles.tagsStyles}>
-              <AntDesign color="black" name="close" size={17} />
-              <Text>{item.label}</Text>
-            </View>
-          </TouchableOpacity>
-        )}
+        renderItem={categoryChip}
+        renderSelectedItem={(item, unSelect) => tinyCategoryChip({item, unSelect})}
       />
 
       <AddCategoryDialog />

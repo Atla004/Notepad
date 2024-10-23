@@ -1,11 +1,12 @@
 import { RichText, Toolbar, useEditorBridge } from "@10play/tentap-editor";
-import { useFocusEffect, useNavigation } from "expo-router";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, KeyboardAvoidingView, StyleSheet, View } from "react-native";
-import { editJSONData, fetchData, getJSONData } from "@/services/localstorage";
+import {  fetchData } from "@/services/localstorage";
 import { editNote } from "@/services/notes";
 import { Text } from "react-native-paper";
 import { NoteRequest } from "@/types/apiResponses";
+import { editLocalNote } from "@/services/notelocalstorage";
 
 interface NoteHtmlProps {
   content: string;
@@ -15,9 +16,9 @@ interface NoteHtmlProps {
 
 export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
   const refFavorite = useRef<boolean>(favorite);
-  console.log("NoteHtml", content, favorite);
   const editorContent = useRef<string>("");
   const [charactersNumber, setCharacterNumber] = useState<number>(0);
+  console.log("NoteHtml", content, _id, favorite);
 
   useEffect(() => {
     refFavorite.current = favorite;
@@ -41,27 +42,23 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
   const editorReady = async () => {
     const waitForEditor = async () => {
       while (!editor.getEditorState().isReady) {
-        await new Promise((resolve) => setTimeout(resolve, 100)); // Esperar 100ms antes de volver a verificar
+        await new Promise((resolve) => setTimeout(resolve, 70)); 
       }
     };
-    console.log("editorReady");
     editorContent.current = content;
-
-
+    
+    
     await waitForEditor(); // Esperar hasta que el editor esté listo
-
     editor.setContent(editorContent.current);
     editor.setEditable(true);
     
-    console.log("ready editorContent:", editorContent.current ,"remaining:" ,charactersNumber);
     const currentCharacterCount = (await editor.getText()).length;
     setCharacterNumber(currentCharacterCount);
   };
 
   const handleEditorChange = async () => {
     try {
-      const content = await editor.getHTML();
-      const text = await editor.getText();
+      const [content, text] = await Promise.all([editor.getHTML(), editor.getText()]);
       if (text.length <= 250) {
         editorContent.current = content;
         setCharacterNumber(text.length);
@@ -95,10 +92,7 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
         favorite: refFavorite.current,
       };
 
-/*       //local
-      await editJSONData("active-note", { content: editorContent.current });
-      // */
-      await editNote(username, dataToSave);
+      await Promise.all([ editNote(username, dataToSave), editLocalNote(dataToSave)]);
 
       console.log("saveNoteContent method Finished");
     } catch (error) {

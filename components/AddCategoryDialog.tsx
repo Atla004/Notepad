@@ -1,6 +1,14 @@
 import * as React from "react";
 import { View, StyleSheet } from "react-native";
-import { Button, Dialog, Portal, Text, useTheme } from "react-native-paper";
+import {
+  Button,
+  Dialog,
+  Portal,
+  Text,
+  TextInput,
+  useTheme,
+} from "react-native-paper";
+import { SelectEmoji } from "./SelectEmoji";
 
 export default function AddCategoryDialog() {
   const [visible, setVisible] = React.useState(false);
@@ -23,9 +31,10 @@ export default function AddCategoryDialog() {
       </Button>
       <Portal>
         <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
-          <Dialog.Title>Alert</Dialog.Title>
+          <Dialog.Title>New Category</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyMedium">This is simple dialog</Text>
+            <TextInput label="Category Name" />
+            <SelectEmoji />
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={hideDialog}>Done</Button>

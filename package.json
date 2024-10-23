@@ -23,6 +23,7 @@
     "react-native": "0.74.5",
     "react-native-actions-sheet": "^0.9.7",
     "react-native-element-dropdown": "^2.12.2",
+    "react-native-emoji-modal": "^0.2.4",
     "react-native-gesture-handler": "^2.20.0",
     "react-native-html-view": "^0.0.1",
     "react-native-htmlview": "^0.17.0",

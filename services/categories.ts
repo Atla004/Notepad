@@ -41,7 +41,7 @@ export const deleteCategory = async (username: string, _id: string) => {
   }
 };
 
-export const getAllCategories = async (username: string) => {
+export const getAllCategories = async (username: string): Promise<Category[]> => {
   try {
     const response = await authorizedWrappedFetch({
       route: `/user/${username}/categories`,

@@ -5,7 +5,7 @@ import {
   useLocalSearchParams,
   useNavigation,
 } from "expo-router";
-import { Button, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { NoteHtml } from "@/components/NoteHtml";
 import {
   FavoritesIcon,
@@ -14,27 +14,20 @@ import {
 } from "@/components/Icon";
 import { useTheme } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { editNote, getNote } from "@/services/notes";
-import {
-  editJSONData,
-  fetchData,
-  getJSONData,
-  removeData,
-  storeJSONData,
-} from "@/services/localstorage";
-import { Note, NoteRequest } from "@/types/apiResponses";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { getLocalNote } from "@/services/notelocalstorage";
 
 const NoteScreen = () => {
   const data = useLocalSearchParams();
-  console.log("NoteScreen");
   const theme = useTheme();
+  console.log("NoteScreen", data._id, data.title);
   const _id = data._id.toString();
   const title = data.title.toString();
 
   const [favoriteBool, setFavoriteBool] = useState<boolean>(false);
   const [content, setContent] = useState<string>("");
   const priority = useRef<number>(0);
+  const listenerRef = useRef<((e: any) => void) | null>(null);
 
 
   useFocusEffect(
@@ -44,13 +37,48 @@ const NoteScreen = () => {
     }, [])
   );
 
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const onBeforeRemove = (e: { preventDefault: () => void }) => {
+      // Prevent default behavior of leaving the screen
+      e.preventDefault();
+
+      // Redirigir a la pantalla deseada
+      router.push({
+        pathname: `/Home`,
+      });
+    };
+
+    // Eliminar el listener existente si hay uno
+    if (listenerRef.current) {
+      console.log("Removing existing beforeRemove listener");
+      navigation.removeListener("beforeRemove", listenerRef.current);
+    }
+
+    // Añadir el nuevo listener y almacenarlo en la referencia
+    navigation.addListener("beforeRemove", onBeforeRemove);
+    listenerRef.current = onBeforeRemove;
+
+    // Eliminar el listener cuando el componente se desmonta
+    return () => {
+      if (listenerRef.current) {
+        navigation.removeListener("beforeRemove", listenerRef.current);
+        listenerRef.current = null;
+      }
+    };
+  }, [navigation]);
+
+
   const getNoteData = async () => {
     try {
-      const username = await fetchData('username');
-      const noteData = await getNote(username,_id);
-      setContent(noteData.content);
-      setFavoriteBool(noteData.favorite);
-      priority.current = noteData.priority;
+      const localNoteData =await getLocalNote();
+      console.log("LocalNoteData", localNoteData);
+      
+
+      setContent(localNoteData.content);
+      setFavoriteBool(localNoteData.favorite);
+      priority.current = localNoteData.priority;
     } catch (error) {
       console.log("(getNoteData)Error al obtener info de la nota", error);
     }
