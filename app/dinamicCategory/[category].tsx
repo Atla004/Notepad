@@ -10,6 +10,9 @@ import { useEffect, useState } from "react";
 import { getCategoryNotes } from "@/services/categories";
 import { fetchData } from "@/services/localstorage";
 import { Note } from "@/types/apiResponses";
+import { addListener, notify } from "@alexsandersarmento/react-native-event-emitter";
+
+
 
 const CategoryNotes = () => {
   const { _id, title } = useLocalSearchParams();
@@ -17,11 +20,16 @@ const CategoryNotes = () => {
   const [search, setSearch] = useState("");
   const [data, setData] = useState<Note[]>([]);
 
+  
+
+  
+
   useEffect(() => {
     // fetchNotes();
     fetchData("username").then((username) => {
       getCategoryNotes(username, _id as string).then((data) => {
         setData(data);
+        notify("getOutCategory");
       });
     });
   }, []);

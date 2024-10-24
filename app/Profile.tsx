@@ -118,11 +118,11 @@ export default function Profile() {
     >
       <StatusBar />
       <ProfileHeader />
-
-      <Text variant="displaySmall" style={{ marginHorizontal: 10 }}>
+      
+      <Text variant="displaySmall" style={{ alignSelf: "center" }}>
         {username}
       </Text>
-      <Text variant="labelLarge" style={{ marginHorizontal: 10 }}>
+      <Text variant="labelLarge" style={{ alignSelf: "center" }}>
         {email}
       </Text>
       <Divider bold style={styles.divider} />

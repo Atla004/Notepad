@@ -4,6 +4,7 @@ import {
   useFocusEffect,
   useLocalSearchParams,
   useNavigation,
+  useRouter,
 } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
 import { NoteHtml } from "@/components/NoteHtml";
@@ -16,6 +17,11 @@ import { ActivityIndicator, useTheme } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getLocalNote } from "@/services/notelocalstorage";
+import {
+  addListener,
+  notify,
+  removeListener,
+} from "@alexsandersarmento/react-native-event-emitter";
 
 const NoteScreen = () => {
   const data = useLocalSearchParams();
@@ -29,11 +35,14 @@ const NoteScreen = () => {
   const priority = useRef<number>(0);
   const listenerRef = useRef<((e: any) => void) | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const shouldHandleBeforeRemove = useRef<boolean>(true);
 
   useFocusEffect(
     useCallback(() => {
+      notify("disable");
+      removeListener("disable");
       getNoteData();
-      return 
+      return;
     }, [])
   );
 
@@ -41,13 +50,13 @@ const NoteScreen = () => {
 
   useEffect(() => {
     const onBeforeRemove = (e: { preventDefault: () => void }) => {
-      // Prevent default behavior of leaving the screen
+      if (!shouldHandleBeforeRemove.current) return;
       e.preventDefault();
 
-      // Redirigir a la pantalla deseada
-      router.push({
-        pathname: `/Home`,
-      });
+      console.log("onBeforeRemove");
+
+      shouldHandleBeforeRemove.current = false;
+      router.back();
     };
 
     // Eliminar el listener existente si hay uno
@@ -69,31 +78,49 @@ const NoteScreen = () => {
     };
   }, [navigation]);
 
-
   const getNoteData = async () => {
     try {
-      const localNoteData =await getLocalNote();
+      const localNoteData = await getLocalNote();
       console.log("LocalNoteData", localNoteData);
-      
 
       setContent(localNoteData.content);
       setFavoriteBool(localNoteData.favorite);
       priority.current = localNoteData.priority;
     } catch (error) {
       console.log("(getNoteData)Error al obtener info de la nota", error);
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
 
+  const goToEditNoteProperties = () => {
+    if (loading) return;
+    removeListener("goToEditNoteProperties");
+    setLoading(true);
+    router.push({
+      pathname: `./EditNoteProperties`,
+      params: { _id, title, priority: priority.current },
+    });
+  };
+
+  addListener("goToEditNoteProperties", goToEditNoteProperties);
+
   if (loading) {
     return (
-      <View style={[styles.container, { backgroundColor: theme.colors.surface, justifyContent: 'center', alignItems: 'center' }]}>
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: theme.colors.surface,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+        ]}
+      >
         <ActivityIndicator size="large" color={theme.colors.primary} />
       </View>
     );
   }
-
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
@@ -117,7 +144,7 @@ const NoteScreen = () => {
                 <Pressable
                   style={{ marginTop: 2 }}
                   onPress={() => {
-                    router.push({ pathname: `./EditNoteProperties`,params:{_id, title, priority: priority.current}});
+                    notify("goToEditNoteProperties");
                   }}
                 >
                   <SettingsIcon />
@@ -130,7 +157,7 @@ const NoteScreen = () => {
       <StatusBar />
 
       <View style={[styles.noteContainer]}>
-        <NoteHtml content={content} _id={_id}  favorite ={favoriteBool}/>
+        <NoteHtml content={content} _id={_id} favorite={favoriteBool} />
       </View>
     </View>
   );

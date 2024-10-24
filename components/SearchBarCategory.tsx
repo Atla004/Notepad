@@ -8,23 +8,14 @@ interface SearchBarProps {
   onChangeText: (text: string) => void;
 }
 
-const lightTheme = {
-  colors: { 
-    primary: "#F7F7ED", // naranja
-    surface: "#EBEBD3", // Beige
-    primaryContainer: "#F7F7ED", //white
-    tertiary: "#532302", //marron
-    shadow: "#3C3C3B", // gris
-    scrim: "#FDCDAC", //naranja claro
-  },
-};
-
-export default function SearchBar({
+export default function SearchBarCategory({
   placeholder,
   value,
   onChangeText,
 }: SearchBarProps) {
   const theme = useTheme();
+
+  
   return (
     <Searchbar
       style={[
@@ -40,7 +31,6 @@ export default function SearchBar({
             style={styles.avatar}
             onPress={() => router.push({ pathname: `../Profile` })}
           >
-            <Avatar.Icon size={35} icon="account" theme={{colors: { primary: "#F7F7ED"}}} color="#3C3C3B" />
           </Pressable>
         </>
       )}
@@ -51,7 +41,6 @@ export default function SearchBar({
 const styles = StyleSheet.create({
   avatar: {
     marginRight: 15,
-    // backgroundColor: "#FFF"
   },
   searchBar: {
     marginTop: 10,
@@ -59,7 +48,4 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     height: 50,
   },
-  pressable: {
-    marginLeft: 15
-  }
 });
