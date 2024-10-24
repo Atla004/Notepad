@@ -52,7 +52,7 @@ const CategoryNotes = () => {
         data={filteredData}
         renderItem={({ item }) => (
           <CardNote
-            _id={item._id}
+            _id={item._id as string}
             title={item.title}
             content={item.content}
             priority={item.priority}
