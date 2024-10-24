@@ -22,9 +22,14 @@ const FABNewNote = ( {onNewNote}: FABNewNoteProps) => {
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
   const [noteName, setNoteName] = useState("");
+  const [isDebounced, setIsDebounced] = useState(false);
   const theme = useTheme();
 
   const newNote = async (noteName: string) => {
+    if (isDebounced) return; 
+    setIsDebounced(true); 
+
+    hideDialog();
     const username = await fetchData("username");
     console.log("este es el username",username);
     const note: Note = {
@@ -35,8 +40,8 @@ const FABNewNote = ( {onNewNote}: FABNewNoteProps) => {
       favorite: false,
     };
     await createNote(username, note);
-    hideDialog();
     onNewNote();
+    setIsDebounced(false);
   };
 
   return (
