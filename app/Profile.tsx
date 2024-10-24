@@ -22,7 +22,7 @@ export default function Profile() {
 
   const LogOut = async () => {
     await logout();
-    // router.dismissAll();
+    router.dismissAll();
     router.replace("/Login");
   };
 
@@ -177,7 +177,7 @@ export default function Profile() {
               Cancel
             </Button>
             <Button
-              onPress={async () => await deleteAccount()}
+              onPress={ async () => await deleteAccount() }
               style={[
                 styles.dialogButton,
                 styles.deleteButton,
