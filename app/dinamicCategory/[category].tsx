@@ -6,25 +6,25 @@ import { Text, useTheme } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import CardNote from "@/components/CardNote";
 import SearchBar from "@/components/SearchBar";
-import { useState } from "react";
-
-const data = [
-  {
-    id: 1,
-    title: "Sin ganas de vivir",
-    description: "porque...",
-  },
-  {
-    id: 2,
-    title: "a veces pienso...",
-    description: "es mentira",
-  },
-];
+import { useEffect, useState } from "react";
+import { getCategoryNotes } from "@/services/categories";
+import { fetchData } from "@/services/localstorage";
+import { Note } from "@/types/apiResponses";
 
 const CategoryNotes = () => {
-  const { category } = useLocalSearchParams();
+  const { _id, title } = useLocalSearchParams();
   const theme = useTheme();
   const [search, setSearch] = useState("");
+  const [data, setData] = useState<Note[]>([]);
+
+  useEffect(() => {
+    // fetchNotes();
+    fetchData("username").then((username) => {
+      getCategoryNotes(username, _id as string).then((data) => {
+        setData(data);
+      });
+    });
+  }, []);
 
   const filteredData = data.filter((item) =>
     item.title.toLowerCase().includes(search.toLowerCase())
@@ -34,7 +34,7 @@ const CategoryNotes = () => {
     <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
       <Stack.Screen
         options={{
-          title: `${category}`,
+          title: `${title}`,
           headerShown: true,
           headerStyle: {
             backgroundColor: theme.colors.primaryContainer,
@@ -51,9 +51,18 @@ const CategoryNotes = () => {
       <FlatList
         data={filteredData}
         renderItem={({ item }) => (
-          <CardNote title={item.title} content={item.description} />
+          <CardNote
+            _id={item._id}
+            title={item.title}
+            content={item.content}
+            priority={item.priority}
+            favorite={item.favorite}
+            categories={item.categories}
+          />
         )}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => {
+          return item._id ? item._id.toString() : "UNDEFINED";
+        }}
       />
     </View>
   );

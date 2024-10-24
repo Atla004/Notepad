@@ -1,12 +1,15 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   View,
-  StyleSheet,
-  KeyboardAvoidingView,
-  ScrollView,
+  StyleSheet
 } from "react-native";
 import {
-  Chip,
   TextInput,
   Divider,
   Dialog,
@@ -16,66 +19,112 @@ import {
   useTheme,
 } from "react-native-paper";
 import { Pressable } from "react-native";
-import { FavoritesIcon, TrashIcon } from "@/components/Icon";
+import { TrashIcon } from "@/components/Icon";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
-import DropdownPriority from "@/components/DropdownPriority"; // Ensure DropdownPriority accepts style prop
-import { router, Stack, useFocusEffect } from "expo-router";
-import { CloseIcon } from "@/components/Icon";
-import { StatusBar } from "expo-status-bar";
-import { deleteNote } from "@/services/notes";
+import DropdownPriority from "@/components/DropdownPriority";
 import {
-  editJSONData,
-  fetchData,
-  getJSONData,
-  removeData,
+  router,
+  Stack,
+  useLocalSearchParams,
+  useNavigation,
+} from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { deleteNote, editNote } from "@/services/notes";
+import {
+  fetchData
 } from "@/services/localstorage";
+import { editLocalNote, getLocalNote } from "@/services/notelocalstorage";
+import { NoteRequest } from "@/types/apiResponses";
 
 const EditNoteProperties = () => {
   const theme = useTheme();
-  const [noteName, setNoteName] = useState("");
   const [visible, setVisible] = useState(false);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
+  const listenerRef = useRef<((e: any) => void) | null>(null);
+  const { _id, priority, title } = useLocalSearchParams();
 
+  const [titleState, setTitleState] = useState<string>(title.toString());
 
-  const borrarNota = async () => {
+  const deleteNoteById = async () => {
     const username = await fetchData("username");
-    // const noteId = noteData._id ?? "";
-    await removeData("active-note");
-    // deleteNote(username, noteId);
+    const id = _id.toString();
+
+    await deleteNote(username, id);
     router.push("/Home");
     hideDialog();
   };
 
-  const data = [
-    { id: 1, title: " 1" },
-    { id: 2, title: "Category 2" },
-    { id: 3, title: "Category 3" },
-    { id: 4, title: "Category 4ffff" },
-    { id: 5, title: "Category 5" },
-    { id: 6, title: "Category 6" },
-    { id: 7, title: "Category 7" },
-    { id: 8, title: "Category 8" },
-    { id: 9, title: "Category 9" },
-    { id: 10, title: "Category 10" },
-  ];
+  const navigation = useNavigation();
 
-  const [favoriteState, setFavoriteState] = useState(false);
-  const [priorityState, setPriorityState] = useState(0);
-  const [titleState, setTitleState] = useState("");
+  const saveNoteProperties = async () => {
+    try {
+      console.log("saveNoteContent method");
+      const username = await fetchData("username");
+      const data = await getLocalNote();
+      console.log("data", data);
+      const dataToSave: NoteRequest = {
+        _id: data._id,
+        title: titleState,
+        categories: data.categories,
+      };
+      console.log("dataToSave", dataToSave);
 
-  useFocusEffect(
-    useCallback(() => {
-      //saveNote();
-    }, [])
-  );
+      await editNote(username, dataToSave);
 
-  const saveNote = async () => {
-    const data = await getJSONData("active-note");
-    console.log("data", data);
-    setFavoriteState(data.favorite);
-    setPriorityState(data.priority);
+      console.log("editnote method Finished");
+      await editLocalNote(dataToSave);
+
+      console.log("saveNoteContent method Finished");
+    } catch (error) {
+      console.log("Error al guardar la nota", error);
+    }
   };
+
+
+  useEffect(() => {
+    const onBeforeRemove = (e: { preventDefault: () => void }) => {
+      // Prevent default behavior of leaving the screen
+      e.preventDefault();
+
+      //guardar los cambios
+      saveNoteProperties();
+
+
+
+      // Redirigir a la pantalla deseada
+      router.push({
+        pathname: `/${titleState}`,
+        params: { _id, title: titleState },
+      });
+    };
+
+    // Eliminar el listener existente si hay uno
+    if (listenerRef.current) {
+      console.log("Removing existing beforeRemove listener");
+      navigation.removeListener("beforeRemove", listenerRef.current);
+    }
+
+    // Añadir el nuevo listener y almacenarlo en la referencia
+    navigation.addListener("beforeRemove", onBeforeRemove);
+    listenerRef.current = onBeforeRemove;
+
+    // Eliminar el listener cuando el componente se desmonta
+    return () => {
+      if (listenerRef.current) {
+        navigation.removeListener("beforeRemove", listenerRef.current);
+        listenerRef.current = null;
+      }
+
+      
+    };
+  }, [navigation, _id, titleState]);
+
+
+
+  const handleChangeText = useCallback((text: string) => {
+    setTitleState(text);
+  }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
@@ -91,16 +140,6 @@ const EditNoteProperties = () => {
               <>
                 <StatusBar />
                 <View style={styles.headersLeft}>
-                  <Pressable
-                    onPress={async () => {
-                      setFavoriteState(!favoriteState);
-                      await editJSONData("active-note", {
-                        favorite: !favoriteState,
-                      });
-                    }}
-                  >
-                    <FavoritesIcon />
-                  </Pressable>
                   <Pressable onPress={showDialog}>
                     <TrashIcon />
                   </Pressable>
@@ -121,7 +160,7 @@ const EditNoteProperties = () => {
                         Cancel
                       </Button>
                       <Button
-                        onPress={() => borrarNota()}
+                        onPress={() => deleteNoteById()}
                         style={[
                           styles.dialogButton,
                           styles.deleteButton,
@@ -149,9 +188,9 @@ const EditNoteProperties = () => {
       <TextInput
         style={styles.input}
         label="name"
-        value={noteName}
+        value={titleState}
         mode="outlined"
-        onChangeText={(text) => setNoteName(text)}
+        onChangeText={(text) => handleChangeText(text)}
         theme={{
           roundness: 8,
         }}
@@ -164,41 +203,6 @@ const EditNoteProperties = () => {
         Categories
       </Text>
 
-      {/*       <ScrollView
-        style={[
-          styles.scrollView,
-          { backgroundColor: theme.colors.primaryContainer },
-        ]}
-      >
-        <View
-          style={[
-            styles.chipContainer,
-            { backgroundColor: theme.colors.primaryContainer },
-          ]}
-        >
-          {data.map((item) => (
-            <Chip
-              key={item.id}
-              icon="close"
-              onPress={() => console.log("close")}
-              style={[styles.chips, { backgroundColor: theme.colors.tertiary }]}
-            >
-              <Text
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                variant="bodySmall"
-                style={[
-                  styles.chipText,
-                  { color: theme.colors.primaryContainer },
-                ]}
-              >
-                {item.title}
-              </Text>
-            </Chip>
-          ))}
-        </View>
-      </ScrollView> */}
-
       <CategoryMultiSelect />
       <Divider
         bold
@@ -210,7 +214,7 @@ const EditNoteProperties = () => {
       >
         Priority
       </Text>
-      <DropdownPriority />
+      <DropdownPriority priority={priority.toString()} _id={_id.toString()} />
     </View>
   );
 };

@@ -1,39 +1,39 @@
 import { RichText, Toolbar, useEditorBridge } from "@10play/tentap-editor";
-import { useFocusEffect, useNavigation } from "expo-router";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, KeyboardAvoidingView, StyleSheet, View } from "react-native";
-import { editJSONData, fetchData, getJSONData } from "@/services/localstorage";
+import {  fetchData } from "@/services/localstorage";
 import { editNote } from "@/services/notes";
 import { Text } from "react-native-paper";
 import { NoteRequest } from "@/types/apiResponses";
+import { editLocalNote } from "@/services/notelocalstorage";
 
 interface NoteHtmlProps {
   content: string;
   _id: string;
+  favorite: boolean;  
 }
 
-export const NoteHtml = ({ content,_id }: NoteHtmlProps) => {
-  const isFirstRender = useRef<boolean>(true);
+export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
+  const refFavorite = useRef<boolean>(favorite);
   const editorContent = useRef<string>("");
-  const [remainingChars, setRemainingChars] = useState<number>(0);
+  const [charactersNumber, setCharacterNumber] = useState<number>(0);
+  console.log("NoteHtml", content, _id, favorite);
 
-
-  useFocusEffect(
-    useCallback(() => {
-
-      console.log("(NoteHtml)content", content);
-      editorReady();
-      
-    }, [content])
-  );
+  useEffect(() => {
+    refFavorite.current = favorite;
+    editorReady();
+    return () => {
+    }
+  },[favorite,content]);
 
   useFocusEffect(
     useCallback(() => {
-      return async () => {
-        console.log("NoteHtml return");
-        await saveNoteContent();
-        setRemainingChars(0);
-      };
+      return () => {
+        console.log("REF", editorContent.current,refFavorite.current);
+        saveNoteContent();
+        setCharacterNumber(0);
+      }
     }, [])
   );
 
@@ -42,30 +42,26 @@ export const NoteHtml = ({ content,_id }: NoteHtmlProps) => {
   const editorReady = async () => {
     const waitForEditor = async () => {
       while (!editor.getEditorState().isReady) {
-        await new Promise((resolve) => setTimeout(resolve, 100)); // Esperar 100ms antes de volver a verificar
+        await new Promise((resolve) => setTimeout(resolve, 70)); 
       }
     };
     editorContent.current = content;
-
-
+    
+    
     await waitForEditor(); // Esperar hasta que el editor esté listo
-
     editor.setContent(editorContent.current);
     editor.setEditable(true);
     
-    console.log("ready editorContent:", editorContent.current ,"remaining:" ,remainingChars);
-    setRemainingChars(250 - (await editor.getText()).length);
+    const currentCharacterCount = (await editor.getText()).length;
+    setCharacterNumber(currentCharacterCount);
   };
 
   const handleEditorChange = async () => {
     try {
-      const content = await editor.getHTML();
-      const text = await editor.getText();
+      const [content, text] = await Promise.all([editor.getHTML(), editor.getText()]);
       if (text.length <= 250) {
         editorContent.current = content;
-        //console.log("content:", content, "length", content.length);
-        setRemainingChars(250 - text.length);
-        //console.log("remainingChars", remainingChars);
+        setCharacterNumber(text.length);
       } else {
         Alert.alert(
           "Character Limit Exceeded",
@@ -90,20 +86,13 @@ export const NoteHtml = ({ content,_id }: NoteHtmlProps) => {
     try {
       console.log("saveNoteContent method");
       const username = await fetchData("username");
-
-    
-
       const dataToSave: NoteRequest = {
         _id,
         content :editorContent.current,
-      }
+        favorite: refFavorite.current,
+      };
 
-      console.log("dataToSave", dataToSave);
-
-      //local
-      await editJSONData("active-note", { content: editorContent.current });
-      await editNote(username, dataToSave);
-      //
+      await Promise.all([ editNote(username, dataToSave), editLocalNote(dataToSave)]);
 
       console.log("saveNoteContent method Finished");
     } catch (error) {
@@ -114,7 +103,7 @@ export const NoteHtml = ({ content,_id }: NoteHtmlProps) => {
   return (
     <>
       <Text style={styles.charCount}>
-        Characters remaining: {remainingChars}
+        Characters remaining: {250 -charactersNumber}
       </Text>
       <RichText editor={editor} />
       <KeyboardAvoidingView style={styles.keyboardAvoidingView}>

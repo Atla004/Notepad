@@ -1,8 +1,11 @@
 import Background from "@/components/Background";
-import Emoji from "@/components/Emoji";
+import Emoji from "@/components/Emoji2";
 import SearchBar from "@/components/SearchBar";
+import { getAllCategories } from "@/services/categories";
+import { fetchData } from "@/services/localstorage";
+import { Category } from "@/types/apiResponses";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -16,36 +19,38 @@ import { FlatGrid } from "react-native-super-grid";
 
 const data = [
   {
-    id: 1,
-    title: "Sin ganas de vivir",
-    description: "porque...",
+    _id: "67197377f16dd83e3240d1f1", 
+    emoji: "😍", 
+    owner: "6714818962ecd2db0e161d15", 
+    title: "hiw"
   },
   {
-    id: 2,
-    title: "a fffveces pienso...",
-    description: "es mentira",
+    _id: "67197377f16dd83e3240d1f1", 
+    emoji: "😍", 
+    owner: "6714818962ecd2db0e161d15", 
+    title: "hiddw"
   },
 ];
 
 export default function Categories() {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState("")
 
-  const [items, setItems] = useState([
-    { name: "TURQUOISE", code: 0x1f60a },
-    { name: "EMERALD", code: 0x1f60a },
-    { name: "PETER RIVER", code: 0x1f60a },
-    { name: "AMETHYST", code: 0x1f60a },
-    { name: "WET ASPHALT", code: 0x1f60a },
-    { name: "GREEN SEA", code: 0x1f60a },
-    { name: "NEPHRITIS", code: 0x1f60a },
-    { name: "BELIZE HOLE", code: 0x1f60a },
-    { name: "WISTERIA", code: 0x1f60a },
-    { name: "MIDNIGHT BLUE", code: 0x1f60a },
-    { name: "SUN FLOWER", code: 0x1f60a },
-  ]);
+  useEffect(() => {
+    fetchData("username").then((res) => {
+      getAllCategories(res).then((res) => {
+        console.log(res[0]);
+        setItems(res);
+      });
+    });
+
+  }
+  , []);
+
+
+  const [items, setItems] = useState<Category[]>([]);
 
   const filteredData = items.filter((item) =>
-    item.name.toLowerCase().includes(search.toLowerCase())
+    item.title.toLowerCase().includes(search.toLowerCase())
   );
 
   const theme = useTheme();
@@ -73,15 +78,17 @@ export default function Categories() {
               { backgroundColor: theme.colors.primaryContainer },
             ]}
             onPress={() => {
-              console.log(`/${item.name}`);
-              router.push({ pathname: `/dinamicCategory/${item.name}` });
+              console.log(`/${item.title}`);
+              router.push(
+                { pathname: `/dinamicCategory/${item.title}`, params: {_id: item._id, title:item.title} }
+               );
             }}
           >
             <Text style={styles.text}>
-              <Emoji symbol={item.code} />
+              <Emoji symbol={item.emoji} />
             </Text>
             <Text style={[styles.itemName, { color: theme.colors.shadow }]}>
-              {item.name}
+              {item.title}
             </Text>
           </Pressable>
         )}

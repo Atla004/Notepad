@@ -1,4 +1,4 @@
-import { Category } from "@/types/apiResponses";
+import { Category, Note } from "@/types/apiResponses";
 import { authorizedWrappedFetch } from "./fetch";
 import { FetchError } from "./utils";
 
@@ -41,7 +41,7 @@ export const deleteCategory = async (username: string, _id: string) => {
   }
 };
 
-export const getAllCategories = async (username: string) => {
+export const getAllCategories = async (username: string): Promise<Category[]> => {
   try {
     const response = await authorizedWrappedFetch({
       route: `/user/${username}/categories`,
@@ -50,7 +50,24 @@ export const getAllCategories = async (username: string) => {
 
     if (response?.status !== 200) {
       const errors = await response?.json();
-      console.log("Response0.1: ");
+      throw new FetchError(errors.error);
+    }
+    const json = await response?.json();
+    return json.data;
+  } catch (error) {
+    throw new Error(`Error creating category: ${(error as Error).message}`);
+  }
+};
+
+export const getCategoryNotes = async (username: string, categoryId: string): Promise<Note[]> => {
+  try {
+    const response = await authorizedWrappedFetch({
+      route: `/user/${username}/notes/${categoryId}`,
+      method: "GET",
+    });
+
+    if (response?.status !== 200) {
+      const errors = await response?.json();
       throw new FetchError(errors.error);
     }
     const json = await response?.json();
