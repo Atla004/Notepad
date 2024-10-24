@@ -22,7 +22,7 @@ export const getLocalNote = async ():Promise<Note> => {
 interface NoteMerge {
   title?: string,
   content?: string,
-  categories?: Category[],
+  categories?: string[],
   priority?: number,
   favorite?: boolean,
 }

@@ -30,7 +30,6 @@ export const createNote = async (username: string, note: Note) => {
 
 export const editNote = async (username: string, note: NoteRequest) => {
   try {
-    note.categories = note.categories ? note.categories : [];
     const response = await authorizedWrappedFetch({
       route: `/user/${username}/note/${note._id}`,
       method: "PUT",
@@ -43,7 +42,7 @@ export const editNote = async (username: string, note: NoteRequest) => {
       console.error(message.error);
       throw new FetchError(message.error);
     }
-
+    
     return message.success;
   } catch (error) {
     console.error("(editNote)error editing the note", error);

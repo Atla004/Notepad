@@ -62,6 +62,7 @@ const EditNoteProperties = () => {
       console.log("saveNoteContent method");
       const username = await fetchData("username");
       const data = await getLocalNote();
+      console.log("data", data);
       const dataToSave: NoteRequest = {
         _id: data._id,
         title: titleState,
@@ -70,6 +71,8 @@ const EditNoteProperties = () => {
       console.log("dataToSave", dataToSave);
 
       await editNote(username, dataToSave);
+
+      console.log("editnote method Finished");
       await editLocalNote(dataToSave);
 
       console.log("saveNoteContent method Finished");

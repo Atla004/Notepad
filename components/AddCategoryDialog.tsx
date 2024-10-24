@@ -12,6 +12,8 @@ import { SelectEmoji } from "./SelectEmoji";
 import { createCategory } from "@/services/categories";
 import { fetchData } from "@/services/localstorage";
 import { useState } from "react";
+import { notify } from '@alexsandersarmento/react-native-event-emitter';
+
 
 export default function AddCategoryDialog() {
   const [visible, setVisible] = useState(false);
@@ -19,7 +21,7 @@ export default function AddCategoryDialog() {
   const [userError, setUserError] = useState("");
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
-
+  
   const theme = useTheme();
 
   const handlerNewCategories = async () => {
@@ -34,6 +36,7 @@ export default function AddCategoryDialog() {
             title: categoryName,
             emoji: categoryEmoji,
           });
+          notify("newCategory");
       
         } catch (error) {
       console.log("Error creating category: ", error);
@@ -70,7 +73,7 @@ export default function AddCategoryDialog() {
             </View>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={handlerNewCategories}>Dones</Button>
+            <Button onPress={handlerNewCategories}>Done</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

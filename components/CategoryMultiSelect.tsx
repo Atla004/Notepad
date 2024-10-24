@@ -8,12 +8,14 @@ import { fetchData } from "@/services/localstorage";
 import { getAllCategories } from "@/services/categories";
 import { Category } from "@/types/apiResponses";
 import { editLocalNote, getLocalNote } from "@/services/notelocalstorage";
+import { addListener } from '@alexsandersarmento/react-native-event-emitter';
+
 
 const CategoryMultiSelect = () => {
   /*   const userCategories: Category[] = [
-    { title: "Item 1", _id: "1", emoji: "📝" },
-    { title: "Item 2", _id: "2", emoji: "📝" },
-    { title: "Item 3", _id: "3", emoji: "📝" },
+    { title: "Item 1" , emoji: "📝" },
+    { title: "Item 2", emoji: "📝" },
+    { title: "Item 3", emoji: "📝" },
     { title: "Item 4", _id: "4", emoji: "📝" },
     { title: "Item 5", _id: "5", emoji: "📝" },
     { title: "Item 6", _id: "6", emoji: "📝" },
@@ -23,9 +25,13 @@ const CategoryMultiSelect = () => {
     { title: "Item 10", _id: "10", emoji: "📝" },
   ]; */
 
+
+
+  
+  
   const [selected, setSelected] = useState<string[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-
+  
   const getUserCategories = async () => {
     const username = await fetchData("username");
     const [categoriesData, data] = await Promise.all([
@@ -33,9 +39,13 @@ const CategoryMultiSelect = () => {
       getLocalNote(),
     ]);
     console.log("data", categoriesData);
+    console.log("data", data.categories);
     setSelected(data.categories);
     setCategories(categoriesData);
   };
+
+
+  addListener('newCategory', getUserCategories);
 
   useEffect(() => {
     getUserCategories();
@@ -70,13 +80,15 @@ const CategoryMultiSelect = () => {
 
   const handleChange = async (selectedItems: string[]) => {
     console.log("selectedItems", selectedItems);
+    console.log("user categories", categories[1]._id, categories[1].title);
+ 
     if (selectedItems.length > 5) {
       Alert.alert("Limit reached", "You can only select up to 5 items.");
       return;
     }
     setSelected(selectedItems);
-    //await editLocalNote({ categories: selectedItems });
-    console.log("selectedItems", selectedItems);
+    await editLocalNote({ categories: selectedItems });
+
   };
 
   return (
@@ -91,7 +103,7 @@ const CategoryMultiSelect = () => {
           inputSearchStyle={styles.input}
           data={categories}
           labelField="title"
-          valueField="_id"
+          valueField="title"
           placeholder="Select categories"
           value={selected}
           search
