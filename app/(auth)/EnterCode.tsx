@@ -1,4 +1,4 @@
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams, useRouter } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { useState } from "react";
 import { Card, Text, useTheme, Button, TextInput } from "react-native-paper";
@@ -9,9 +9,14 @@ import { checkResetToken } from "@/services/auth";
 export default function ForgotPassword() {
   const [token, setToken] = useState("");
   const [error, setError] = useState("");
-  const { email } = useLocalSearchParams();
+  const { email, isLogged=false } = useLocalSearchParams();
 
   const theme = useTheme();
+
+  const router = useRouter();
+  const handleGoBack = () => {
+    router.dismiss(1);
+  }
 
   const handleLoginClick = async () => {
     const isValid = await checkResetToken(token);
@@ -54,19 +59,25 @@ export default function ForgotPassword() {
               </Text>
             ) : null}
 
-            <View style={[styles.row, styles.centeredRow]}>
-              <Link href="./ForgotPassword">
-                <Text
-                  variant="labelLarge"
-                  style={{
-                    color: theme.colors.primary,
-                    textDecorationLine: "underline",
-                  }}
-                >
-                  not received the code?
-                </Text>
-              </Link>
-            </View>
+            {!isLogged ?
+              <View style={[styles.row, styles.centeredRow]}>
+                <Link href="./ForgotPassword">
+                  <Text
+                    variant="labelLarge"
+                    style={{
+                      color: theme.colors.primary,
+                      textDecorationLine: "underline",
+                    }}
+                    >
+                    not received the code?
+                  </Text>
+                </Link>
+              </View> : <>
+              <Button mode="contained" onPressOut={handleGoBack}>
+                Cancel
+              </Button>
+            </>
+            }
 
             <Button mode="contained" onPressOut={handleLoginClick}>
               Continue

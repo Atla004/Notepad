@@ -15,9 +15,9 @@ const ProfileHeader = () => {
   return (
     <View style={styles.headerContainer}>
       <View style={styles.headerLeft}>
-        <View style={styles.profileLetterContainer}>
+        {/* <View style={styles.profileLetterContainer}>
           <Avatar.Text size={70} label="A" />
-        </View>
+        </View> */}
       </View>
       <View style={styles.headerBackground}>
         <Pressable

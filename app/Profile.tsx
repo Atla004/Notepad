@@ -7,6 +7,8 @@ import { StatusBar } from "expo-status-bar";
 import { ThemeContext } from "@/components/Container";
 import { logout } from "@/services/auth";
 import { deleteUser, getUserEmail } from "@/services/user";
+import Toast from "react-native-simple-toast";
+import { getPasswordToken } from "@/services/auth";
 import { fetchData } from "@/services/localstorage";
 
 export default function Profile() {
@@ -27,23 +29,45 @@ export default function Profile() {
   };
 
   const deleteAccount = async () => {
-    await deleteUser({ username });
-    await logout();
+    try {
+      // await deleteUser({ username });
+      // await logout();
+      console.log("Why");
+    }
+    catch (error) {
+      console.error('Failed to delete user')
+    }
   }
-
   const theme = useTheme();
+
+  const changePassword = async () => {
+
+    await getPasswordToken(email);
+    Toast.show(
+      "We will send you a code to reset your password.",
+      Toast.LONG
+    );
+    router.push({
+      pathname: "/EnterCode",
+      params: { email, isLogged: 'true' },
+    });
+    return;
+  };
 
   const getUserData = async () => {
     const userName = await fetchData('username');
-    const userEmail = await getUserEmail({username});
+    const userEmail = await getUserEmail({username: userName});
     setUsername(userName);
     setEmail(userEmail);
   }
 
   useFocusEffect(
     useCallback(() => {
-      getUserData();
-    },[])
+      const wrapper = async() => {
+        await getUserData();
+      }
+      wrapper();
+    }, [])
   )
 
   const styles = StyleSheet.create({
@@ -105,10 +129,14 @@ export default function Profile() {
       <Text variant="bodySmall" style={styles.textCloseToDivider}>
         Profile data
       </Text>
-      <Button icon="account" textColor={theme.colors.shadow} style={styles.bnt}>
+      <Button icon="account" textColor={theme.colors.shadow} style={styles.bnt}
+      >
         Change Email
       </Button>
-      <Button icon="lock" textColor={theme.colors.shadow} style={styles.bnt}>
+      <Button icon="lock" textColor={theme.colors.shadow} style={styles.bnt}
+        onPress={async () => {await changePassword()}}
+      >
+        
         Change Password
       </Button>
       <Divider bold style={styles.divider} />
@@ -177,7 +205,7 @@ export default function Profile() {
               Cancel
             </Button>
             <Button
-              onPress={ async () => await deleteAccount() }
+              onPress={ async () => deleteAccount() }
               style={[
                 styles.dialogButton,
                 styles.deleteButton,

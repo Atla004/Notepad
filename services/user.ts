@@ -1,5 +1,5 @@
 import { logout } from "./auth";
-import { wrappedFetch } from "./fetch";
+import { authorizedWrappedFetch, wrappedFetch } from "./fetch";
 import { FetchError } from "./utils";
 
 export const changeUserEmail = async (userData: {
@@ -25,7 +25,7 @@ export const changeUserEmail = async (userData: {
 
 export const deleteUser = async (userData: { username: string }) => {
   try {
-    const response = await wrappedFetch({
+    const response = await authorizedWrappedFetch({
       route: `/user/${userData.username}`,
       method: "DELETE",
       body: userData,
@@ -43,7 +43,7 @@ export const deleteUser = async (userData: { username: string }) => {
 
 export const getUserEmail = async (userData: {username: string}) => {
     try {
-        const response = await wrappedFetch({
+        const response = await authorizedWrappedFetch({
             route: `/user/${userData.username}`,
             method: "GET",
         });
@@ -55,6 +55,6 @@ export const getUserEmail = async (userData: {username: string}) => {
         return json.data.email;
     } 
     catch (error) {
-        throw new Error(`Failed to delete user`);
+        throw new Error(`Failed to get user email`);
     } 
 };
