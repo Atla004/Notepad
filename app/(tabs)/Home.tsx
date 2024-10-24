@@ -14,7 +14,6 @@ import { addListener } from "@alexsandersarmento/react-native-event-emitter";
 export default function Home() {
   const [search, setSearch] = useState<string>("");
   const [data, setData] = useState<Note[]>([]);
-  const navigator = useNavigation();
   const [loading, setLoading] = useState<boolean>(true);
 
   useFocusEffect(
@@ -30,7 +29,7 @@ export default function Home() {
     setLoading(true);
   };
 
-  addListener('myEvent', changeLoading);
+  addListener('goToNote', changeLoading);
 
 
 
