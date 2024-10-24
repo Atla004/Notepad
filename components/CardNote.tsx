@@ -4,6 +4,8 @@ import { router } from "expo-router";
 import { StyleSheet } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { storeLocalNote } from "@/services/notelocalstorage";
+import { useState } from "react";
+import { notify } from "@alexsandersarmento/react-native-event-emitter";
 
 const priorities = [
   { name: "", color: "#" },
@@ -21,14 +23,21 @@ const CardNote = ({
   favorite,
   _id,
   categories,
+
 }: CardNoteProps) => {
+
+
   const goToNote = async () => {
-    console.log("Go to Note with id: ", _id);
+    notify("goToNote");
+    
+    console.log("Go to Note with id: ", title);
+ 
     await storeLocalNote({ _id, title, content, priority, favorite, categories });
     router.push({
       pathname: `/${title}`,
       params: { _id , title},
     });
+
   };
   const theme = useTheme();
 
