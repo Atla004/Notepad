@@ -40,3 +40,21 @@ export const deleteUser = async (userData: { username: string }) => {
     throw new Error(`Failed to delete user`);
   }
 };
+
+export const getUserEmail = async (userData: {username: string}) => {
+    try {
+        const response = await wrappedFetch({
+            route: `/user/${userData.username}`,
+            method: "GET",
+        });
+        if (response.status !== 200) {
+            const errors = await response.json();
+            throw new FetchError(errors.error);
+        }
+        const json = await response.json();
+        return json.data.email;
+    } 
+    catch (error) {
+        throw new Error(`Failed to delete user`);
+    } 
+};
