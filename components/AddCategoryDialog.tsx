@@ -30,6 +30,10 @@ export default function AddCategoryDialog() {
         setUserError("Category name cannot be empty.");
         return;
       }
+      if (categoryName.length > 20) {
+        setUserError("Category name is too long.");
+        return;
+      }
           hideDialog();
           const [username,categoryEmoji] = await Promise.all([fetchData("username"),fetchData("categories")]);
           await createCategory(username, {
