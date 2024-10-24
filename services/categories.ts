@@ -50,10 +50,10 @@ export const getAllCategories = async (username: string): Promise<Category[]> =>
 
     if (response?.status !== 200) {
       const errors = await response?.json();
-      console.log("Response0.1: ");
       throw new FetchError(errors.error);
     }
     const json = await response?.json();
+    console.log("Response0.2: ", json.data);
     return json.data;
   } catch (error) {
     throw new Error(`Error creating category: ${(error as Error).message}`);

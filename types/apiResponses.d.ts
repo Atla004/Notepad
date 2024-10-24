@@ -31,5 +31,5 @@ export interface Category {
     _id?: string,
     title: string,
     owner?: string,
-    emoji: number
+    emoji: string,
 }

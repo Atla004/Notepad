@@ -1,4 +1,4 @@
-import { Note, NoteRequest } from "@/types/apiResponses";
+import { Category, Note, NoteRequest } from "@/types/apiResponses";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const storeLocalNote = async (value: Note) => {
@@ -22,7 +22,7 @@ export const getLocalNote = async ():Promise<Note> => {
 interface NoteMerge {
   title?: string,
   content?: string,
-  categories?: string[],
+  categories?: Category[],
   priority?: number,
   favorite?: boolean,
 }
@@ -34,3 +34,4 @@ export const editLocalNote = async ( value: NoteMerge) => {
     throw new Error((error as Error).message);
   }
 };
+

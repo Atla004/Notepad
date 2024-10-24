@@ -3,60 +3,44 @@ import { StyleSheet, View, TouchableOpacity, Text, Alert } from "react-native";
 import { MultiSelect } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import AddCategoryDialog from "./AddCategoryDialog";
-import Emoji from "./Emoji";
+import Emoji from "./Emoji2";
 import { fetchData } from "@/services/localstorage";
 import { getAllCategories } from "@/services/categories";
 import { Category } from "@/types/apiResponses";
 import { editLocalNote, getLocalNote } from "@/services/notelocalstorage";
 
-
-
-
-
 const CategoryMultiSelect = () => {
+  /*   const userCategories: Category[] = [
+    { title: "Item 1", _id: "1", emoji: "📝" },
+    { title: "Item 2", _id: "2", emoji: "📝" },
+    { title: "Item 3", _id: "3", emoji: "📝" },
+    { title: "Item 4", _id: "4", emoji: "📝" },
+    { title: "Item 5", _id: "5", emoji: "📝" },
+    { title: "Item 6", _id: "6", emoji: "📝" },
+    { title: "Item 7", _id: "7", emoji: "📝" },
+    { title: "Item 8", _id: "8", emoji: "📝" },
+    { title: "Item 9", _id: "9", emoji: "📝" },
+    { title: "Item 10", _id: "10", emoji: "📝" },
+  ]; */
 
-
-  const userCategories = [
-    { title: "Item 1", _id: "1", emoji: 0x1f60a },
-    { title: "Item 2", _id: "2", emoji: 0x1f60a },
-    { title: "Item 3", _id: "3", emoji: 0x1f60a },
-    { title: "Item 4", _id: "4", emoji: 0x1f60a },
-    { title: "Item 5", _id: "5", emoji: 0x1f60a },
-    { title: "Item 6", _id: "6", emoji: 0x1f60a },
-    { title: "Item 7", _id: "7", emoji: 0x1f60a },
-    { title: "Item 8", _id: "8", emoji: 0x1f60a },
-    { title: "Item 9", _id: "9", emoji: 0x1f60a },
-    { title: "Item 10", _id: "10", emoji: 0x1f60a },
-  ];
-  
-
-  
   const [selected, setSelected] = useState<string[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
 
   const getUserCategories = async () => {
-    const username = await fetchData("username")
+    const username = await fetchData("username");
     const [categoriesData, data] = await Promise.all([
       getAllCategories(username),
-      getLocalNote()
+      getLocalNote(),
     ]);
+    console.log("data", categoriesData);
     setSelected(data.categories);
-    //console.log("categoriesData", categoriesData);
-    setCategories(userCategories);
-
-
-  }
-
+    setCategories(categoriesData);
+  };
 
   useEffect(() => {
     getUserCategories();
-    return () => {
-
-    }
-
-  } , []);
-
-  
+    return () => {};
+  }, []);
 
   const categoryChip = (chip: Category) => {
     return (
@@ -67,7 +51,13 @@ const CategoryMultiSelect = () => {
     );
   };
 
-  const tinyCategoryChip = ({item , unSelect}: {item: Category, unSelect: any}  ) => {
+  const tinyCategoryChip = ({
+    item,
+    unSelect,
+  }: {
+    item: Category;
+    unSelect: any;
+  }) => {
     return (
       <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
         <View style={styles.tagsStyles}>
@@ -76,7 +66,7 @@ const CategoryMultiSelect = () => {
         </View>
       </TouchableOpacity>
     );
-  }
+  };
 
   const handleChange = async (selectedItems: string[]) => {
     console.log("selectedItems", selectedItems);
@@ -85,28 +75,34 @@ const CategoryMultiSelect = () => {
       return;
     }
     setSelected(selectedItems);
-    await editLocalNote({ categories: selectedItems });
+    //await editLocalNote({ categories: selectedItems });
     console.log("selectedItems", selectedItems);
   };
 
   return (
     <View style={styles.container}>
-      <MultiSelect
-        style={styles.dropdown}
-        placeholderStyle={styles.placeholderStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        inputSearchStyle={styles.input}
-        data={userCategories}
-        labelField="title"
-        valueField="_id"
-        placeholder="Select categories"
-        value={selected}
-        search
-        searchPlaceholder="Search..."
-        onChange={handleChange}
-        renderItem={categoryChip}
-        renderSelectedItem={(item, unSelect) => tinyCategoryChip({item, unSelect})}
-      />
+      {categories.length === 0 ? (
+        <Text style={styles.noCategoriesText}>Cree categorías</Text>
+      ) : (
+        <MultiSelect
+          style={styles.dropdown}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.input}
+          data={categories}
+          labelField="title"
+          valueField="_id"
+          placeholder="Select categories"
+          value={selected}
+          search
+          searchPlaceholder="Search..."
+          onChange={handleChange}
+          renderItem={categoryChip}
+          renderSelectedItem={(item, unSelect) =>
+            tinyCategoryChip({ item, unSelect })
+          }
+        />
+      )}
 
       <AddCategoryDialog />
     </View>
@@ -174,5 +170,10 @@ const styles = StyleSheet.create({
   textSelectedStyle: {
     marginRight: 5,
     fontSize: 16,
+  },
+  noCategoriesText: {
+    fontSize: 16,
+    textAlign: "center",
+    color: "gray",
   },
 });
