@@ -6,7 +6,7 @@ import EditNoteProperties from "./EditNoteProperties";
 export default function Index() {
   return (
     <>
-      <Categories />
+      <Home />
     </>
   );
 }
