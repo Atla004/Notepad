@@ -12,7 +12,7 @@ import {
   FilledFavoritesIcon,
   SettingsIcon,
 } from "@/components/Icon";
-import { useTheme } from "react-native-paper";
+import { ActivityIndicator, useTheme } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getLocalNote } from "@/services/notelocalstorage";
@@ -28,7 +28,7 @@ const NoteScreen = () => {
   const [content, setContent] = useState<string>("");
   const priority = useRef<number>(0);
   const listenerRef = useRef<((e: any) => void) | null>(null);
-
+  const [loading, setLoading] = useState<boolean>(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -81,8 +81,18 @@ const NoteScreen = () => {
       priority.current = localNoteData.priority;
     } catch (error) {
       console.log("(getNoteData)Error al obtener info de la nota", error);
+    }finally{
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { backgroundColor: theme.colors.surface, justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      </View>
+    );
+  }
 
 
   return (

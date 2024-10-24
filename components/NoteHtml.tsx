@@ -19,6 +19,7 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
   const editorContent = useRef<string>("");
   const [charactersNumber, setCharacterNumber] = useState<number>(0);
   console.log("NoteHtml", content, _id, favorite);
+  const refLoading = useRef<boolean>(true);
 
   useEffect(() => {
     refFavorite.current = favorite;
@@ -40,6 +41,7 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
 
 
   const editorReady = async () => {
+
     const waitForEditor = async () => {
       while (!editor.getEditorState().isReady) {
         await new Promise((resolve) => setTimeout(resolve, 70)); 
@@ -51,6 +53,8 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
     await waitForEditor(); // Esperar hasta que el editor esté listo
     editor.setContent(editorContent.current);
     editor.setEditable(true);
+    refLoading.current = false;
+
     
     const currentCharacterCount = (await editor.getText()).length;
     setCharacterNumber(currentCharacterCount);
@@ -77,7 +81,7 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
   const editor = useEditorBridge({
     autofocus: true,
     avoidIosKeyboard: true,
-    initialContent: "Loading...",
+    initialContent: "",
     onChange: handleEditorChange,
     editable: false,
   });
@@ -86,6 +90,9 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
     try {
       console.log("saveNoteContent method");
       const username = await fetchData("username");
+      if (refLoading.current) {
+        return
+      }
       const dataToSave: NoteRequest = {
         _id,
         content :editorContent.current,
