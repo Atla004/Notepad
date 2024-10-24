@@ -43,16 +43,21 @@ const EditNoteProperties = () => {
   const hideDialog = () => setVisible(false);
   const listenerRef = useRef<((e: any) => void) | null>(null);
   const { _id, priority, title } = useLocalSearchParams();
+  const [isDebounced, setIsDebounced] = useState(false);
 
   const [titleState, setTitleState] = useState<string>(title.toString());
 
   const deleteNoteById = async () => {
+    if (isDebounced) return; 
+    setIsDebounced(true); 
+    
+    hideDialog();
     const username = await fetchData("username");
     const id = _id.toString();
 
     await deleteNote(username, id);
     router.push("/Home");
-    hideDialog();
+    setIsDebounced(false);
   };
 
   const navigation = useNavigation();
@@ -64,7 +69,7 @@ const EditNoteProperties = () => {
       const data = await getLocalNote();
       console.log("data", data);
       const dataToSave: NoteRequest = {
-        _id: data._id,
+        _id: data._id as string,
         title: titleState,
         categories: data.categories,
       };
