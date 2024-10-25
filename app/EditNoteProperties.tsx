@@ -44,6 +44,8 @@ const EditNoteProperties = () => {
   const listenerRef = useRef<((e: any) => void) | null>(null);
   const { _id, priority, title } = useLocalSearchParams();
   const [isDebounced, setIsDebounced] = useState(false);
+  const shouldHandleBeforeRemove = useRef<boolean>(true);
+
 
   const [titleState, setTitleState] = useState<string>(title.toString());
 
@@ -67,20 +69,15 @@ const EditNoteProperties = () => {
       console.log("saveNoteContent method");
       const username = await fetchData("username");
       const data = await getLocalNote();
-      console.log("data", data);
       const dataToSave: NoteRequest = {
         _id: data._id as string,
         title: titleState,
         categories: data.categories,
       };
-      console.log("dataToSave", dataToSave);
-
       await editNote(username, dataToSave);
 
-      console.log("editnote method Finished");
       await editLocalNote(dataToSave);
 
-      console.log("saveNoteContent method Finished");
     } catch (error) {
       console.log("Error al guardar la nota", error);
     }
@@ -89,8 +86,11 @@ const EditNoteProperties = () => {
 
   useEffect(() => {
     const onBeforeRemove = (e: { preventDefault: () => void }) => {
-      // Prevent default behavior of leaving the screen
+      if (!shouldHandleBeforeRemove.current) return;
+      shouldHandleBeforeRemove.current = false;
       e.preventDefault();
+
+      console.log("onBeforeRemove 1");
 
       //guardar los cambios
       saveNoteProperties();
@@ -98,6 +98,8 @@ const EditNoteProperties = () => {
 
 
       // Redirigir a la pantalla deseada
+
+      router.dismiss(1);
       router.push({
         pathname: `/${titleState}`,
         params: { _id, title: titleState },

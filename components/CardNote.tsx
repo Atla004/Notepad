@@ -1,9 +1,11 @@
 import { Card, Chip, Text, useTheme } from "react-native-paper";
 import { CardNoteProps } from "@/types/types";
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
 import { StyleSheet } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { storeLocalNote } from "@/services/notelocalstorage";
+import { useEffect, useState } from "react";
+import { addListener, notify } from "@alexsandersarmento/react-native-event-emitter";
 
 const priorities = [
   { name: "", color: "#" },
@@ -21,21 +23,36 @@ const CardNote = ({
   favorite,
   _id,
   categories,
+
 }: CardNoteProps) => {
+
+  const [isDisabled, setIsDisabled] = useState(false);
+  const router = useRouter();
+
+
   const goToNote = async () => {
-    console.log("Go to Note with id: ", _id);
+    notify("goToNote");
+    setIsDisabled(true);
+    console.log("Go to Note with id: ", title);
+ 
     await storeLocalNote({ _id, title, content, priority, favorite, categories });
     router.push({
       pathname: `/${title}`,
       params: { _id , title},
     });
+
   };
   const theme = useTheme();
+
+  addListener('disable',() => {
+    setIsDisabled(false);
+  });
 
   return (
     <Card
       style={[styles.card, { backgroundColor: theme.colors.primaryContainer }]}
       onPress={goToNote}
+      disabled={isDisabled}
     >
       <Card.Title
         title={title}

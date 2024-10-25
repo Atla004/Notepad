@@ -1,41 +1,57 @@
 import { useCallback, useEffect, useState } from "react";
 import { FlatList, StyleSheet, StatusBar, View, Pressable } from "react-native";
-import { Searchbar, useTheme } from "react-native-paper";
+import { ActivityIndicator, Button, Searchbar, useTheme } from "react-native-paper";
 import FABNewNote from "@/components/FABNewNote";
 import CardNote from "@/components/CardNote";
 import SearchBar from "@/components/SearchBar";
 import { getAllNotes } from "@/services/notes";
-import { fetchData } from "@/services/localstorage";
+import { fetchData, storeData } from "@/services/localstorage";
 import { Note } from "@/types/apiResponses";
 import { router, useFocusEffect, useNavigation } from "expo-router";
+import { addListener } from "@alexsandersarmento/react-native-event-emitter";
+
 
 export default function Home() {
   const [search, setSearch] = useState<string>("");
   const [data, setData] = useState<Note[]>([]);
-  const navigator = useNavigation();
+  const [loading, setLoading] = useState<boolean>(true);
+
 
   useFocusEffect(
     useCallback(() => {
-      
+      storeData('active-tab', 'Home')
       getNotes();
       
       return () => {};
     }, [])
   );
 
+  const changeLoading = () => {
+    setLoading(true);
+  };
+
+  addListener('goToNote', changeLoading);
+
+
+
+
+
   const getNotes = async (): Promise<Note[]> => {
-    console.log("getNotes");
-    const username = await fetchData("username");
     try {
+      console.log("getNotes");
+      const username = await fetchData("username");
       const dataNotes = await getAllNotes(username);
       if (dataNotes !== undefined) {
         setData(dataNotes);
       }
       //console.log("dataNotes: ", JSON.stringify(dataNotes, null, 2));
+      return data;
     } catch (error) {
-      console.error("error retrieving the notes ", error);
+      console.error("Error getting notes: ", error);
+      return [];
+    }finally{
+      setLoading(false);
     }
-    return data;
   };
 
   const handleNewNote = (): void => {
@@ -47,6 +63,15 @@ export default function Home() {
   )
   .sort((a, b) => b.priority - a.priority)
   const theme = useTheme();
+
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { backgroundColor: theme.colors.surface, justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <View
@@ -61,8 +86,8 @@ export default function Home() {
 
       <FlatList
         data={filteredData}
-        renderItem={({ item }) => (
-          <CardNote
+        renderItem={({ item }) => (         
+        <CardNote 
             _id={item._id as string}
             title={item.title}
             content={item.content}
@@ -81,4 +106,10 @@ export default function Home() {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
+});

@@ -76,3 +76,23 @@ export const getCategoryNotes = async (username: string, categoryId: string): Pr
     throw new Error(`Error creating category: ${(error as Error).message}`);
   }
 };
+
+export const editCategory = async (username: string,_id:string, category: Category) => {
+  try {
+    const response = await authorizedWrappedFetch({
+      route: `/user/${username}/category/${_id}`,
+      method: "PUT",
+      body: { ...category },
+    });
+
+    if (response?.status !== 200) {
+      const errors = await response?.json();
+      console.log("Response0.1: ");
+      throw new FetchError(errors.error);
+    }
+    const json = await response?.json();
+    return json.success;
+  } catch (error) {
+    throw new Error(`Error creating category: ${(error as Error).message}`);
+  }
+};

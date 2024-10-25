@@ -2,15 +2,17 @@ import { useCallback, useState } from "react";
 import { FlatList, StyleSheet, StatusBar, View } from "react-native";
 import CardNote from "@/components/CardNote";
 import SearchBar from "@/components/SearchBar";
-import { useTheme } from "react-native-paper";
-import { fetchData } from "@/services/localstorage";
+import { ActivityIndicator, useTheme } from "react-native-paper";
+import { fetchData, storeData } from "@/services/localstorage";
 import { Note } from "@/types/apiResponses";
 import { getAllNotes } from "@/services/notes";
 import { useFocusEffect } from "expo-router";
+import { addListener } from "@alexsandersarmento/react-native-event-emitter";
 
 export default function Favorites() {
   const [search, setSearch] = useState("");
   const [data, setData] = useState<Note[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const getNotes = async (): Promise<Note[]> => {
     console.log("getNotes(favorites)");
@@ -21,15 +23,24 @@ export default function Favorites() {
       //console.log("dataNotes(favorites): ", JSON.stringify(dataNotes, null, 2));
     } catch (error) {
       console.error("error retrieving the notes ", error);
+    }finally{
+      setLoading(false);
     }
     return data;
   };
 
   useFocusEffect(
     useCallback(() => {
+      storeData('active-tab', 'Favorites')
       getNotes();
     }, [])
   );
+
+  const changeLoading = () => {
+    setLoading(true);
+  };
+
+  addListener("goToNote", changeLoading);
 
   const filteredData = data.filter((item) =>
     item.favorite === true &&
@@ -38,6 +49,23 @@ export default function Favorites() {
   .sort((a, b) => b.priority - a.priority)
 
   const theme = useTheme();
+
+  if (loading) {
+    return (
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: theme.colors.surface,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+        ]}
+      >
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <View
@@ -70,4 +98,10 @@ export default function Favorites() {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
+});

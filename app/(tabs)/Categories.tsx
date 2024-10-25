@@ -1,9 +1,14 @@
 import Background from "@/components/Background";
 import Emoji from "@/components/Emoji2";
 import SearchBar from "@/components/SearchBar";
-import { getAllCategories } from "@/services/categories";
-import { fetchData } from "@/services/localstorage";
+import { deleteCategory, getAllCategories } from "@/services/categories";
+import { fetchData, storeData } from "@/services/localstorage";
 import { Category } from "@/types/apiResponses";
+import {
+  addListener,
+  notify,
+  removeListener,
+} from "@alexsandersarmento/react-native-event-emitter";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -11,49 +16,184 @@ import {
   StyleSheet,
   StatusBar,
   View,
-  Text,
   Pressable,
 } from "react-native";
-import { useTheme } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Button,
+  Dialog,
+  Divider,
+  Menu,
+  Portal,
+  Text,
+  useTheme,
+} from "react-native-paper";
 import { FlatGrid } from "react-native-super-grid";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import EditCategoryDialog from "@/components/EditCategoryDialog";
 
-const data = [
-  {
-    _id: "67197377f16dd83e3240d1f1", 
-    emoji: "😍", 
-    owner: "6714818962ecd2db0e161d15", 
-    title: "hiw"
-  },
-  {
-    _id: "67197377f16dd83e3240d1f1", 
-    emoji: "😍", 
-    owner: "6714818962ecd2db0e161d15", 
-    title: "hiddw"
-  },
-];
+const CategoryItem = ({item}: {item:Category}) => {
+  const [visible, setVisible] = useState(false);
+
+  const openMenu = () =>{
+    console.log("openMenu");
+    setVisible(true);
+  } 
+  const theme = useTheme();
+  const closeMenu = () => setVisible(false);
+
+
+  const [visibleDialog, setVisibleDialog] = useState(false);
+  const showDialog = () => setVisibleDialog(true);
+  const hideDialog = () => setVisibleDialog(false);
+  const [presiono,setPresiono]=useState(false);
+
+  const onPressDeleteCategory=()=>{
+    fetchData("username").then((res) => {
+      deleteCategory(res,item._id as string).then(() => {
+        notify("deleteCategory", item);
+        hideDialog();
+        setVisible(false);
+      });
+    }
+    );
+  }
+
+  const onPressEditCategory=()=>{
+
+/*     fetchData("username").then((res) => {
+      deleteCategory(res,item._id as string).then(() => {
+        notify("deleteCategory", item);
+        hideDialog();
+        setVisible(false);
+      });
+    }
+    ); */
+  }
+
+
+
+  return (
+    <>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "flex-end",
+        }}
+      >
+        <Menu
+          visible={visible}
+          onDismiss={closeMenu}
+          anchor={
+            <Pressable onPress={openMenu}>
+              <FontAwesome6 name="ellipsis-vertical" size={24} color="black" />
+            </Pressable>
+          }
+        >
+          <Menu.Item onPress={() => {  notify("showdialog",item._id)}} title="Edit" />
+          <EditCategoryDialog  />
+
+          <Divider />
+          <Menu.Item onPress={() => {showDialog()}} title="Delete" />
+          <Portal>
+            <Dialog visible={visibleDialog} onDismiss={hideDialog}>
+              <Dialog.Icon icon="alert" />
+              <Dialog.Title style={styles.dialogTitle}>Confirm</Dialog.Title>
+              <Dialog.Content>
+                <Text variant="bodyMedium" style={styles.dialogContent}>
+                  Are you sure you want to delete this category?
+                </Text>
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button onPress={hideDialog} style={styles.dialogButton}>
+                  Cancel
+                </Button>
+                <Button
+                  onPress={async () => {onPressDeleteCategory()}}
+                  style={[
+                    styles.dialogButton,
+                    styles.deleteButton,
+                    { backgroundColor: theme.colors.primary },
+                  ]}
+                >
+                  <Text style={{ color: "white" }}>Delete</Text>
+                </Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
+
+          
+        </Menu>
+      </View>
+    </>
+  );
+};
 
 export default function Categories() {
-  const [search, setSearch] = useState("")
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [items, setItems] = useState<Category[]>([]);
+
+  addListener("deleteCategory", (itemDeleted) => {
+    setItems(items.filter((item) => item._id !== itemDeleted._id));
+
+    fetchData("username").then((res) => {
+      getAllCategories(res).then((res) => {
+        setItems(res);
+      });
+    });
+  });
+
+  const goToCategory = (item: Category) => {
+    removeListener("goToCategory");
+    setLoading(true);
+    console.log(`/${item.title}`);
+    router.push({
+      pathname: `/dinamicCategory/${item.title}`,
+      params: { _id: item._id, title: item.title },
+    });
+  };
+
+  addListener("getOutCategory", () => {
+    console.log("getOutCategory");
+    setLoading(false);
+  });
+  addListener("goToCategory", goToCategory);
 
   useEffect(() => {
     fetchData("username").then((res) => {
+      storeData("active-tab", "Categories");
       getAllCategories(res).then((res) => {
         console.log(res[0]);
         setItems(res);
       });
     });
+  }, []);
 
-  }
-  , []);
-
-
-  const [items, setItems] = useState<Category[]>([]);
+  
 
   const filteredData = items.filter((item) =>
     item.title.toLowerCase().includes(search.toLowerCase())
   );
 
   const theme = useTheme();
+
+  if (loading) {
+    return (
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: theme.colors.surface,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+        ]}
+      >
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <View
@@ -72,25 +212,25 @@ export default function Categories() {
         style={styles.gridView}
         spacing={10}
         renderItem={({ item }) => (
-          <Pressable
-            style={[
-              styles.itemContainer,
-              { backgroundColor: theme.colors.primaryContainer },
-            ]}
-            onPress={() => {
-              console.log(`/${item.title}`);
-              router.push(
-                { pathname: `/dinamicCategory/${item.title}`, params: {_id: item._id, title:item.title} }
-               );
-            }}
-          >
-            <Text style={styles.text}>
-              <Emoji symbol={item.emoji} />
-            </Text>
-            <Text style={[styles.itemName, { color: theme.colors.shadow }]}>
-              {item.title}
-            </Text>
-          </Pressable>
+          <>
+            <CategoryItem item={item} />
+            <Pressable
+              style={[
+                styles.itemContainer,
+                { backgroundColor: theme.colors.primaryContainer },
+              ]}
+              onPress={() => {
+                notify("goToCategory", item);
+              }}
+            >
+              <Text style={styles.text}>
+                <Emoji symbol={item.emoji} />
+              </Text>
+              <Text style={[styles.itemName, { color: theme.colors.shadow }]}>
+                {item.title}
+              </Text>
+            </Pressable>
+          </>
         )}
       />
     </View>
@@ -122,5 +262,31 @@ const styles = StyleSheet.create({
     margin: "auto",
     top: 5,
     bottom: 0,
+  },
+  container: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
+  deleteBnt: {
+    marginHorizontal: 10,
+    marginVertical: 5,
+    borderRadius: 8,
+  },
+  dialogTitle: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 18,
+    color: "red",
+  },
+  dialogContent: {
+    textAlign: "center",
+    fontSize: 16,
+  },
+  dialogButton: {
+    marginHorizontal: 10,
+  },
+  deleteButton: {
+    borderRadius: 8,
   },
 });

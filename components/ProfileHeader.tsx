@@ -9,44 +9,51 @@ import {
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
-import { Avatar } from "react-native-paper";
+import { Avatar, useTheme } from "react-native-paper";
 
 const ProfileHeader = () => {
+  const theme = useTheme();
   return (
-    <View style={styles.headerContainer}>
+    <View
+      style={[
+        styles.headerContainer,
+        { backgroundColor: theme.colors.surface },
+      ]}
+    >
       <View style={styles.headerLeft}>
         {/* <View style={styles.profileLetterContainer}>
           <Avatar.Text size={70} label="A" />
         </View> */}
       </View>
       <View style={styles.headerBackground}>
-        <Pressable
-          style={styles.backButton}
-          onPress={() => router.push("./Home")}
-        >
+        <Pressable style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back-sharp" size={24} color="black" />
         </Pressable>
-        <Image
+        {/* <Image
           style={styles.headerBackgroundImage}
           source={{ uri: "URL_DE_TU_IMAGEN" }}
-        />
+        /> */}
+        <Text style={styles.headerText}>Profile</Text>
       </View>
     </View>
   );
-};
-{
-  /* <Image
+  {
+    /* <Image
 source={{ uri: 'URL_DE_LA_FOTO_DE_PERFIL' }} // Reemplaza con la URL de la foto de perfil
 style={{ width: 40, height: 40, borderRadius: 20, marginLeft: 10 }}
 /> */
-}
-
+  }
+};
 const styles = StyleSheet.create({
+  headerText: {
+    alignSelf: "center",
+    marginTop: -22,
+  },
   headerContainer: {
     flexDirection: "row",
     alignItems: "flex-end", // Alinea los elementos al final del contenedor
-    height: 150, // Ajusta este valor según tus necesidades
-    backgroundColor: "white", // Color del encabezado
+    height: 90, // Ajusta este valor según tus necesidades
+    backgroundColor: "#F7F7ED", // Color del encabezado
     paddingBottom: 10, // Ajusta este valor para mover el contenido hacia abajo
   },
   headerLeft: {

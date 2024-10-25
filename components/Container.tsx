@@ -22,12 +22,12 @@ const darkTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: "#1E1E1E",
-    surface: "#121212",
-    primaryContainer: "#333333",
-    tertiary: "#BBBBBB",
-    shadow: "#000000",
-    scrim: "#444444",
+    primary: "red",
+    surface: "white",
+    primaryContainer: "gray",
+    tertiary: "white",
+    shadow: "white",
+    scrim: "white",
   },
 };
 

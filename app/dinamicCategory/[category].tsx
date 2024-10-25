@@ -5,11 +5,14 @@ import { FavoritesIcon, SettingsIcon } from "@/components/Icon";
 import { Text, useTheme } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import CardNote from "@/components/CardNote";
-import SearchBar from "@/components/SearchBar";
+import SearchBar from "@/components/SearchBarCategory";
 import { useEffect, useState } from "react";
 import { getCategoryNotes } from "@/services/categories";
 import { fetchData } from "@/services/localstorage";
 import { Note } from "@/types/apiResponses";
+import { addListener, notify } from "@alexsandersarmento/react-native-event-emitter";
+
+
 
 const CategoryNotes = () => {
   const { _id, title } = useLocalSearchParams();
@@ -17,11 +20,16 @@ const CategoryNotes = () => {
   const [search, setSearch] = useState("");
   const [data, setData] = useState<Note[]>([]);
 
+  
+
+  
+
   useEffect(() => {
     // fetchNotes();
     fetchData("username").then((username) => {
       getCategoryNotes(username, _id as string).then((data) => {
         setData(data);
+        notify("getOutCategory");
       });
     });
   }, []);

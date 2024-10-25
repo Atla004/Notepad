@@ -17,21 +17,40 @@ interface FABNewNoteProps {
   onNewNote: () => void;
 }
 
-const FABNewNote = ( {onNewNote}: FABNewNoteProps) => {
+const FABNewNote = ({ onNewNote }: FABNewNoteProps) => {
   const [visible, setVisible] = useState(false);
   const showDialog = () => setVisible(true);
-  const hideDialog = () => setVisible(false);
+  const hideDialog = () => {
+    setUserError("");
+    setVisible(false)
+    console.log("hideDialog");
+    setNoteName("");
+  };
   const [noteName, setNoteName] = useState("");
   const [isDebounced, setIsDebounced] = useState(false);
   const theme = useTheme();
+  const [userError, setUserError] = useState("");
 
   const newNote = async (noteName: string) => {
-    if (isDebounced) return; 
-    setIsDebounced(true); 
-
+    console.log("este es el noteName", isDebounced);
+    if (isDebounced) return;
+    setIsDebounced(true);
+    console.log("Note name cannot be empty?", noteName === "");
+    if (noteName === "") {
+      console.log("noteNameddddd");
+      setUserError("Note name cannot be empty.");
+      setIsDebounced(false);
+      return;
+    }
+    console.log("Note name cannot be empty?", noteName.length > 15);
+    if (noteName.length > 15) {
+      setUserError("Note name is too long.");
+      setIsDebounced(false);
+      return;
+    }
     hideDialog();
     const username = await fetchData("username");
-    console.log("este es el username",username);
+    console.log("este es el username", username);
     const note: Note = {
       title: noteName,
       content: "",
@@ -68,6 +87,9 @@ const FABNewNote = ( {onNewNote}: FABNewNoteProps) => {
               mode="outlined"
               onChangeText={(text) => setNoteName(text)}
             />
+            {userError ? (
+              <Text style={styles.errorText}>{userError}</Text>
+            ) : null}
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={hideDialog}>Cancel</Button>
@@ -94,6 +116,11 @@ const styles = StyleSheet.create({
   content: {
     alignItems: "center",
     justifyContent: "center",
+  },
+  errorText: {
+    color: "red",
+    alignSelf: "center",
+    marginBottom: 5,
   },
 });
 
