@@ -3,6 +3,7 @@ import { testJSON } from "./utils";
 
 export const storeData = async (key: string, value: string) => {
   try {
+    console.log(`saving '${value}' in key '${key}'`)
     await AsyncStorage.setItem(key, value);
   } catch (error) {
     throw new Error(`Error at saving data: ${(error as Error).message}`);

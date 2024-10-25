@@ -149,31 +149,6 @@ export default function Profile() {
         Change Password
       </Button>
 
-
-
-
-
-
-      <Button icon="note" textColor={theme.colors.shadow} style={styles.bnt}
-        onPress={async () => {await changeCategory()}}
-      >
-        Category
-      </Button>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       <Divider bold style={styles.divider} />
       <Text variant="bodySmall" style={styles.textCloseToDivider}>
         Settings

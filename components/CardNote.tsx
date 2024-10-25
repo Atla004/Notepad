@@ -55,16 +55,20 @@ const CardNote = ({
       disabled={isDisabled}
     >
       <Card.Title
-        title={title}
+        title={<Text style={styles.cardTitle}>
+          {title}
+        </Text>}
         subtitle={
           <HTMLView
             value={`${(content ?? "").slice(0, 25)}${
               (content ?? "").length > 25 ? "..." : ""
             }`
-              .replace("\n", " ")
-              .replace("<p>", " ")
-              .replace("</p>", " ")
-              .replace("<br>", " ")}
+              .replaceAll("\n", "")
+              .replaceAll("<p>", "")
+              .replaceAll("</p>", "")
+              .replaceAll("<br>", "")
+              .replace(/ /, "")
+            }
           />
         }
         right={(props) =>
@@ -80,6 +84,10 @@ const CardNote = ({
 };
 
 const styles = StyleSheet.create({
+  cardTitle: {
+    fontWeight: 'bold',
+    fontSize: 20
+  },
   card: {
     margin: 10,
     borderRadius: 6,

@@ -5,16 +5,24 @@ import {
   setDataExpiryTime,
   storeData,
   storeExpiringData,
+  storeJSONData,
 } from "@/services/localstorage";
 import { FetchError } from "./utils";
 
 export const autologin = async () => {
   try {
+    const validator = await fetchData('autologin')
+    
+    if (!validator)
+      throw new Error();
+    
     const token = await fetchData("jwtoken");
+
     await setDataExpiryTime(
       "jwtoken",
       Number(process.env.EXPO_PUBLIC_JWTOKEN_EXPIRATION_DAYS as string) * 24
     );
+
     return token;
   } catch (e) {}
 };
@@ -40,14 +48,16 @@ export const login = async (
 
     const json = await response.json();
     const { user, token } = json.data;
-    if (save) {
-      await storeExpiringData(
-        "jwtoken",
-        token,
-        Number(process.env.EXPO_PUBLIC_JWTOKEN_EXPIRATION_DAYS as string) * 24
-      );
-      await storeData("username", user.username);
-    }
+ 
+    await storeExpiringData(
+      "jwtoken",
+      token,
+      Number(process.env.EXPO_PUBLIC_JWTOKEN_EXPIRATION_DAYS as string) * 24
+    );
+    await storeData('username', user.username)
+    if (save) 
+      await storeData("autologin", user.username)
+    
     return user;
   } catch (error) {
     throw new Error(`Login failed: ${(error as Error).message}`);
