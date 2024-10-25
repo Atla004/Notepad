@@ -7,7 +7,8 @@ import React, {
 } from "react";
 import {
   View,
-  StyleSheet
+  StyleSheet,
+  Alert
 } from "react-native";
 import {
   TextInput,
@@ -48,6 +49,10 @@ const EditNoteProperties = () => {
 
 
   const [titleState, setTitleState] = useState<string>(title.toString());
+  const defaultTitle = title.toString();
+  const refIsValidTitle = useRef<boolean>(true);
+
+  const [userError, setUserError] = useState("");
 
   const deleteNoteById = async () => {
     if (isDebounced) return; 
@@ -69,9 +74,11 @@ const EditNoteProperties = () => {
       console.log("saveNoteContent method");
       const username = await fetchData("username");
       const data = await getLocalNote();
+
+
       const dataToSave: NoteRequest = {
         _id: data._id as string,
-        title: titleState,
+        title: userError?defaultTitle:titleState,
         categories: data.categories,
       };
       await editNote(username, dataToSave);
@@ -92,12 +99,26 @@ const EditNoteProperties = () => {
 
       console.log("onBeforeRemove 1");
 
+      
+      if( userError !== ""){
+        Alert.alert(
+          "Error",
+          "Note name cannot be empty.",
+          [
+            {
+              text: "OK",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+          ],
+          { cancelable: false }
+        );
+        return;
+      }
+
       //guardar los cambios
       saveNoteProperties();
 
-
-
-      // Redirigir a la pantalla deseada
 
       router.dismiss(1);
       router.push({
@@ -127,10 +148,34 @@ const EditNoteProperties = () => {
     };
   }, [navigation, _id, titleState]);
 
-
+  function isPasswordValid(password: string): boolean {
+    // Expresión regular para verificar la ausencia de caracteres especiales excepto '-' y '_'
+    const specialCharPattern = /[^a-zA-Z0-9-_]/;
+    return !specialCharPattern.test(password);
+  }
 
   const handleChangeText = useCallback((text: string) => {
     setTitleState(text);
+    if (text === "") {
+      setUserError("Note name cannot be empty.");
+      setIsDebounced(false);
+      return;
+    }
+
+    if (text.length > 30) {
+      setUserError("Note name is too long.");
+      setIsDebounced(false);
+      return;
+    }
+
+    if (!isPasswordValid(text)) {
+      setUserError("no se admiten caracteres especiales");
+      setIsDebounced(false);
+      return;
+    }
+    setUserError("");
+
+    
   }, []);
 
   return (
@@ -202,6 +247,9 @@ const EditNoteProperties = () => {
           roundness: 8,
         }}
       />
+      {userError ? (
+        <Text style={styles.errorText}>{userError}</Text>
+      ) : null}
       <Divider
         bold
         style={[styles.divider, { backgroundColor: theme.colors.shadow }]}
@@ -299,6 +347,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 10,
     width: 80,
+  },
+  errorText: {
+    color: "red",
+    alignSelf: "center",
+    marginBottom: 5,
   },
 });
 
