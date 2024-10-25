@@ -31,11 +31,12 @@ export default function Favorites() {
     }, [])
   );
 
-  const filteredData = data.filter(
-    (item) =>
-      item.favorite === true &&
-      item.title.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredData = data.filter((item) =>
+    item.favorite === true &&
+    item.title.toLowerCase().includes(search.toLowerCase())
+  )
+  .sort((a, b) => b.priority - a.priority)
+
   const theme = useTheme();
 
   return (
@@ -53,7 +54,7 @@ export default function Favorites() {
         data={filteredData}
         renderItem={({ item }) => (
           <CardNote
-            _id={item._id}
+            _id={item._id as string}
             title={item.title}
             content={item.content}
             priority={item.priority}
