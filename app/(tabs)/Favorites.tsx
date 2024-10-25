@@ -37,17 +37,17 @@ export default function Favorites() {
   );
 
   const changeLoading = () => {
-    
     setLoading(true);
   };
 
   addListener("goToNote", changeLoading);
 
-  const filteredData = data.filter(
-    (item) =>
-      item.favorite === true &&
-      item.title.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredData = data.filter((item) =>
+    item.favorite === true &&
+    item.title.toLowerCase().includes(search.toLowerCase())
+  )
+  .sort((a, b) => b.priority - a.priority)
+
   const theme = useTheme();
 
   if (loading) {

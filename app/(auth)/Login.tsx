@@ -180,13 +180,13 @@ export default function Login() {
 
 const styles = StyleSheet.create({
   input: {
-    maxWidth: 220,
+    maxWidth: 320,
     width: "100%",
     alignSelf: "center",
     marginVertical: 5,
   },
   card: {
-    width: 250,
+    width: 320,
   },
   container: {
     flex: 1,

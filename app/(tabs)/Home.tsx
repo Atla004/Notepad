@@ -41,7 +41,9 @@ export default function Home() {
       console.log("getNotes");
       const username = await fetchData("username");
       const dataNotes = await getAllNotes(username);
-      if (dataNotes !== undefined) setData(dataNotes);
+      if (dataNotes !== undefined) {
+        setData(dataNotes);
+      }
       //console.log("dataNotes: ", JSON.stringify(dataNotes, null, 2));
       return data;
     } catch (error) {
@@ -63,7 +65,8 @@ export default function Home() {
 
   const filteredData = data.filter((item) =>
     item.title.toLowerCase().includes(search.toLowerCase())
-  );
+  )
+  .sort((a, b) => b.priority - a.priority)
   const theme = useTheme();
 
 
