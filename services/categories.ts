@@ -1,4 +1,4 @@
-import { Category, Note } from "@/types/apiResponses";
+import { Category, CategoryRequest, Note } from "@/types/apiResponses";
 import { authorizedWrappedFetch } from "./fetch";
 import { FetchError } from "./utils";
 
@@ -77,7 +77,7 @@ export const getCategoryNotes = async (username: string, categoryId: string): Pr
   }
 };
 
-export const editCategory = async (username: string,_id:string, category: Category) => {
+export const editCategory = async (username: string,_id:string, category: CategoryRequest) => {
   try {
     const response = await authorizedWrappedFetch({
       route: `/user/${username}/category/${_id}`,
@@ -93,6 +93,6 @@ export const editCategory = async (username: string,_id:string, category: Catego
     const json = await response?.json();
     return json.success;
   } catch (error) {
-    throw new Error(`Error creating category: ${(error as Error).message}`);
+    throw new Error(`Error on EditCategory category: ${(error as Error).message}`);
   }
 };

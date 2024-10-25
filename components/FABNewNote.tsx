@@ -14,7 +14,7 @@ import {
 } from "react-native-paper";
 
 interface FABNewNoteProps {
-  onNewNote: () => void;
+  onNewNote: (note: Note) => void;
 }
 
 const FABNewNote = ({ onNewNote }: FABNewNoteProps) => {
@@ -22,7 +22,7 @@ const FABNewNote = ({ onNewNote }: FABNewNoteProps) => {
   const showDialog = () => setVisible(true);
   const hideDialog = () => {
     setUserError("");
-    setVisible(false)
+    setVisible(false);
     console.log("hideDialog");
     setNoteName("");
   };
@@ -31,36 +31,51 @@ const FABNewNote = ({ onNewNote }: FABNewNoteProps) => {
   const theme = useTheme();
   const [userError, setUserError] = useState("");
 
+  function isPasswordValid(password: string): boolean {
+    // Expresión regular para verificar la ausencia de caracteres especiales excepto '-' y '_'
+    const specialCharPattern = /[^a-zA-Z0-9-_]/;
+    return !specialCharPattern.test(password);
+  }
+
   const newNote = async (noteName: string) => {
-    console.log("este es el noteName", isDebounced);
-    if (isDebounced) return;
-    setIsDebounced(true);
-    console.log("Note name cannot be empty?", noteName === "");
-    if (noteName === "") {
-      console.log("noteNameddddd");
-      setUserError("Note name cannot be empty.");
+    try {
+      console.log("este es el noteName", isDebounced);
+      if (isDebounced) return;
+      setIsDebounced(true);
+
+      if (noteName === "") {
+        console.log("noteNameddddd");
+        setUserError("Note name cannot be empty.");
+        setIsDebounced(false);
+        return;
+      }
+      if (noteName.length > 15) {
+        setUserError("Note name is too long.");
+        setIsDebounced(false);
+        return;
+      }
+      if (!isPasswordValid(noteName)) {
+        setUserError("no se admiten caracteres especiales");
+        setIsDebounced(false);
+        return;
+      }
+
+      hideDialog();
+      const username = await fetchData("username");
+      console.log("este es el username", username);
+      const note: Note = {
+        title: noteName,
+        content: "",
+        categories: [],
+        priority: 0,
+        favorite: false,
+      };
+      onNewNote(note);
+      await createNote(username, note);
       setIsDebounced(false);
-      return;
+    } catch (e) {
+      console.error("Error creating note: ", e);
     }
-    console.log("Note name cannot be empty?", noteName.length > 15);
-    if (noteName.length > 15) {
-      setUserError("Note name is too long.");
-      setIsDebounced(false);
-      return;
-    }
-    hideDialog();
-    const username = await fetchData("username");
-    console.log("este es el username", username);
-    const note: Note = {
-      title: noteName,
-      content: "",
-      categories: [],
-      priority: 0,
-      favorite: false,
-    };
-    await createNote(username, note);
-    onNewNote();
-    setIsDebounced(false);
   };
 
   return (

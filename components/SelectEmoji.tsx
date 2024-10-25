@@ -5,8 +5,12 @@ import { View, Text, Modal, StyleSheet } from "react-native";
 import EmojiModal from "react-native-emoji-modal";
 import { Button } from "react-native-paper";
 
-export const SelectEmoji = () => {
-  const [selectedEmoji, setSelectedEmoji] = useState<string | null>("");
+interface SelectEmojiProps {
+  defaultEmoji?: string;
+}
+
+export const SelectEmoji = ({defaultEmoji}: SelectEmojiProps) => {
+  const [selectedEmoji, setSelectedEmoji] = useState<string | null>(defaultEmoji? defaultEmoji: null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const handleEmojiSelected = (emoji: string | null) => {
@@ -18,7 +22,6 @@ export const SelectEmoji = () => {
   useEffect(() => {
     console.log("selectedEmoji", selectedEmoji);
     if (selectedEmoji === null || selectedEmoji === "") {
-      console.log("selectedEmoji es null");
       storeData("categories", "📝");
       setSelectedEmoji("📝");
     } else {

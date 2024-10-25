@@ -11,13 +11,7 @@ import {
 } from "@alexsandersarmento/react-native-event-emitter";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-  FlatList,
-  StyleSheet,
-  StatusBar,
-  View,
-  Pressable,
-} from "react-native";
+import { FlatList, StyleSheet, StatusBar, View, Pressable } from "react-native";
 import {
   ActivityIndicator,
   Button,
@@ -32,46 +26,29 @@ import { FlatGrid } from "react-native-super-grid";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import EditCategoryDialog from "@/components/EditCategoryDialog";
 
-const CategoryItem = ({item}: {item:Category}) => {
+const CategoryItem = ({ item }: { item: Category }) => {
   const [visible, setVisible] = useState(false);
 
-  const openMenu = () =>{
+  const openMenu = () => {
     console.log("openMenu");
     setVisible(true);
-  } 
+  };
   const theme = useTheme();
   const closeMenu = () => setVisible(false);
-
 
   const [visibleDialog, setVisibleDialog] = useState(false);
   const showDialog = () => setVisibleDialog(true);
   const hideDialog = () => setVisibleDialog(false);
-  const [presiono,setPresiono]=useState(false);
 
-  const onPressDeleteCategory=()=>{
+  const onPressDeleteCategory = () => {
     fetchData("username").then((res) => {
-      deleteCategory(res,item._id as string).then(() => {
+      deleteCategory(res, item._id as string).then(() => {
         notify("deleteCategory", item);
         hideDialog();
         setVisible(false);
       });
-    }
-    );
-  }
-
-  const onPressEditCategory=()=>{
-
-/*     fetchData("username").then((res) => {
-      deleteCategory(res,item._id as string).then(() => {
-        notify("deleteCategory", item);
-        hideDialog();
-        setVisible(false);
-      });
-    }
-    ); */
-  }
-
-
+    });
+  };
 
   return (
     <>
@@ -90,11 +67,21 @@ const CategoryItem = ({item}: {item:Category}) => {
             </Pressable>
           }
         >
-          <Menu.Item onPress={() => {  notify("showdialog",item._id)}} title="Edit" />
-          <EditCategoryDialog  />
+          <Menu.Item
+            onPress={() => {
+              notify("showdialog", item._id, item.title, item.emoji);
+            }}
+            title="Edit"
+          />
+          <EditCategoryDialog />
 
           <Divider />
-          <Menu.Item onPress={() => {showDialog()}} title="Delete" />
+          <Menu.Item
+            onPress={() => {
+              showDialog();
+            }}
+            title="Delete"
+          />
           <Portal>
             <Dialog visible={visibleDialog} onDismiss={hideDialog}>
               <Dialog.Icon icon="alert" />
@@ -109,7 +96,9 @@ const CategoryItem = ({item}: {item:Category}) => {
                   Cancel
                 </Button>
                 <Button
-                  onPress={async () => {onPressDeleteCategory()}}
+                  onPress={async () => {
+                    onPressDeleteCategory();
+                  }}
                   style={[
                     styles.dialogButton,
                     styles.deleteButton,
@@ -121,8 +110,6 @@ const CategoryItem = ({item}: {item:Category}) => {
               </Dialog.Actions>
             </Dialog>
           </Portal>
-
-          
         </Menu>
       </View>
     </>
@@ -134,6 +121,22 @@ export default function Categories() {
   const [loading, setLoading] = useState<boolean>(false);
   const [items, setItems] = useState<Category[]>([]);
 
+  const goToCategory = (item: Category) => {
+    removeListener("goToCategory");
+    setLoading(true);
+    console.log(`/${item.title}`);
+    router.push({
+      pathname: `/dinamicCategory/${item.title}`,
+      params: { _id: item._id, title: item.title },
+    });
+  };
+  addListener("goToCategory", goToCategory);
+
+  addListener("getOutCategory", () => {
+    console.log("getOutCategory");
+    setLoading(false);
+  });
+
   addListener("deleteCategory", (itemDeleted) => {
     setItems(items.filter((item) => item._id !== itemDeleted._id));
 
@@ -144,21 +147,17 @@ export default function Categories() {
     });
   });
 
-  const goToCategory = (item: Category) => {
-    removeListener("goToCategory");
-    setLoading(true);
-    console.log(`/${item.title}`);
-    router.push({
-      pathname: `/dinamicCategory/${item.title}`,
-      params: { _id: item._id, title: item.title },
-    });
-  };
+  addListener("editCategory", (itemEdited) => {
+    setItems(
+      items.map((item) => (item._id === itemEdited._id ? {...itemEdited,owner: item.owner} : item))
+    );
 
-  addListener("getOutCategory", () => {
-    console.log("getOutCategory");
-    setLoading(false);
+    fetchData("username").then((res) => {
+      getAllCategories(res).then((res) => {
+        setItems(res);
+      });
+    });
   });
-  addListener("goToCategory", goToCategory);
 
   useEffect(() => {
     fetchData("username").then((res) => {
@@ -169,8 +168,6 @@ export default function Categories() {
       });
     });
   }, []);
-
-  
 
   const filteredData = items.filter((item) =>
     item.title.toLowerCase().includes(search.toLowerCase())
