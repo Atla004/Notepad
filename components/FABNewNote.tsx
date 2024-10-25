@@ -49,7 +49,7 @@ const FABNewNote = ({ onNewNote }: FABNewNoteProps) => {
         setIsDebounced(false);
         return;
       }
-      if (noteName.length > 15) {
+      if (noteName.length > 30) {
         setUserError("Note name is too long.");
         setIsDebounced(false);
         return;
