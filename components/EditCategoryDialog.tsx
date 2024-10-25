@@ -21,7 +21,11 @@ export default function EditCategoryDialog(presiono: any) {
   const [categoryName, setCategoryName] = useState("");
   const [userError, setUserError] = useState("");
   const showDialog = () => setVisible(true);
-  const hideDialog = () => setVisible(false);
+  const hideDialog = () =>{ 
+    setVisible(false);
+    setUserError("");
+    setCategoryName("");
+  }
   const [id, setid] = useState("");
 
   addListener("showdialog", (_id) => {

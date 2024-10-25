@@ -131,7 +131,7 @@ const NoteScreen = () => {
     <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
       <Stack.Screen
         options={{
-          title: `${title}`,
+          title: `${data.noteId}`,
           headerShown: true,
           headerStyle: {
             backgroundColor: theme.colors.primaryContainer,
