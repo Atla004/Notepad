@@ -67,7 +67,7 @@ export default function Register() {
       const response = await register({ email, username: user, password });
 
       if (response == "registered") {
-        Toast.show("Registrado con éxito", Toast.LONG);
+        Toast.show("User registered succesfully", Toast.LONG);
         router.push("/Login");
         return;
       } else {
@@ -105,14 +105,14 @@ export default function Register() {
 
   const validateUser = (user: string) => {
     if (user.length < 3) {
-      return "Username must be at least 3 characters";
+      return "Username must be at least 3 characters long";
     }
     return "";
   };
 
   const validatePassword = (password: string) => {
     if (password.length < 8) {
-      return "Password must be at least 8 characters";
+      return "Password must be at least 8 characters long";
     }
     return "";
   };
@@ -172,6 +172,10 @@ export default function Register() {
               </Text>
             ) : null}
 
+            <Text variant="bodySmall" style={styles.infoText}>
+              Usernames and passwords can't contain spaces or special characters
+            </Text>
+
             <View style={[styles.row, styles.centeredRow]}>
               <Text variant="labelLarge">Already have an account? </Text>
               <Link href="./Login">
@@ -199,16 +203,20 @@ export default function Register() {
 }
 
 const styles = StyleSheet.create({
+  infoText: {
+    textAlign: "center",
+    marginBottom: 10
+  },
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
   card: {
-    width: 250,
+    width: 320,
   },
   input: {
-    maxWidth: 220,
+    maxWidth: 320,
     width: "100%",
     alignSelf: "center",
     marginVertical: 5,

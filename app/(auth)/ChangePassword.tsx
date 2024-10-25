@@ -52,7 +52,7 @@ export default function ForgotPassword() {
       setPasswordError(isValid);
     }
 
-    Toast.show("passwords changed with success", Toast.LONG);
+    Toast.show("Your password was changed successfully!", Toast.LONG);
   };
 
   const validatePassword = (password: string) => {
@@ -80,13 +80,13 @@ export default function ForgotPassword() {
               >
                 You are almost there!
               </Text>
-              <Text variant="bodySmall">
+              <Text variant="bodySmall" style={styles.infoText}>
                 Enter your new password and confirm it
               </Text>
             </View>
             <TextInput
               style={styles.input}
-              label="password"
+              label="New Password"
               value={password}
               secureTextEntry
               mode="outlined"
@@ -95,7 +95,7 @@ export default function ForgotPassword() {
 
             <TextInput
               style={styles.input}
-              label="confirm password"
+              label="Confirm new password"
               value={password2}
               secureTextEntry
               mode="outlined"
@@ -105,6 +105,9 @@ export default function ForgotPassword() {
               <Text style={styles.errorText}>{passwordError}</Text>
             ) : null}
 
+            <Text variant="bodySmall" style={styles.infoText}>
+              Passwords must be at least 8 characters long and not contain spaces or special characters.
+            </Text>
             <Button
               mode="contained"
               style={styles.btn}
@@ -120,6 +123,9 @@ export default function ForgotPassword() {
 }
 
 const styles = StyleSheet.create({
+  infoText: {
+    textAlign: "center"
+  },
   errorText: {
     color: "red",
     alignSelf: "center",
@@ -129,13 +135,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   input: {
-    maxWidth: 220,
+    maxWidth: 320,
     width: "100%",
     alignSelf: "center",
     marginVertical: 5,
   },
   card: {
-    width: 250,
+    width: 320,
   },
   container: {
     flex: 1,

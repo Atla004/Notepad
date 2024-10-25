@@ -18,6 +18,10 @@ export default function ForgotPassword() {
     router.dismiss(1);
   }
 
+  const handleCodeChange = (text: string) => {
+    setToken(text.toUpperCase());
+  }
+
   const handleLoginClick = async () => {
     const isValid = await checkResetToken(token);
     if (isValid == "valid") {
@@ -40,18 +44,18 @@ export default function ForgotPassword() {
                 variant="titleMedium"
                 style={{ color: theme.colors.primary }}
               >
-                Enter your Code
+                Check your inbox
               </Text>
-              <Text variant="bodySmall">
-                Enter the code that was sent to your email address
+              <Text variant="bodySmall" style={styles.infoText}>
+                Enter the code that was sent to your email address, if you can't find it try looking in your spam folder
               </Text>
             </View>
             <TextInput
               style={styles.input}
-              label="code"
+              label="Code"
               value={token}
               mode="outlined"
-              onChangeText={(text) => setToken(text)}
+              onChangeText={(text) => handleCodeChange(text)}
             />
             {error ? (
               <Text variant="labelSmall" style={styles.errorText}>
@@ -69,7 +73,7 @@ export default function ForgotPassword() {
                       textDecorationLine: "underline",
                     }}
                     >
-                    not received the code?
+                    Not received the code?
                   </Text>
                 </Link>
               </View> : <>
@@ -90,18 +94,21 @@ export default function ForgotPassword() {
 }
 
 const styles = StyleSheet.create({
+  infoText: {
+    textAlign: "center"
+  },
   errorText: {
     color: "red",
     marginBottom: 8,
   },
   input: {
-    maxWidth: 220,
+    maxWidth: 320,
     width: "100%",
     alignSelf: "center",
     marginVertical: 5,
   },
   card: {
-    width: 250,
+    width: 320,
   },
   container: {
     flex: 1,

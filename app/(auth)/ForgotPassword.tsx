@@ -62,8 +62,8 @@ export default function ForgotPassword() {
               >
                 Forgot your Password?
               </Text>
-              <Text variant="bodySmall">
-                Enter your email address to recover your information
+              <Text variant="bodySmall" style={styles.infoText}>
+                Enter your account's email address, we will send a code to validate your identity
               </Text>
             </View>
             <TextInput
@@ -116,19 +116,22 @@ export default function ForgotPassword() {
 }
 
 const styles = StyleSheet.create({
+  infoText: {
+    textAlign: "center"
+  },
   errorText: {
     color: "red",
     alignSelf: "center",
     marginBottom: 5,
   },
   input: {
-    maxWidth: 220,
+    maxWidth: 320,
     width: "100%",
     alignSelf: "center",
     marginVertical: 5,
   },
   card: {
-    width: 250,
+    width: 320,
   },
   container: {
     flex: 1,
