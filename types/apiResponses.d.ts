@@ -33,3 +33,8 @@ export interface Category {
     owner?: string,
     emoji: string,
 }
+
+export interface CategoryRequest {
+    title?: string,
+    emoji?: string,
+}

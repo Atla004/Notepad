@@ -54,7 +54,12 @@ export default function Home() {
     }
   };
 
-  const handleNewNote = (): void => {
+  const handleNewNote = (note:Note): void => {
+    console.log("handleNewNote", note);
+    console.log("filteredData", filteredData);
+
+    filteredData.push(note);
+    console.log("filteredData 2", filteredData);
     getNotes();
   };
 

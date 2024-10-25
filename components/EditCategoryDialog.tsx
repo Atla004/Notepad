@@ -15,22 +15,28 @@ import {
   addListener,
   notify,
 } from "@alexsandersarmento/react-native-event-emitter";
+import { Item } from "react-native-paper/lib/typescript/components/Drawer/Drawer";
 
-export default function EditCategoryDialog(presiono: any) {
+export default function EditCategoryDialog() {
   const [visible, setVisible] = useState(false);
   const [categoryName, setCategoryName] = useState("");
   const [userError, setUserError] = useState("");
   const showDialog = () => setVisible(true);
-  const hideDialog = () =>{ 
+  const hideDialog = () => {
     setVisible(false);
     setUserError("");
     setCategoryName("");
-  }
+  };
   const [id, setid] = useState("");
+  const [title, setTitle] = useState("");
+  const [emoji, setEmoji] = useState("");
 
-  addListener("showdialog", (_id) => {
+  addListener("showdialog", (_id, c_title, c_emoji) => {
     showDialog();
     setid(_id);
+    setTitle(c_title);
+    setCategoryName(c_title);
+    setEmoji(c_emoji);
   });
 
   const theme = useTheme();
@@ -45,17 +51,46 @@ export default function EditCategoryDialog(presiono: any) {
         setUserError("Category name is too long.");
         return;
       }
+
       hideDialog();
+
       const [username, categoryEmoji] = await Promise.all([
         fetchData("username"),
         fetchData("categories"),
       ]);
-      await editCategory(username,id, {
+
+      if (title === categoryName && categoryEmoji === emoji) {
+        //si el titulo es igual al nuevo nombre y el emoji es igual al emoji anterior
+        return;
+      }
+
+      notify("editCategory", { _id: id, emoji:categoryEmoji, title:categoryName });
+      
+      if (title !== categoryName) {
+        await editCategory(username, id, {
+          title: categoryName,
+        });
+        return;
+      }
+
+      if (categoryEmoji !== emoji) {
+        console.log("emoji", emoji);
+        console.log("categoryEmoji", categoryEmoji);
+        await editCategory(username, id, {
+          emoji: categoryEmoji,
+        });
+        return;
+      }
+
+
+
+      await editCategory(username, id, {
         title: categoryName,
         emoji: categoryEmoji,
       });
     } catch (error) {
-      console.log("Error creating category: ", error);
+      console.log("Error Editing category: ", error);
+      return;
     }
   };
 
@@ -76,7 +111,7 @@ export default function EditCategoryDialog(presiono: any) {
                 <Text style={styles.errorText}>{userError}</Text>
               ) : null}
 
-              <SelectEmoji />
+              <SelectEmoji defaultEmoji={emoji} />
             </View>
           </Dialog.Content>
           <Dialog.Actions>
