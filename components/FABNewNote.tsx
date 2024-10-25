@@ -82,8 +82,9 @@ const FABNewNote = ({ onNewNote }: FABNewNoteProps) => {
     <>
       <FAB
         icon="plus"
-        style={[styles.fab, { backgroundColor: theme.colors.primary }]}
+        style={[styles.fab, { backgroundColor: theme.colors.primary, color: theme.colors.scrim }]}
         onPress={() => showDialog()}
+        background={{color: theme.colors.scrim}}
       />
       <Portal>
         <Dialog
