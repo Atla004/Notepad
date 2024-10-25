@@ -8,17 +8,6 @@ interface SearchBarProps {
   onChangeText: (text: string) => void;
 }
 
-const lightTheme = {
-  colors: { 
-    primary: "#F7F7ED", // naranja
-    surface: "#EBEBD3", // Beige
-    primaryContainer: "#F7F7ED", //white
-    tertiary: "#532302", //marron
-    shadow: "#3C3C3B", // gris
-    scrim: "#FDCDAC", //naranja claro
-  },
-};
-
 export default function SearchBar({
   placeholder,
   value,
@@ -40,7 +29,7 @@ export default function SearchBar({
             style={styles.avatar}
             onPress={() => router.push({ pathname: `../Profile` })}
           >
-            <Avatar.Icon size={35} icon="account" theme={{colors: { primary: "#F7F7ED"}}} color="#3C3C3B" />
+            <Avatar.Icon size={35} icon="account" theme={{colors: { primary: theme.colors.scrim}}} color={theme.colors.primary} />
           </Pressable>
         </>
       )}
