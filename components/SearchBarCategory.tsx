@@ -15,7 +15,6 @@ export default function SearchBarCategory({
 }: SearchBarProps) {
   const theme = useTheme();
 
-  
   return (
     <Searchbar
       style={[
@@ -25,27 +24,18 @@ export default function SearchBarCategory({
       placeholder={placeholder}
       onChangeText={onChangeText}
       value={value}
-      right={() => (
-        <>
-          <Pressable
-            style={styles.avatar}
-            onPress={() => router.push({ pathname: `../Profile` })}
-          >
-          </Pressable>
-        </>
-      )}
+      mode="view"
     />
+
   );
 }
 
 const styles = StyleSheet.create({
-  avatar: {
-    marginRight: 15,
-  },
   searchBar: {
-    marginTop: 10,
-    width: "96%",
-    alignSelf: "center",
-    height: 50,
+    maxHeight: 50,
+    
+
+
+
   },
 });

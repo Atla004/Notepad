@@ -2,7 +2,7 @@ import Background from "@/components/Background";
 import Emoji from "@/components/Emoji2";
 import SearchBar from "@/components/SearchBar";
 import { getAllCategories } from "@/services/categories";
-import { fetchData } from "@/services/localstorage";
+import { fetchData, storeData } from "@/services/localstorage";
 import { Category } from "@/types/apiResponses";
 import {
   addListener,
@@ -59,6 +59,7 @@ export default function Categories() {
 
   useEffect(() => {
     fetchData("username").then((res) => {
+      storeData('active-tab', 'Categories')
       getAllCategories(res).then((res) => {
         console.log(res[0]);
         setItems(res);

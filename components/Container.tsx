@@ -23,8 +23,8 @@ const darkTheme = {
   colors: {
     ...DefaultTheme.colors,
     primary: "red",
-    surface: "blue",
-    primaryContainer: "green",
+    surface: "white",
+    primaryContainer: "gray",
     tertiary: "white",
     shadow: "white",
     scrim: "white",

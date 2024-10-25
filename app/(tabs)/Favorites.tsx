@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, StatusBar, View } from "react-native";
 import CardNote from "@/components/CardNote";
 import SearchBar from "@/components/SearchBar";
 import { ActivityIndicator, useTheme } from "react-native-paper";
-import { fetchData } from "@/services/localstorage";
+import { fetchData, storeData } from "@/services/localstorage";
 import { Note } from "@/types/apiResponses";
 import { getAllNotes } from "@/services/notes";
 import { useFocusEffect } from "expo-router";
@@ -31,6 +31,7 @@ export default function Favorites() {
 
   useFocusEffect(
     useCallback(() => {
+      storeData('active-tab', 'Favorites')
       getNotes();
     }, [])
   );

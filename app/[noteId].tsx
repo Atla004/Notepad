@@ -22,6 +22,7 @@ import {
   notify,
   removeListener,
 } from "@alexsandersarmento/react-native-event-emitter";
+import { fetchData } from "@/services/localstorage";
 
 const NoteScreen = () => {
   const data = useLocalSearchParams();
@@ -56,7 +57,11 @@ const NoteScreen = () => {
       console.log("onBeforeRemove");
 
       shouldHandleBeforeRemove.current = false;
-      router.back();
+      // router.back();
+      fetchData('active-tab').then((tab) => {
+        router.dismissAll();
+        router.replace(`/${tab}`);
+      })
     };
 
     // Eliminar el listener existente si hay uno
@@ -98,7 +103,7 @@ const NoteScreen = () => {
     removeListener("goToEditNoteProperties");
     setLoading(true);
     router.push({
-      pathname: `./EditNoteProperties`,
+      pathname: `/EditNoteProperties`,
       params: { _id, title, priority: priority.current },
     });
   };

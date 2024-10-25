@@ -5,7 +5,7 @@ import { FavoritesIcon, SettingsIcon } from "@/components/Icon";
 import { Text, useTheme } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import CardNote from "@/components/CardNote";
-import SearchBar from "@/components/SearchBar";
+import SearchBar from "@/components/SearchBarCategory";
 import { useEffect, useState } from "react";
 import { getCategoryNotes } from "@/services/categories";
 import { fetchData } from "@/services/localstorage";

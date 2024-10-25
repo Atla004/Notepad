@@ -5,7 +5,7 @@ import FABNewNote from "@/components/FABNewNote";
 import CardNote from "@/components/CardNote";
 import SearchBar from "@/components/SearchBar";
 import { getAllNotes } from "@/services/notes";
-import { fetchData } from "@/services/localstorage";
+import { fetchData, storeData } from "@/services/localstorage";
 import { Note } from "@/types/apiResponses";
 import { router, useFocusEffect, useNavigation } from "expo-router";
 import { addListener } from "@alexsandersarmento/react-native-event-emitter";
@@ -16,9 +16,10 @@ export default function Home() {
   const [data, setData] = useState<Note[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+
   useFocusEffect(
     useCallback(() => {
-      
+      storeData('active-tab', 'Home')
       getNotes();
       
       return () => {};

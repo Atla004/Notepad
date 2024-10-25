@@ -87,18 +87,20 @@ const EditNoteProperties = () => {
   useEffect(() => {
     const onBeforeRemove = (e: { preventDefault: () => void }) => {
       if (!shouldHandleBeforeRemove.current) return;
+      shouldHandleBeforeRemove.current = false;
       e.preventDefault();
 
-      console.log("onBeforeRemove");
+      console.log("onBeforeRemove 1");
 
       //guardar los cambios
-      //saveNoteProperties();
+      saveNoteProperties();
 
 
 
       // Redirigir a la pantalla deseada
+
       router.dismiss(1);
-      router.replace({
+      router.push({
         pathname: `/${titleState}`,
         params: { _id, title: titleState },
       });
