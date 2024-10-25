@@ -1,5 +1,5 @@
 import { router, Stack, useFocusEffect } from "expo-router";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { Button, Dialog, Divider, Portal, Text, useTheme } from "react-native-paper";
 import ProfileHeader from "@/components/ProfileHeader";
@@ -10,6 +10,7 @@ import { deleteUser, getUserEmail } from "@/services/user";
 import Toast from "react-native-simple-toast";
 import { getPasswordToken } from "@/services/auth";
 import { fetchData } from "@/services/localstorage";
+
 
 export default function Profile() {
   const { toggleTheme } = useContext(ThemeContext);
@@ -54,6 +55,12 @@ export default function Profile() {
     return;
   };
 
+  const changeCategory = async () => {
+    console.log("Change category");
+  };
+
+
+
   const getUserData = async () => {
     const userName = await fetchData('username');
     const userEmail = await getUserEmail({username: userName});
@@ -69,6 +76,7 @@ export default function Profile() {
       wrapper();
     }, [])
   )
+
 
   const styles = StyleSheet.create({
     bnt: {
@@ -109,6 +117,7 @@ export default function Profile() {
     deleteButton: {
       borderRadius: 8,
     },
+
   });
 
 
@@ -139,6 +148,32 @@ export default function Profile() {
         
         Change Password
       </Button>
+
+
+
+
+
+
+      <Button icon="note" textColor={theme.colors.shadow} style={styles.bnt}
+        onPress={async () => {await changeCategory()}}
+      >
+        Category
+      </Button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       <Divider bold style={styles.divider} />
       <Text variant="bodySmall" style={styles.textCloseToDivider}>
         Settings

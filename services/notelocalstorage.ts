@@ -29,6 +29,7 @@ interface NoteMerge {
 
 export const editLocalNote = async ( value: NoteMerge) => {
   try {
+    
     await AsyncStorage.mergeItem("local-note", JSON.stringify(value));
   } catch (error) {
     throw new Error((error as Error).message);

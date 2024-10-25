@@ -8,17 +8,26 @@ import {
   useTheme,
 } from "react-native-paper";
 import { SelectEmoji } from "./SelectEmoji";
-import { createCategory } from "@/services/categories";
+import { editCategory } from "@/services/categories";
 import { fetchData } from "@/services/localstorage";
 import { useState } from "react";
-import { notify } from "@alexsandersarmento/react-native-event-emitter";
+import {
+  addListener,
+  notify,
+} from "@alexsandersarmento/react-native-event-emitter";
 
-export default function AddCategoryDialog() {
+export default function EditCategoryDialog(presiono: any) {
   const [visible, setVisible] = useState(false);
   const [categoryName, setCategoryName] = useState("");
   const [userError, setUserError] = useState("");
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
+  const [id, setid] = useState("");
+
+  addListener("showdialog", (_id) => {
+    showDialog();
+    setid(_id);
+  });
 
   const theme = useTheme();
 
@@ -37,11 +46,10 @@ export default function AddCategoryDialog() {
         fetchData("username"),
         fetchData("categories"),
       ]);
-      await createCategory(username, {
+      await editCategory(username,id, {
         title: categoryName,
         emoji: categoryEmoji,
       });
-      notify("newCategory");
     } catch (error) {
       console.log("Error creating category: ", error);
     }
@@ -49,17 +57,9 @@ export default function AddCategoryDialog() {
 
   return (
     <View>
-      <Button
-        icon="plus"
-        mode="contained"
-        onPress={showDialog}
-        style={[styles.btn, { backgroundColor: theme.colors.tertiary }]}
-      >
-        New Category
-      </Button>
       <Portal>
         <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
-          <Dialog.Title>New Category</Dialog.Title>
+          <Dialog.Title>Edit Category</Dialog.Title>
           <Dialog.Content>
             <View style={styles.containerCategory}>
               <TextInput
