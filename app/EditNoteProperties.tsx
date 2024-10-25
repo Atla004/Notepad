@@ -93,17 +93,12 @@ const EditNoteProperties = () => {
 
   useEffect(() => {
     const onBeforeRemove = (e: { preventDefault: () => void }) => {
-      if (!shouldHandleBeforeRemove.current) return;
-      shouldHandleBeforeRemove.current = false;
       e.preventDefault();
-
-      console.log("onBeforeRemove 1");
-
-      
       if( userError !== ""){
+        console.log("Error title");
         Alert.alert(
           "Error",
-          "Note name cannot be empty.",
+           userError ,
           [
             {
               text: "OK",
@@ -115,6 +110,16 @@ const EditNoteProperties = () => {
         );
         return;
       }
+
+      console.log("good title");
+
+
+      if (!shouldHandleBeforeRemove.current) return;
+      shouldHandleBeforeRemove.current = false;
+      
+
+      
+
 
       //guardar los cambios
       saveNoteProperties();
