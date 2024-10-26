@@ -1,29 +1,26 @@
 {
   "expo": {
-    "name": "Notepad-Frontend",
+    "name": "Tlas",
     "slug": "Notepad-Frontend",
     "scheme": "Notepad-Frontend",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/TLASNotepad-icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/tlaslogo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#EBEBD3"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/TLASNotepad-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.atlas004.NotepadFrontend"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-router"
