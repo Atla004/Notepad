@@ -25,6 +25,7 @@ import {
 import { FlatGrid } from "react-native-super-grid";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import EditCategoryDialog from "@/components/EditCategoryDialog";
+import FABCreateCategory from "@/components/FABCreateCategory";
 
 const CategoryItem = ({ item }: { item: Category }) => {
   const [visible, setVisible] = useState(false);
@@ -177,6 +178,18 @@ export default function Categories() {
     });
   });
 
+  addListener("addCategory", (newCategory: Category) => {
+    console.log("addCategory", newCategory);
+    setItems([...items, newCategory]);
+
+
+    fetchData("username").then((res) => {
+      getAllCategories(res).then((res) => {
+        setItems(res);
+      });
+    });
+  });
+
   useEffect(() => {
     fetchData("username").then((res) => {
       storeData("active-tab", "Categories");
@@ -248,6 +261,7 @@ export default function Categories() {
           </>
         )}
       />
+      <FABCreateCategory />
     </View>
   );
 }
