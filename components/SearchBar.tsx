@@ -23,6 +23,7 @@ export default function SearchBar({
       placeholder={placeholder}
       onChangeText={onChangeText}
       value={value}
+      iconColor={theme.colors.onSurface}
       right={() => (
         <>
           <Pressable

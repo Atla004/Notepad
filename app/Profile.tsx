@@ -9,11 +9,20 @@ import { logout } from "@/services/auth";
 import { deleteUser, getUserEmail } from "@/services/user";
 import Toast from "react-native-simple-toast";
 import { getPasswordToken } from "@/services/auth";
-import { fetchData } from "@/services/localstorage";
+import { fetchData, storeData } from "@/services/localstorage";
 
 
 export default function Profile() {
   const { toggleTheme } = useContext(ThemeContext);
+  const theme = useTheme();
+
+  const changeTheme = async () => {
+    console.log('toggle theme')
+    const actualTheme = await fetchData('theme');
+    
+    await storeData('theme', actualTheme == 'light' ? 'dark' : 'light')
+    toggleTheme();
+  }
 
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -39,7 +48,6 @@ export default function Profile() {
       console.error('Failed to delete user')
     }
   }
-  const theme = useTheme();
 
   const changePassword = async () => {
 
@@ -54,12 +62,6 @@ export default function Profile() {
     });
     return;
   };
-
-  const changeCategory = async () => {
-    console.log("Change category");
-  };
-
-
 
   const getUserData = async () => {
     const userName = await fetchData('username');
@@ -158,7 +160,7 @@ export default function Profile() {
         icon="theme-light-dark"
         textColor={theme.colors.shadow}
         style={styles.bnt}
-        onPress={toggleTheme}
+        onPress={changeTheme}
       >
         Change Theme
       </Button>
@@ -194,7 +196,7 @@ export default function Profile() {
       </Button>
       <Button
         icon="delete"
-        textColor={theme.colors.primaryContainer}
+        textColor={theme.colors.onSurface}
         style={styles.deleteBnt}
         onPress={showDialog}
       >

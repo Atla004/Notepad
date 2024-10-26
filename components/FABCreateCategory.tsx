@@ -137,7 +137,7 @@ const FABCreateCategory = () => {
             <View style={styles.containerCategory}>
               <TextInput
                 style={styles.inputCategory}
-                label="Category Name"
+                label={<Text style={{color: theme.colors.onSurface}}>Category Title</Text>}
                 value={categoryName}
                 onChangeText={handleCategoryTextChange}
                 mode="outlined"
@@ -145,7 +145,7 @@ const FABCreateCategory = () => {
               />
               <SelectEmoji />
             </View>
-            <View style={styles.errorContainer}>
+            <View>
               {userError ? (
                 <Text style={styles.errorText}>{userError}</Text>
               ) : <Text>{""}</Text>}

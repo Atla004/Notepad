@@ -86,7 +86,7 @@ export default function ForgotPassword() {
             </View>
             <TextInput
               style={styles.input}
-              label="New Password"
+              label={<Text style={{color: theme.colors.onSurface}}>New password</Text>}
               value={password}
               secureTextEntry
               mode="outlined"
@@ -95,7 +95,7 @@ export default function ForgotPassword() {
 
             <TextInput
               style={styles.input}
-              label="Confirm new password"
+              label={<Text style={{color: theme.colors.onSurface}}>Confirm new password</Text>}
               value={password2}
               secureTextEntry
               mode="outlined"

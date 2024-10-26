@@ -155,7 +155,7 @@ export default function EditCategoryDialog() {
             <View style={styles.containerCategory}>
               <TextInput
                 style={styles.inputCategory}
-                label="Category Name"
+                label={<Text style={{color: theme.colors.onSurface}}>Category Title</Text>}
                 value={categoryName}
                 onChangeText={handleCategoryTextChange}
                 mode="outlined"

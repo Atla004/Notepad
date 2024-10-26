@@ -195,6 +195,7 @@ const EditNoteProperties = () => {
       width: "100%",
       borderColor: theme.colors.shadow,
       // borderBottomWidth: 1,
+      color: theme.colors.onSurface,
       alignSelf: "center",
       borderRadius: 8,
       backgroundColor: theme.colors.primaryContainer,
@@ -326,7 +327,9 @@ const EditNoteProperties = () => {
       />
       <TextInput
         style={styles.input}
-        label="Note Title"
+        label={<Text style={{color: theme.colors.onSurface}}>Note Title</Text>}
+        outlineColor={theme.colors.onSurface}
+        
         value={titleState}
         mode="outlined"
         onChangeText={(text) => handleChangeText(text)}

@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { SvgXml } from "react-native-svg";
 
-const svgData = `
+const svgData = (color: string) => `
 <svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'>
   <defs>
     <pattern id='a' patternUnits='userSpaceOnUse' width='40' height='40' patternTransform='scale(2) rotate(0)'>
@@ -15,13 +15,17 @@ const svgData = `
 `;
 
 interface BackgroundProps {
+  theme?: 'dark' | 'light'
   children: React.ReactNode;
 }
 
-const Background: React.FC<BackgroundProps> = ({ children }) => {
+const Background: React.FC<BackgroundProps> = ({ theme, children }) => {
+  if (!theme) 
+    theme = 'light';
+  const color = theme == 'light' ? 'hsla(59.99, 37.49%, 87.45%, 1)' : 'hsla(60, 1%, 23%, 1)' 
   return (
     <View style={styles.container}>
-      <SvgXml xml={svgData} style={styles.background} />
+      <SvgXml xml={svgData(color)} style={styles.background} />
       {children}
     </View>
   );

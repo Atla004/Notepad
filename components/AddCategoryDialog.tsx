@@ -82,8 +82,9 @@ export default function AddCategoryDialog() {
       padding: 0,
       flexGrow: 0,
       maxHeight: 50,
-      textAlignVertical: 'center'
+      textAlignVertical: 'center',
       // marginHorizontal: 10,
+      backgroundColor: theme.colors.surface
     },
     errorText: {
       color: "red",
@@ -113,7 +114,7 @@ export default function AddCategoryDialog() {
             <View style={styles.containerCategory}>
               <TextInput
                 style={styles.inputCategory}
-                label="Category Name"
+                label={<Text style={{color: theme.colors.onSurface}}>Category Title</Text>}
                 value={categoryName}
                 onChangeText={handleCategoryTextChange}
                 mode="outlined"

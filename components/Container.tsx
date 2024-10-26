@@ -1,3 +1,4 @@
+import { fetchData } from "@/services/localstorage";
 import React, { createContext, ReactNode, useState, useCallback } from "react";
 import {
   MD3LightTheme as DefaultTheme,
@@ -15,7 +16,7 @@ const lightTheme = {
     tertiary: "#532302", //marron
     shadow: "#3C3C3B", // gris
     scrim: "#FDCDAC", //naranja claro
-    onSurface: "3C3C3B"
+    onSurface: "#3C3C3B"
   },
 };
 
@@ -26,7 +27,7 @@ const darkTheme = {
     primary: "#FA7921",
     surface: '#3c3c3b',
     primaryContainer: "#4f4f4e",
-    tertiary: "white",
+    tertiary: "#FA7921",
     shadow: "#F7F7ED",
     scrim: "#ffc49d",
     onSurface: "#F7F7ED"
@@ -42,7 +43,20 @@ export const ThemeContext = createContext({
 });
 
 const Container = React.memo(({ children }: LayoutProps) => {
+  
   const [theme, setTheme] = useState(lightTheme);
+  try {
+    fetchData('theme')
+    .then((theme) => {
+      if (!theme || theme == 'light')
+        setTheme(lightTheme);
+      else 
+      setTheme(darkTheme)
+  });
+  }
+  catch (error) {
+    setTheme(lightTheme);
+  }
 
   const toggleTheme = useCallback(() => {
     setTheme((prevTheme) =>

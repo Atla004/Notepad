@@ -44,7 +44,7 @@ const CardNote = ({
 
   const fontSizeByPriority = [20, 17.5, 18, 18, 18, 18]
 
-  const chipColor = theme.dark ? theme.colors.surface : theme.colors.onSurface
+  const chipColor = theme.dark ? theme.colors.onSurface : theme.colors.surface
 
   const styles = StyleSheet.create({
     cardTitle: {

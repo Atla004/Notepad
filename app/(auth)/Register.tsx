@@ -134,7 +134,7 @@ export default function Register() {
 
             <TextInput
               style={[styles.input, { marginTop: -10 }]}
-              label="Email"
+              label={<Text style={{color: theme.colors.onSurface}}>Email</Text>}
               value={email}
               mode="outlined"
               onChangeText={(text) => setEmail(text)}
@@ -147,7 +147,7 @@ export default function Register() {
 
             <TextInput
               style={styles.input}
-              label="Username"
+              label={<Text style={{color: theme.colors.onSurface}}>Username</Text>}
               value={user}
               mode="outlined"
               onChangeText={(text) => setUser(text)}
@@ -160,7 +160,7 @@ export default function Register() {
 
             <TextInput
               style={styles.input}
-              label="Password"
+              label={<Text style={{color: theme.colors.onSurface}}>Password</Text>}
               value={password}
               mode="outlined"
               secureTextEntry

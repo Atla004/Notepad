@@ -79,6 +79,7 @@ const DropdownPriority = ({priority,_id}: DropdownPriorityProps) => {
     },
     selectedTextStyle: {
       fontSize: 14,
+      color: theme.colors.onSurface
     },
     iconStyle: {
       width: 20,
@@ -89,6 +90,9 @@ const DropdownPriority = ({priority,_id}: DropdownPriorityProps) => {
       borderColor: theme.colors.shadow,
       borderWidth: 1,
       backgroundColor: theme.colors.primaryContainer
+    },
+    itemText: {
+      color: theme.colors.onSurface
     }
   });  
 
@@ -99,6 +103,7 @@ const DropdownPriority = ({priority,_id}: DropdownPriorityProps) => {
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         containerStyle={styles.selectContainer}
+        itemTextStyle={styles.itemText}
         activeColor={theme.colors.scrim}
         iconStyle={styles.iconStyle}
         data={data}

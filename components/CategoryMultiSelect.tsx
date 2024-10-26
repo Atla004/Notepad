@@ -107,10 +107,12 @@ try {
     },
     placeholderStyle: {
       fontSize: 16,
+      color: theme.colors.onSurface
     },
     selectedTextStyle: {
       fontSize: 14,
-       
+      marginRight: 5,
+      color: theme.colors.onSurface
     },
     iconStyle: {
       width: 20,
@@ -121,7 +123,8 @@ try {
       width: "100%",
       alignSelf: "center",
       borderColor: theme.colors.shadow,
-      borderRadius: 4
+      borderRadius: 4,
+      color: theme.colors.onSurface
     },
     icon: {
       marginRight: 5,
@@ -145,11 +148,11 @@ try {
       paddingVertical: 8,
       elevation: 2,
       borderColor: theme.colors.shadow,
-      borderWidth: 1
+      borderWidth: 1,
+      // color: theme.colors.onSurface
     },
     textSelectedStyle: {
-      marginRight: 5,
-      fontSize: 16,
+      
     },
     noCategoriesText: {
       fontSize: 16,
@@ -175,8 +178,9 @@ try {
           selectedTextStyle={styles.selectedTextStyle}
           inputSearchStyle={styles.input}
           containerStyle={styles.selectContainer}
+          itemTextStyle={{color: 'red', fontWeight: 'bold'}}
           data={categories}
-          activeColor={theme.colors.scrim}
+          activeColor={theme.dark ? theme.colors.primary : theme.colors.scrim}
           labelField="title"
           valueField="title"
           placeholder="Select categories"

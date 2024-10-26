@@ -99,7 +99,9 @@ export default function Login() {
   );
 
   return (
-    <Background>
+    <Background
+      theme={theme.dark ? 'dark' : 'light'}
+    >
       <View style={styles.container}>
         <Card style={styles.card}>
           <Card.Content>
@@ -110,11 +112,14 @@ export default function Login() {
               >
                 Welcome Back!
               </Text>
-              <Text variant="bodyMedium">We're glad to have you back</Text>
+              <Text 
+              variant="bodyMedium"
+              style={{ color: theme.colors.onSurface }}
+              >We're glad to have you back</Text>
             </View>
             <TextInput
               style={styles.input}
-              label="Username"
+              label={<Text style={{color: theme.colors.onSurface}}>Username</Text>}
               value={user}
               mode="outlined"
               error={!!userError}
@@ -126,7 +131,7 @@ export default function Login() {
 
             <TextInput
               style={styles.input}
-              label="Password"
+              label={<Text style={{color: theme.colors.onSurface}}>Passowrd</Text>}
               value={password}
               mode="outlined"
               secureTextEntry
@@ -152,11 +157,17 @@ export default function Login() {
                 status={isChecked ? "checked" : "unchecked"}
                 onPress={staySignedIn}
               />
-              <Text variant="labelLarge">Stay signed in </Text>
+              <Text 
+                variant="labelLarge"
+                style={{ color: theme.colors.onSurface }}
+              >Stay signed in </Text>
             </View>
 
             <View style={[styles.row, styles.centeredRow]}>
-              <Text variant="labelLarge">Need an account? </Text>
+              <Text
+                variant="labelLarge"
+                style={{ color: theme.colors.onSurface }}
+               >Need an account? </Text>
 
               <Link href="./Register">
                 <Text

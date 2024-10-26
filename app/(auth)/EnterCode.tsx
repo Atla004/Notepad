@@ -52,7 +52,7 @@ export default function ForgotPassword() {
             </View>
             <TextInput
               style={styles.input}
-              label="Code"
+              label={<Text style={{color: theme.colors.onSurface}}>Code</Text>}
               value={token}
               mode="outlined"
               onChangeText={(text) => handleCodeChange(text)}

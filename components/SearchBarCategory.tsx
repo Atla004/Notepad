@@ -19,7 +19,7 @@ export default function SearchBarCategory({
     <Searchbar
       style={[
         styles.searchBar,
-        { backgroundColor: theme.colors.primaryContainer },
+        { backgroundColor: theme.colors.primaryContainer, color: theme.colors.onSurface },
       ]}
       placeholder={placeholder}
       onChangeText={onChangeText}

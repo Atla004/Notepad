@@ -4,7 +4,8 @@ import Login from "./(auth)/Login";
 // import Home from "./(tabs)/Home";
 // import EditNoteProperties from "./EditNoteProperties";
 import { Alert, BackHandler } from "react-native";
-
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...'])
 export default function Index() {
   useEffect(() => {
     const backAction = () => {

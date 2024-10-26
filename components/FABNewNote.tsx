@@ -149,7 +149,7 @@ const FABNewNote = ({ onNewNote }: FABNewNoteProps) => {
           <Dialog.Content style={styles.content}>
             <TextInput
               style={styles.input}
-              label="Note Title"
+              label={<Text style={{color: theme.colors.onSurface}}>Note Title</Text>}
               value={noteName}
               mode="outlined"
               onChangeText={handleNameChange}

@@ -68,7 +68,7 @@ export default function ForgotPassword() {
             </View>
             <TextInput
               style={styles.input}
-              label="Email"
+              label={<Text style={{color: theme.colors.onSurface}}>Email</Text>}
               value={gmail}
               mode="outlined"
               onChangeText={(text) => setGmail(text)}
