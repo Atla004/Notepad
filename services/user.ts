@@ -25,19 +25,23 @@ export const changeUserEmail = async (userData: {
 
 export const deleteUser = async (userData: { username: string }) => {
   try {
+    console.log(userData);
     const response = await authorizedWrappedFetch({
       route: `/user/${userData.username}`,
       method: "DELETE",
-      body: userData,
     });
+    console.log(response)
     if (response.status !== 200) {
       const errors = await response.json();
       throw new FetchError(errors.error);
     }
+    console.log("AAAAAAAAAAAA")
     await logout();
+    console.log("BBBBBBBBBBBB")
     return;
   } catch (error) {
-    throw new Error(`Failed to delete user`);
+    console.error(error)
+    throw new Error(`Failed to delete`);
   }
 };
 

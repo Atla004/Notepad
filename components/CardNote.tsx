@@ -66,7 +66,7 @@ const CardNote = ({
       textAlignVertical: "top",
       fontWeight: 'bold',
       fontSize: 9,
-      color: priority == 5 ? theme.colors.primary : chipColor
+      color: theme.colors.primary
       // padding: 0
     },
     text: {

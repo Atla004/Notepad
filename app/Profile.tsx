@@ -48,12 +48,13 @@ try {
 
   const deleteAccount = async () => {
     try {
-      // await deleteUser({ username });
-      // await logout();
+      await deleteUser({ username });
+      router.dismissAll();
+      router.replace('/Login')
       console.log("Why");
     }
     catch (error) {
-      console.error('Failed to delete user')
+      console.error('Failed to delete user', error)
     }
   }
 

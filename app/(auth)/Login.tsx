@@ -22,6 +22,7 @@ export default function Login() {
     console.log("goToLogin");
     const logger = await autologin();
     if (logger) {
+      router.dismissAll();
       router.replace("/Home");
     }
   };
@@ -51,7 +52,8 @@ export default function Login() {
 
       if (awaitedUser) {
         console.log("User: ", userData);
-        router.push("/Home");
+        router.dismissAll()
+        router.replace("/Home");
         return;
       } else {
         throw new Error("Invalid username or password.");
