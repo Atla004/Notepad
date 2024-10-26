@@ -53,7 +53,7 @@ export const SelectEmoji = ({defaultEmoji}: SelectEmojiProps) => {
       // paddingTop: 5/,
       verticalAlign: "middle",
       // alignSelf: "center",
-      backgroundColor: "white",
+      backgroundColor: theme.colors.primaryContainer,
       borderColor: theme.colors.shadow,
       borderWidth: 1,
       borderRadius: 5

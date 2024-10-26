@@ -287,7 +287,8 @@ const EditNoteProperties = () => {
                   </Pressable>
                 </View>
                 <Portal>
-                  <Dialog visible={visible} onDismiss={hideDialog}>
+                  <Dialog visible={visible} onDismiss={hideDialog}
+                  style={{backgroundColor: theme.colors.primaryContainer}}>
                     <Dialog.Icon icon="alert" />
                     <Dialog.Title style={styles.dialogTitle}>
                       Confirm

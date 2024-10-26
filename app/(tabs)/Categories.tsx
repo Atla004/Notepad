@@ -50,24 +50,37 @@ const CategoryItem = ({ item }: { item: Category }) => {
     });
   };
 
+  const localStyle = StyleSheet.create({
+    modalMenu: {
+      backgroundColor: theme.colors.primaryContainer
+    }
+  })
+
   return (
     <>
       <View
         style={{
           flexDirection: "row",
           justifyContent: "flex-end",
+          ...styles.menu
         }}
       >
         <Menu
+            // style={localStyle.modalMenu}
           visible={visible}
           onDismiss={closeMenu}
           anchor={
-            <Pressable onPress={openMenu}>
-              <FontAwesome6 name="ellipsis-vertical" size={24} color="black" />
+            <Pressable 
+              onPress={openMenu}
+              hitSlop={{ top: 25, bottom: 25, left: 15, right: 15 }}
+            >
+              <FontAwesome6 name="ellipsis-vertical" size={24} color={theme.colors.shadow} />
             </Pressable>
           }
+          contentStyle={localStyle.modalMenu}
         >
           <Menu.Item
+            style={localStyle.modalMenu}
             onPress={() => {
               notify("showdialog", item._id, item.title, item.emoji);
             }}
@@ -77,13 +90,18 @@ const CategoryItem = ({ item }: { item: Category }) => {
 
           <Divider />
           <Menu.Item
+            style={localStyle.modalMenu}
             onPress={() => {
               showDialog();
             }}
             title="Delete"
           />
           <Portal>
-            <Dialog visible={visibleDialog} onDismiss={hideDialog}>
+            <Dialog
+             visible={visibleDialog} 
+             onDismiss={hideDialog}
+              style={localStyle.modalMenu}
+            >
               <Dialog.Icon icon="alert" />
               <Dialog.Title style={styles.dialogTitle}>Confirm</Dialog.Title>
               <Dialog.Content>
@@ -235,6 +253,15 @@ export default function Categories() {
 }
 
 const styles = StyleSheet.create({
+  menu: {
+    position: 'absolute',
+    // marginLeft: 165,
+    // marginBottom: 40,
+    transform: [{translateY: -55}, {translateX: 165}],
+    // margin: 10,
+    // backgroundColor: theme
+    zIndex: 2
+  },
   gridView: {
     marginTop: 10,
     flex: 1,

@@ -50,6 +50,8 @@ const Tabs = () => {
       onIndexChange={setIndex}
       renderScene={renderScene}
       activeIndicatorStyle={{ backgroundColor: thme.colors.scrim }}
+      sceneAnimationEnabled={true}
+      sceneAnimationType="shifting"
       barStyle={{ backgroundColor: thme.colors.primaryContainer }}
     />
   );

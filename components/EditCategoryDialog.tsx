@@ -94,25 +94,81 @@ export default function EditCategoryDialog() {
     }
   };
 
+  const handleCategoryTextChange = (text: string) => {
+    setCategoryName(text);
+    if (!text) {
+      setUserError("Category name cannot be empty.");
+      return;
+    }
+    if (text.length > 15) {
+      setUserError("Category name is too long.");
+      return;
+    }
+    setUserError('')
+  }
+
+  const styles = StyleSheet.create({
+    dialog: {
+      display: "flex",
+      position: "relative",
+      backgroundColor: theme.colors.primaryContainer,
+      borderRadius: 20
+    },
+    btn: {
+      marginTop: 15,
+    },
+    containerCategory: {
+      justifyContent: "space-around",
+      flexDirection: "row",
+      alignItems:"center",
+      height: 70
+    },
+    inputCategory: {
+      // marginVertical: 10,
+      width: 220,
+      // height: 60,
+      padding: 0,
+      flexGrow: 0,
+      maxHeight: 50,
+      textAlignVertical: 'center',
+      // marginHorizontal: 10,
+      backgroundColor: theme.colors.primaryContainer
+    },
+    errorText: {
+      color: "red",
+      // alignSelf: "center",
+      marginBottom: 5,
+      marginLeft: 10,
+      // textAlign: "left"
+    },
+    errorContainer: {
+    },
+  });
+  
+
   return (
     <View>
       <Portal>
         <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
-          <Dialog.Title>Edit Category</Dialog.Title>
+          <Dialog.Title>New Category</Dialog.Title>
           <Dialog.Content>
             <View style={styles.containerCategory}>
               <TextInput
                 style={styles.inputCategory}
                 label="Category Name"
                 value={categoryName}
-                onChangeText={(text) => setCategoryName(text)}
+                onChangeText={handleCategoryTextChange}
+                mode="outlined"
+
               />
+              <SelectEmoji />
+            </View>
+            <View>
               {userError ? (
                 <Text style={styles.errorText}>{userError}</Text>
-              ) : null}
-
-              <SelectEmoji defaultEmoji={emoji} />
+              ) : <Text>{""}</Text>}
             </View>
+
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={handlerNewCategories}>Done</Button>
@@ -123,31 +179,3 @@ export default function EditCategoryDialog() {
   );
 }
 
-const styles = StyleSheet.create({
-  dialog: {
-    display: "flex",
-    position: "relative",
-  },
-  btn: {
-    marginVertical: 10,
-  },
-  containerCategory: {
-    justifyContent: "space-around",
-    flexDirection: "row",
-  },
-  inputCategory: {
-    marginVertical: 10,
-    width: 150,
-    height: 50,
-    padding: 0,
-    flexGrow: 0,
-    maxHeight: 50,
-
-    marginHorizontal: 10,
-  },
-  errorText: {
-    color: "red",
-    alignSelf: "center",
-    marginBottom: 5,
-  },
-});
