@@ -1,4 +1,6 @@
-import { fetchData } from "@/services/localstorage";
+import { fetchData, storeData } from "@/services/localstorage";
+import { addListener } from "@alexsandersarmento/react-native-event-emitter";
+import { store } from "expo-router/build/global-state/router-store";
 import React, { createContext, ReactNode, useState, useCallback } from "react";
 import {
   MD3LightTheme as DefaultTheme,
@@ -45,7 +47,14 @@ export const ThemeContext = createContext({
 const Container = React.memo(({ children }: LayoutProps) => {
   
   const [theme, setTheme] = useState(lightTheme);
+
+  addListener("Layout", () => {
+    storeData('theme', 'light');
+    setTheme(lightTheme);
+});
+
   try {
+    console.log("try");
     fetchData('theme')
     .then((theme) => {
       if (!theme || theme == 'light')
