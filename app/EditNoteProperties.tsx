@@ -149,9 +149,9 @@ const EditNoteProperties = () => {
     };
   }, [navigation, _id, titleState]);
 
-  function isPasswordValid(password: string): boolean {
+  function isTextValid(password: string): boolean {
     // Expresión regular para verificar la ausencia de caracteres especiales excepto '-' y '_'
-    const specialCharPattern = /[^a-zA-Z0-9-_]/;
+    const specialCharPattern = /[^a-zA-Z0-9-_-\s]/;
     return !specialCharPattern.test(password);
   }
 
@@ -169,7 +169,7 @@ const EditNoteProperties = () => {
       return;
     }
 
-    if (!isPasswordValid(text)) {
+    if (!isTextValid(text)) {
       setUserError("Name cannot contain special characters");
       setIsDebounced(false);
       return;
