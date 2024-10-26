@@ -9,7 +9,7 @@ import { logout } from "@/services/auth";
 import { deleteUser, getUserEmail } from "@/services/user";
 import Toast from "react-native-simple-toast";
 import { getPasswordToken } from "@/services/auth";
-import { fetchData, storeData } from "@/services/localstorage";
+import { fetchData, storeData,editJSONData } from "@/services/localstorage";
 
 
 export default function Profile() {
@@ -17,10 +17,19 @@ export default function Profile() {
   const theme = useTheme();
 
   const changeTheme = async () => {
-    console.log('toggle theme')
-    const actualTheme = await fetchData('theme');
-    await storeData('theme', actualTheme == 'light' ? 'dark' : 'light')
-    toggleTheme();
+
+try {
+      console.log('toggle theme')
+      const actualTheme = await fetchData('theme');
+      console.log('toggle theme2')
+      await storeData('theme', actualTheme == 'light' ? 'dark' : 'light')
+      console.log('toggle theme3')
+      toggleTheme();
+} catch (error) {
+  await storeData('theme', 'light')
+  return
+  
+}
   }
 
   const [username, setUsername] = useState<string>("");
