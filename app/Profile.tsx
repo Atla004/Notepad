@@ -99,6 +99,7 @@ export default function Profile() {
       marginHorizontal: 10,
       marginVertical: 5,
       backgroundColor: theme.colors.primary,
+      color: 'red',
       borderRadius: 8,
     },
     dialogTitle: {

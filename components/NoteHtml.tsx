@@ -1,10 +1,10 @@
-import { RichText, Toolbar, useEditorBridge } from "@10play/tentap-editor";
+import { CodeBridge, darkEditorTheme, RichText, Toolbar, useEditorBridge } from "@10play/tentap-editor";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, KeyboardAvoidingView, StyleSheet, View } from "react-native";
 import {  fetchData } from "@/services/localstorage";
 import { editNote } from "@/services/notes";
-import { Text } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 import { NoteRequest } from "@/types/apiResponses";
 import { editLocalNote } from "@/services/notelocalstorage";
 import { notify } from "@alexsandersarmento/react-native-event-emitter";
@@ -86,12 +86,32 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
     }
   };
 
+  const theme = useTheme()  
+  const [editorCSS, setEditorCSS] = useState<string>(`
+    code {
+      background-color: ${theme.colors.surface};
+      border-radius: 0.25em;
+      border-color: #e45d5d;
+      border-width: 1px;
+      border-style: solid;
+      box-decoration-break: clone;
+      color: ${theme.colors.onSurface};
+      font-size: 0.9rem;
+      padding: 0.25em;
+  }  
+  `)
+  useEffect(()=> {
+
+  }, [theme])
   const editor = useEditorBridge({
     autofocus: true,
     avoidIosKeyboard: true,
     initialContent: "",
     onChange: handleEditorChange,
     editable: false,
+    // bridgeExtensions: [
+    //   CodeBridge.configureCSS(editorCSS)
+    // ]
   });
 
   const saveNoteContent = async () => {
@@ -120,7 +140,7 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
       <Text style={styles.charCount}>
         Characters remaining: {250 -charactersNumber}
       </Text>
-      <RichText editor={editor} />
+      <RichText editor={editor}/>
       <KeyboardAvoidingView style={styles.keyboardAvoidingView}>
         <Toolbar editor={editor} />
       </KeyboardAvoidingView>

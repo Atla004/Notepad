@@ -1,7 +1,7 @@
 import { Card, Chip, Text, TouchableRipple, useTheme } from "react-native-paper";
 import { CardNoteProps } from "@/types/types";
 import { router, useRouter } from "expo-router";
-import { StyleSheet } from "react-native";
+import { StyleProp, StyleSheet, ViewStyle } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { storeLocalNote } from "@/services/notelocalstorage";
 import { useEffect, useState } from "react";
@@ -64,8 +64,11 @@ const CardNote = ({
       textAlignVertical: "top",
       fontWeight: 'bold',
       fontSize: 9,
-      color: priority == 5 ? theme.colors.primary : theme.colors.shadow
+      color: priority == 5 ? theme.colors.primary : theme.colors.surface
       // padding: 0
+    },
+    text: {
+      color: theme.colors.onSurface
     }
   });
 
@@ -91,12 +94,9 @@ const CardNote = ({
             {title.trim()}
           </Text>}
           subtitle={
-            <HTMLView
-              value={
-                // cardContent
-                `${(cardContent).slice(0, 28).trim()}${(content ?? "").length > 25 ? "..." : ""}`
-              }
-            />
+            <Text>
+              {(cardContent).slice(0, 27).trim()}{(content ?? "").length > 25 ? "..." : ""}
+            </Text>
           }
           right={(props) =>
             priority !== 0 ? (

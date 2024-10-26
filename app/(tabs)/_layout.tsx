@@ -16,6 +16,7 @@ const TNotes = () => <Home />;
 
 const Tabs = () => {
   const [index, setIndex] = React.useState(0);
+  const theme = useTheme();
   const [routes] = React.useState([
     {
       key: "Home",
@@ -43,16 +44,16 @@ const Tabs = () => {
     Favorites: TFavorites,
     Categories: TCategories,
   });
-  const thme = useTheme();
   return (
     <BottomNavigation
       navigationState={{ index, routes }}
       onIndexChange={setIndex}
       renderScene={renderScene}
-      activeIndicatorStyle={{ backgroundColor: thme.colors.scrim }}
+      activeIndicatorStyle={{ backgroundColor: theme.colors.scrim }}
       sceneAnimationEnabled={true}
       sceneAnimationType="shifting"
-      barStyle={{ backgroundColor: thme.colors.primaryContainer }}
+      barStyle={{ backgroundColor: theme.colors.primaryContainer }}
+      inactiveColor={theme.colors.onSurface}
     />
   );
 };

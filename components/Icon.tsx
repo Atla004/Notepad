@@ -3,47 +3,59 @@ import Feather from "@expo/vector-icons/Feather";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useTheme } from "react-native-paper";
 
 export const FilledFavoritesIcon = () => {
-  return <Entypo name="star" size={24} color="black" />
+  const theme = useTheme();
+  return <Entypo name="star" size={24} color={theme.colors.onSurface} />
 }
 
 export const FavoritesIcon = () => {
-  return <Entypo name="star-outlined" size={24} color="black" />;
+  const theme = useTheme();
+  return <Entypo name="star-outlined" size={24} color={theme.colors.onSurface} />;
 };
 
 export const SunIcon = () => {
-  return <Feather name="sun" size={24} color="black" />;
+  const theme = useTheme();
+  return <Feather name="sun" size={24} color={theme.colors.onSurface} />;
 };
 
 export const SettingsIcon = () => {
-  return <Feather name="settings" size={21} color="black" />;
+  const theme = useTheme();
+  return <Feather name="settings" size={21} color={theme.colors.onSurface} />;
 };
 
 export const TrashIcon = () => {
-  return <Feather name="trash-2" size={24} color="black" />;
+  const theme = useTheme();
+  return <Feather name="trash-2" size={24} color={theme.colors.onSurface} />;
 };
 
 export const FolderIcon = () => {
-  return <FontAwesome6 name="folder" size={20} color="black" />;
+  const theme = useTheme();
+  return <FontAwesome6 name="folder" size={20} color={theme.colors.onSurface} />;
 };
 
 export const BoxIcon = () => {
-  return <Feather name="inbox" size={24} color="black" />;
+  const theme = useTheme();
+  return <Feather name="inbox" size={24} color={theme.colors.onSurface} />;
 };
 
 export const PlusIcon = () => {
-  <AntDesign name="plus" size={24} color="black" />;
+  const theme = useTheme();
+  <AntDesign name="plus" size={24} color={theme.colors.onSurface} />;
 };
 
 export const PeopleIcon = () => {
-  <Ionicons name="people-sharp" size={24} color="black" />;
+  const theme = useTheme();
+  <Ionicons name="people-sharp" size={24} color={theme.colors.onSurface} />;
 };
 
 export const PersonIcon = () => {
-  <Ionicons name="person-sharp" size={24} color="black" />;
+  const theme = useTheme();
+  <Ionicons name="person-sharp" size={24} color={theme.colors.onSurface} />;
 };
 
 export const CloseIcon = () => {
-  <AntDesign name="close" size={24} color="black" />;
+  const theme = useTheme();
+  <AntDesign name="close" size={24} color={theme.colors.onSurface} />;
 };

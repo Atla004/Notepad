@@ -15,6 +15,7 @@ const lightTheme = {
     tertiary: "#532302", //marron
     shadow: "#3C3C3B", // gris
     scrim: "#FDCDAC", //naranja claro
+    onSurface: "3C3C3B"
   },
 };
 
@@ -22,12 +23,13 @@ const darkTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: "red",
-    surface: "white",
-    primaryContainer: "gray",
+    primary: "#FA7921",
+    surface: '#3c3c3b',
+    primaryContainer: "#4f4f4e",
     tertiary: "white",
-    shadow: "white",
-    scrim: "white",
+    shadow: "#F7F7ED",
+    scrim: "#ffc49d",
+    onSurface: "#F7F7ED"
   },
 };
 

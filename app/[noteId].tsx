@@ -138,11 +138,13 @@ const NoteScreen = () => {
           headerStyle: {
             backgroundColor: theme.colors.primaryContainer,
           },
+          headerTintColor: theme.colors.onSurface,
           headerLeft: HeaderBackButton,
           headerRight: () => {
             return (
               <View style={styles.headersLeft}>
                 <Pressable
+                  
                   onPress={() => {
                     setFavoriteBool(!favoriteBool);
                   }}
