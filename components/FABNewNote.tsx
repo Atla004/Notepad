@@ -31,9 +31,30 @@ const FABNewNote = ({ onNewNote }: FABNewNoteProps) => {
   const theme = useTheme();
   const [userError, setUserError] = useState("");
 
-  function isPasswordValid(password: string): boolean {
+  const handleNameChange = (text: string) => {
+    setNoteName(text);
+    if (text === "") {
+      setUserError("Note title cannot be empty.");
+      setIsDebounced(false);
+      return;
+    }
+    if (text.length >= 17) {
+      setUserError("Note title is too long.");
+      setIsDebounced(false);
+      return;
+    }
+    if (!isNameValid(text)) {
+      setUserError("no se admiten caracteres especiales");
+      setIsDebounced(false);
+      return;
+    }
+    setUserError("");
+    setIsDebounced(false);
+  }
+
+  function isNameValid(password: string): boolean {
     // Expresión regular para verificar la ausencia de caracteres especiales excepto '-' y '_'
-    const specialCharPattern = /[^a-zA-Z0-9-_]/;
+    const specialCharPattern = /[^a-zA-Z0-9-_-\s]/;
     return !specialCharPattern.test(password);
   }
 
@@ -44,25 +65,24 @@ const FABNewNote = ({ onNewNote }: FABNewNoteProps) => {
       setIsDebounced(true);
 
       if (noteName === "") {
-        console.log("noteNameddddd");
-        setUserError("Note name cannot be empty.");
+        setUserError("Note title cannot be empty.");
         setIsDebounced(false);
         return;
       }
-      if (noteName.length > 30) {
-        setUserError("Note name is too long.");
+      if (noteName.length >= 17) {
+        setUserError("Note title is too long.");
         setIsDebounced(false);
         return;
       }
-      if (!isPasswordValid(noteName)) {
-        setUserError("no se admiten caracteres especiales");
+      if (!isNameValid(noteName)) {
+        setUserError("Note title cannot contain special characters");
         setIsDebounced(false);
         return;
       }
 
       hideDialog();
       const username = await fetchData("username");
-      console.log("este es el username", username);
+      // console.log("este es el username", username);
       const note: Note = {
         title: noteName,
         content: "",
@@ -78,6 +98,37 @@ const FABNewNote = ({ onNewNote }: FABNewNoteProps) => {
     }
   };
 
+  // const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    fab: {
+      position: "absolute",
+      margin: 16,
+      right: 0,
+      bottom: 0,
+      borderRadius: 20,
+    },
+  
+    input: {
+      maxWidth: 300,
+      width: "100%",
+    },
+    content: {
+      alignItems: "center",
+      justifyContent: "center",
+      display: "flex",
+      position: "relative",
+      borderRadius: 20
+    },
+    errorText: {
+      color: "red",
+      textAlign:"left",
+      marginLeft: 5, 
+      alignSelf: "flex-start",
+      marginBottom: 5,
+    },
+  });
+
   return (
     <>
       <FAB
@@ -90,7 +141,7 @@ const FABNewNote = ({ onNewNote }: FABNewNoteProps) => {
         <Dialog
           visible={visible}
           onDismiss={hideDialog}
-          style={{ borderRadius: 30 }}
+          style={{ borderRadius: 30, backgroundColor: theme.colors.primaryContainer }}
         >
           <Dialog.Title>
             <Text variant="titleMedium">New Note</Text>
@@ -98,10 +149,10 @@ const FABNewNote = ({ onNewNote }: FABNewNoteProps) => {
           <Dialog.Content style={styles.content}>
             <TextInput
               style={styles.input}
-              label="name"
+              label="Note Title"
               value={noteName}
               mode="outlined"
-              onChangeText={(text) => setNoteName(text)}
+              onChangeText={handleNameChange}
             />
             {userError ? (
               <Text style={styles.errorText}>{userError}</Text>
@@ -116,28 +167,6 @@ const FABNewNote = ({ onNewNote }: FABNewNoteProps) => {
     </>
   );
 };
-const styles = StyleSheet.create({
-  fab: {
-    position: "absolute",
-    margin: 16,
-    right: 0,
-    bottom: 0,
-    borderRadius: 20,
-  },
 
-  input: {
-    maxWidth: 300,
-    width: "100%",
-  },
-  content: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  errorText: {
-    color: "red",
-    alignSelf: "center",
-    marginBottom: 5,
-  },
-});
 
 export default FABNewNote;

@@ -7,6 +7,7 @@ import { editNote } from "@/services/notes";
 import { Text } from "react-native-paper";
 import { NoteRequest } from "@/types/apiResponses";
 import { editLocalNote } from "@/services/notelocalstorage";
+import { notify } from "@alexsandersarmento/react-native-event-emitter";
 
 interface NoteHtmlProps {
   content: string;
@@ -23,10 +24,17 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
 
   useEffect(() => {
     refFavorite.current = favorite;
-    editorReady();
+    try {
+      editorReady();
+    }
+    catch (err) {}
     return () => {
     }
-  },[favorite,content]);
+  },[/* favorite */, content]);
+
+  useEffect(()=> {
+    refFavorite.current = favorite;
+  }, [favorite])
 
   useFocusEffect(
     useCallback(() => {
@@ -49,7 +57,6 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
     };
     editorContent.current = content;
     
-    
     await waitForEditor(); // Esperar hasta que el editor esté listo
     editor.setContent(editorContent.current);
     editor.setEditable(true);
@@ -58,6 +65,7 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
     
     const currentCharacterCount = (await editor.getText()).length;
     setCharacterNumber(currentCharacterCount);
+    notify('allowGoBack');
   };
 
   const handleEditorChange = async () => {

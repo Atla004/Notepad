@@ -1,6 +1,5 @@
 import React, {
   useCallback,
-  useContext,
   useEffect,
   useRef,
   useState,
@@ -36,6 +35,8 @@ import {
 } from "@/services/localstorage";
 import { editLocalNote, getLocalNote } from "@/services/notelocalstorage";
 import { NoteRequest } from "@/types/apiResponses";
+import HeaderBackButton from "./HeaderBackButton";
+import { notify } from "@alexsandersarmento/react-native-event-emitter";
 
 const EditNoteProperties = () => {
   const theme = useTheme();
@@ -113,13 +114,8 @@ const EditNoteProperties = () => {
 
       console.log("good title");
 
-
       if (!shouldHandleBeforeRemove.current) return;
       shouldHandleBeforeRemove.current = false;
-      
-
-      
-
 
       //guardar los cambios
       saveNoteProperties();
@@ -167,14 +163,14 @@ const EditNoteProperties = () => {
       return;
     }
 
-    if (text.length > 30) {
+    if (text.length >= 17) {
       setUserError("Note name is too long.");
       setIsDebounced(false);
       return;
     }
 
     if (!isPasswordValid(text)) {
-      setUserError("no se admiten caracteres especiales");
+      setUserError("Name cannot contain special characters");
       setIsDebounced(false);
       return;
     }
@@ -182,6 +178,93 @@ const EditNoteProperties = () => {
 
     
   }, []);
+  
+
+  const styles = StyleSheet.create({
+    saveButton: {
+      margin: 10,
+    },
+    scrollView: {
+      maxHeight: 100,
+      marginBottom: 16,
+      marginTop: 8,
+      marginHorizontal: 18,
+    },
+    input: {
+      maxWidth: 360,
+      width: "100%",
+      borderColor: theme.colors.shadow,
+      // borderBottomWidth: 1,
+      alignSelf: "center",
+      borderRadius: 8,
+      backgroundColor: theme.colors.primaryContainer,
+      // elevation: 0
+    },
+    card: {
+      width: 320,
+    },
+    container: {
+      width: "100%",
+      height: "100%",
+    },
+    title: {
+      textAlign: "center",
+    },
+    chipContainer: {
+      borderRadius: 5,
+      flexDirection: "row",
+      flexWrap: "wrap",
+      width: "100%",
+      alignSelf: "center",
+    },
+    chips: {
+      margin: 4,
+      width: 100,
+      borderRadius: 5,
+    },
+    chipText: {
+      width: "100%",
+    },
+    dropdown: {
+      marginTop: 16,
+    },
+    divider: {
+      marginVertical: 16, // Adjust the value to increase or decrease the space
+      marginHorizontal: 10,
+    },
+    textCloseToDivider: {
+      marginTop: -8,
+      marginLeft: 16,
+    },
+    dialogTitle: {
+      textAlign: "center",
+      fontWeight: "bold",
+      fontSize: 18,
+      color: "red",
+    },
+    dialogContent: {
+      textAlign: "center",
+      fontSize: 16,
+    },
+    dialogButton: {
+      marginHorizontal: 10,
+    },
+    deleteButton: {
+      borderRadius: 8,
+    },
+    headersLeft: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      paddingLeft: 45,
+      alignItems:"flex-end",
+      width: 80,
+    },
+    errorText: {
+      color: "red",
+      alignSelf: "center",
+      marginBottom: 5,
+    },
+  });
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
@@ -189,13 +272,15 @@ const EditNoteProperties = () => {
         options={{
           title: `Edit Note `,
           headerShown: true,
+          
           headerStyle: {
             backgroundColor: theme.colors.primaryContainer, // Cambia este valor al color que desees
           },
+          headerLeft: HeaderBackButton,
           headerRight: () => {
             return (
               <>
-                <StatusBar />
+                {/* <StatusBar /> */}
                 <View style={styles.headersLeft}>
                   <Pressable onPress={showDialog}>
                     <TrashIcon />
@@ -234,17 +319,13 @@ const EditNoteProperties = () => {
           },
         }}
       />
-
       <Divider
         bold
         style={[styles.divider, { backgroundColor: theme.colors.shadow }]}
       />
-      <Text style={styles.textCloseToDivider} variant="bodySmall">
-        Note Name
-      </Text>
       <TextInput
         style={styles.input}
-        label="name"
+        label="Note Title"
         value={titleState}
         mode="outlined"
         onChangeText={(text) => handleChangeText(text)}
@@ -279,85 +360,5 @@ const EditNoteProperties = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  saveButton: {
-    margin: 10,
-  },
-  scrollView: {
-    maxHeight: 100,
-    marginBottom: 16,
-    marginTop: 8,
-    marginHorizontal: 18,
-  },
-  input: {
-    maxWidth: 320,
-    width: "100%",
-    alignSelf: "center",
-    borderRadius: 40,
-  },
-  card: {
-    width: 250,
-  },
-  container: {
-    width: "100%",
-    height: "100%",
-  },
-  title: {
-    textAlign: "center",
-  },
-  chipContainer: {
-    borderRadius: 5,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    width: "100%",
-    alignSelf: "center",
-  },
-  chips: {
-    margin: 4,
-    width: 100,
-    borderRadius: 5,
-  },
-  chipText: {
-    width: "100%",
-  },
-  dropdown: {
-    marginTop: 16,
-  },
-  divider: {
-    marginVertical: 16, // Adjust the value to increase or decrease the space
-    marginHorizontal: 10,
-  },
-  textCloseToDivider: {
-    marginTop: -8,
-    marginLeft: 16,
-  },
-  dialogTitle: {
-    textAlign: "center",
-    fontWeight: "bold",
-    fontSize: 18,
-    color: "red",
-  },
-  dialogContent: {
-    textAlign: "center",
-    fontSize: 16,
-  },
-  dialogButton: {
-    marginHorizontal: 10,
-  },
-  deleteButton: {
-    borderRadius: 8,
-  },
-  headersLeft: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 10,
-    width: 80,
-  },
-  errorText: {
-    color: "red",
-    alignSelf: "center",
-    marginBottom: 5,
-  },
-});
 
 export default EditNoteProperties;

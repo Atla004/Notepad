@@ -23,6 +23,7 @@ import {
   removeListener,
 } from "@alexsandersarmento/react-native-event-emitter";
 import { fetchData } from "@/services/localstorage";
+import HeaderBackButton from "./HeaderBackButton";
 
 const NoteScreen = () => {
   const data = useLocalSearchParams();
@@ -37,6 +38,7 @@ const NoteScreen = () => {
   const listenerRef = useRef<((e: any) => void) | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const shouldHandleBeforeRemove = useRef<boolean>(true);
+  const [backButtonVisible, setBackButtonVisible] = useState<boolean>(false)
 
   useFocusEffect(
     useCallback(() => {
@@ -136,6 +138,7 @@ const NoteScreen = () => {
           headerStyle: {
             backgroundColor: theme.colors.primaryContainer,
           },
+          headerLeft: HeaderBackButton,
           headerRight: () => {
             return (
               <View style={styles.headersLeft}>

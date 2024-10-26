@@ -67,7 +67,7 @@ export default function Register() {
       const response = await register({ email, username: user, password });
 
       if (response == "registered") {
-        Toast.show("User registered succesfully", Toast.LONG);
+        Toast.show("Registered successfully", Toast.LONG);
         router.push("/Login");
         return;
       } else {

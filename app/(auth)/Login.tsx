@@ -22,7 +22,7 @@ export default function Login() {
     console.log("goToLogin");
     const logger = await autologin();
     if (logger) {
-      router.push("/Home");
+      router.replace("/Home");
     }
   };
 

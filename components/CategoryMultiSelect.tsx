@@ -8,7 +8,8 @@ import { fetchData } from "@/services/localstorage";
 import { getAllCategories } from "@/services/categories";
 import { Category } from "@/types/apiResponses";
 import { editLocalNote, getLocalNote } from "@/services/notelocalstorage";
-import { addListener } from '@alexsandersarmento/react-native-event-emitter';
+import { addListener, notify } from '@alexsandersarmento/react-native-event-emitter';
+import { useTheme } from "react-native-paper";
 
 
 const CategoryMultiSelect = () => {
@@ -25,6 +26,7 @@ const CategoryMultiSelect = () => {
     console.log("data local", data);
     setSelected(data.categories);
     setCategories(categoriesData);
+    notify('allowGoBack');
   };
 
 
@@ -34,6 +36,8 @@ const CategoryMultiSelect = () => {
     getUserCategories();
     return () => {};
   }, []);
+
+  const theme = useTheme();
 
   const categoryChip = (chip: Category) => {
     return (
@@ -79,18 +83,100 @@ try {
   
 }
   };
+  const styles = StyleSheet.create({
+    container: {
+      paddingTop: 10, 
+      paddingHorizontal: 16 
+    },
+    dropdown: {
+      backgroundColor: theme.colors.primaryContainer,
+      borderRadius: 8,
+      padding: 12,
+      shadowColor: theme.colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 1,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 1.41,
+      elevation: 1,
+      height: 50,
+      borderColor: theme.colors.shadow,
+      borderWidth: 1,
+      paddingHorizontal: 8,
+    },
+    placeholderStyle: {
+      fontSize: 16,
+    },
+    selectedTextStyle: {
+      fontSize: 14,
+       
+    },
+    iconStyle: {
+      width: 20,
+      height: 20,
+    },
+    input: {
+      maxWidth: 345,
+      width: "100%",
+      alignSelf: "center",
+      borderColor: theme.colors.shadow,
+      borderRadius: 4
+    },
+    icon: {
+      marginRight: 5,
+    },
+    categoriesItem: {
+      padding: 17,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    tagsStyles: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: 8,
+      backgroundColor: theme.colors.scrim,
+      shadowColor: theme.colors.shadow,
+      marginTop: 8,
+      marginRight: 12,
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      elevation: 2,
+      borderColor: theme.colors.shadow,
+      borderWidth: 1
+    },
+    textSelectedStyle: {
+      marginRight: 5,
+      fontSize: 16,
+    },
+    noCategoriesText: {
+      fontSize: 16,
+      textAlign: "center",
+      color: "gray",
+    },
+    selectContainer: {
+      borderRadius: 8,
+      borderColor: theme.colors.shadow,
+      borderWidth: 1,
+      backgroundColor: theme.colors.primaryContainer
+    }
+  });  
 
   return (
     <View style={styles.container}>
       {categories.length === 0 ? (
-        <Text style={styles.noCategoriesText}>Cree categorías</Text>
+        <Text style={styles.noCategoriesText}>Create some categories!</Text>
       ) : (
         <MultiSelect
           style={styles.dropdown}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
           inputSearchStyle={styles.input}
+          containerStyle={styles.selectContainer}
           data={categories}
+          activeColor={theme.colors.scrim}
           labelField="title"
           valueField="title"
           placeholder="Select categories"
@@ -112,69 +198,3 @@ try {
 
 export default CategoryMultiSelect;
 
-const styles = StyleSheet.create({
-  container: { padding: 16 },
-  dropdown: {
-    backgroundColor: "white",
-    borderRadius: 8,
-    padding: 12,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-    height: 50,
-    borderColor: "gray",
-    borderWidth: 0.5,
-    paddingHorizontal: 8,
-  },
-  placeholderStyle: {
-    fontSize: 16,
-  },
-  selectedTextStyle: {
-    fontSize: 14,
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
-  },
-  input: {
-    maxWidth: 300,
-    width: "100%",
-    alignSelf: "center",
-  },
-  icon: {
-    marginRight: 5,
-  },
-  categoriesItem: {
-    padding: 17,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  tagsStyles: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 8,
-    backgroundColor: "white",
-    shadowColor: "#000",
-    marginTop: 8,
-    marginRight: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    elevation: 2,
-  },
-  textSelectedStyle: {
-    marginRight: 5,
-    fontSize: 16,
-  },
-  noCategoriesText: {
-    fontSize: 16,
-    textAlign: "center",
-    color: "gray",
-  },
-});

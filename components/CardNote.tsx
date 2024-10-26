@@ -88,7 +88,7 @@ const CardNote = ({
       >
         <Card.Title
           title={<Text style={styles.cardTitle}>
-            {title.slice(0, 15).trim()}
+            {title.trim()}
           </Text>}
           subtitle={
             <HTMLView

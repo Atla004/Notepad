@@ -19,6 +19,8 @@ export default function Home() {
 
   useFocusEffect(
     useCallback(() => {
+      console.log('nigger')
+      // router.dismissAll()
       storeData('active-tab', 'Home')
       getNotes();
       

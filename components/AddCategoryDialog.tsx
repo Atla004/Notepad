@@ -22,6 +22,19 @@ export default function AddCategoryDialog() {
 
   const theme = useTheme();
 
+  const handleCategoryTextChange = (text: string) => {
+    setCategoryName(text);
+    if (!text) {
+      setUserError("Category name cannot be empty.");
+      return;
+    }
+    if (text.length > 15) {
+      setUserError("Category name is too long.");
+      return;
+    }
+    setUserError('')
+  }
+
   const handlerNewCategories = async () => {
     try {
       if (!categoryName) {
@@ -46,6 +59,42 @@ export default function AddCategoryDialog() {
       console.log("Error creating category: ", error);
     }
   };
+  const styles = StyleSheet.create({
+    dialog: {
+      display: "flex",
+      position: "relative",
+      backgroundColor: theme.colors.primaryContainer,
+      borderRadius: 20
+    },
+    btn: {
+      marginTop: 15,
+    },
+    containerCategory: {
+      justifyContent: "space-around",
+      flexDirection: "row",
+      alignItems:"center",
+      height: 70
+    },
+    inputCategory: {
+      // marginVertical: 10,
+      width: 220,
+      // height: 60,
+      padding: 0,
+      flexGrow: 0,
+      maxHeight: 50,
+      textAlignVertical: 'center'
+      // marginHorizontal: 10,
+    },
+    errorText: {
+      color: "red",
+      // alignSelf: "center",
+      marginBottom: 5,
+      marginLeft: 10,
+      // textAlign: "left"
+    },
+    errorContainer: {
+    }
+  });
 
   return (
     <View>
@@ -66,14 +115,18 @@ export default function AddCategoryDialog() {
                 style={styles.inputCategory}
                 label="Category Name"
                 value={categoryName}
-                onChangeText={(text) => setCategoryName(text)}
-              />
-              {userError ? (
-                <Text style={styles.errorText}>{userError}</Text>
-              ) : null}
+                onChangeText={handleCategoryTextChange}
+                mode="outlined"
 
+              />
               <SelectEmoji />
             </View>
+            <View style={styles.errorContainer}>
+              {userError ? (
+                <Text style={styles.errorText}>{userError}</Text>
+              ) : <Text>{""}</Text>}
+            </View>
+
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={handlerNewCategories}>Done</Button>
@@ -84,31 +137,4 @@ export default function AddCategoryDialog() {
   );
 }
 
-const styles = StyleSheet.create({
-  dialog: {
-    display: "flex",
-    position: "relative",
-  },
-  btn: {
-    marginVertical: 10,
-  },
-  containerCategory: {
-    justifyContent: "space-around",
-    flexDirection: "row",
-  },
-  inputCategory: {
-    marginVertical: 10,
-    width: 150,
-    height: 50,
-    padding: 0,
-    flexGrow: 0,
-    maxHeight: 50,
 
-    marginHorizontal: 10,
-  },
-  errorText: {
-    color: "red",
-    alignSelf: "center",
-    marginBottom: 5,
-  },
-});

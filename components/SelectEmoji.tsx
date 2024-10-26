@@ -3,7 +3,7 @@ import { storeLocalNote } from "@/services/notelocalstorage";
 import React, { useEffect, useState } from "react";
 import { View, Text, Modal, StyleSheet } from "react-native";
 import EmojiModal from "react-native-emoji-modal";
-import { Button } from "react-native-paper";
+import { Button, useTheme } from "react-native-paper";
 
 interface SelectEmojiProps {
   defaultEmoji?: string;
@@ -30,21 +30,51 @@ export const SelectEmoji = ({defaultEmoji}: SelectEmojiProps) => {
     }
   }, [selectedEmoji]);
 
+  const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    container: {
+      justifyContent: "center",
+    },
+    emojiText: {
+      fontSize: 15,
+      textAlign: "center",
+      flexShrink: 1,
+      flexGrow: 1,
+      overflow: "visible",
+      maxHeight: 200,
+      minHeight: 200,
+    },
+    emojiContainer: {
+      // width: 50,
+      height: 44,
+      marginTop: 6,
+      // padding: 0,
+      // paddingTop: 5/,
+      verticalAlign: "middle",
+      // alignSelf: "center",
+      backgroundColor: "white",
+      borderColor: theme.colors.shadow,
+      borderWidth: 1,
+      borderRadius: 5
+    },
+  });
+
   return (
     <View style={styles.container}>
       <Button
         style={styles.emojiContainer}
         onPress={() => setIsModalVisible(true)}
       >
-        <Text style={styles.emojiText}>{selectedEmoji}d</Text>
+        <Text style={styles.emojiText}>{selectedEmoji}</Text>
       </Button>
 
-      <Modal visible={isModalVisible} transparent={true} animationType="slide">
+      <Modal visible={isModalVisible} transparent={true} animationType="fade">
         <EmojiModal
           onEmojiSelected={handleEmojiSelected}
-          searchStyle={{ display: "none" }}
-          headerStyle={{ display: "none" }}
-          emojiSize={50}
+          searchStyle={{}}
+          // headerStyle={{ display: "none" }}
+          emojiSize={40}
           onPressOutside={() => setIsModalVisible(false)}
         />
       </Modal>
@@ -52,27 +82,6 @@ export const SelectEmoji = ({defaultEmoji}: SelectEmojiProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-  },
-  emojiText: {
-    fontSize: 15,
-    textAlign: "center",
-    flexShrink: 1,
-    flexGrow: 1,
-    overflow: "visible",
-    maxHeight: 200,
-    minHeight: 200,
-  },
-  emojiContainer: {
-    width: 50,
-    height: 50,
-    padding: 0,
-    paddingTop: 5,
-    marginTop: 20,
-    backgroundColor: "rgba(0,0,0,0.1)",
-  },
-});
+
 
 export default SelectEmoji;
