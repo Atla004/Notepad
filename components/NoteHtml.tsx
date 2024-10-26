@@ -63,6 +63,7 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
     await waitForEditor(); // Esperar hasta que el editor esté listo
     editor.setContent(editorContent.current);
     editor.setEditable(true);
+    editor.injectCSS(`body { color: ${theme.colors.onSurface} }`)
     refLoading.current = false;
     
     const currentCharacterCount = (await editor.getText()).length;
@@ -89,9 +90,7 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
   };
 
   const theme = useTheme()  
-  useEffect(()=> {
 
-  }, [theme])
   const editor = useEditorBridge({
     autofocus: true,
     avoidIosKeyboard: true,
