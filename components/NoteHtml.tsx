@@ -9,6 +9,8 @@ import { NoteRequest } from "@/types/apiResponses";
 import { editLocalNote } from "@/services/notelocalstorage";
 import { notify } from "@alexsandersarmento/react-native-event-emitter";
 
+
+
 interface NoteHtmlProps {
   content: string;
   _id: string;
@@ -24,6 +26,7 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
 
   useEffect(() => {
     refFavorite.current = favorite;
+    
     try {
       editorReady();
     }
@@ -61,7 +64,6 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
     editor.setContent(editorContent.current);
     editor.setEditable(true);
     refLoading.current = false;
-
     
     const currentCharacterCount = (await editor.getText()).length;
     setCharacterNumber(currentCharacterCount);
@@ -87,19 +89,6 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
   };
 
   const theme = useTheme()  
-  const [editorCSS, setEditorCSS] = useState<string>(`
-    code {
-      background-color: ${theme.colors.surface};
-      border-radius: 0.25em;
-      border-color: #e45d5d;
-      border-width: 1px;
-      border-style: solid;
-      box-decoration-break: clone;
-      color: ${theme.colors.onSurface};
-      font-size: 0.9rem;
-      padding: 0.25em;
-  }  
-  `)
   useEffect(()=> {
 
   }, [theme])
@@ -109,13 +98,13 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
     initialContent: "",
     onChange: handleEditorChange,
     editable: false,
-    // bridgeExtensions: [
-    //   CodeBridge.configureCSS(editorCSS)
-    // ]
+    theme: theme.colors.onSurface==="#F7F7ED"? darkEditorTheme: undefined,
   });
+
 
   const saveNoteContent = async () => {
     try {
+      
       console.log("saveNoteContent method");
       const username = await fetchData("username");
       if (refLoading.current) {
@@ -137,7 +126,7 @@ export const NoteHtml = ({ content,_id , favorite}: NoteHtmlProps) => {
 
   return (
     <>
-      <Text style={styles.charCount}>
+      <Text style={[styles.charCount,    {color: "gray"},]}>
         Characters remaining: {250 -charactersNumber}
       </Text>
       <RichText editor={editor}/>
@@ -153,7 +142,7 @@ const styles = StyleSheet.create({
     textAlign: "right",
     marginRight: 10,
     marginTop: 5,
-    color: "gray",
+
   },
   fullScreen: {
     flex: 1,

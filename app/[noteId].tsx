@@ -166,7 +166,7 @@ const NoteScreen = () => {
       />
       <StatusBar />
 
-      <View style={[styles.noteContainer]}>
+      <View style={[styles.noteContainer,{backgroundColor: theme.colors.surface}]}>
         <NoteHtml content={content} _id={_id} favorite={favoriteBool} />
       </View>
     </View>
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginTop: 10,
     padding: 10,
-    backgroundColor: "white",
+    
   },
   container: {
     flex: 1,
