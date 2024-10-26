@@ -9,9 +9,8 @@ import { useTheme } from "react-native-paper";
 export default function AboutUs() {
   const theme = useTheme();
   const markdownContent = `
-# F.A.Q. - Note-Taking App
-
-## General
+## General: 
+---
 
 ### What is a note-taking app?
 A note-taking app is a digital tool that allows users to create, organize, and manage notes efficiently. This app offers features like user registration, login, logout, and profile deletion, ensuring that user data is unique and accessible only after logging in.
@@ -24,6 +23,7 @@ Using this note-taking app offers several benefits, including:
 - **Customization**: Organize your notes into categories and prioritize them as needed.
 
 ## Features
+---
 
 ### Can I register, log in, log out, and delete my profile?
 Yes, our app allows you to register a new account, log in to your account, log out, and delete your profile if you no longer wish to use the service.
@@ -41,6 +41,7 @@ Yes, you can assign a priority or weight to your notes to help you organize and 
 Yes, you can create and manage categories to group your notes according to your preferences. This helps in organizing and finding specific notes easily.
 
 ## Usage
+---
 
 ### How do I create a new note?
 To create a new note, simply open the app, look for the "New Note" or "+" button, and start typing your note. Remember that the description has a limit of 250 characters.
@@ -55,6 +56,7 @@ To assign a priority or weight to a note, open the note, look for the priority o
 To create a new category, look for the "Categories" section in the app, click on "+" button and enter the category name. You can then assign notes to this category by selecting the category when creating or editing a note.
 
 ## Troubleshooting
+---
 
 ### What should I do if I can't log in to my account?
 If you can't log in to your account, try the following steps:
@@ -72,6 +74,7 @@ If your notes are not syncing, try the following steps:
 5. Contact customer support if the issue persists.
 
 ## Support
+---
 
 ### How can I contact customer support?
 You can contact customer support through the following channels:
@@ -100,7 +103,10 @@ Thank you for using our note-taking app! If you have any other questions, please
       heading1: {
         color: theme.colors.shadow, 
       },
-    
+      hr: {
+        backgroundColor: theme.colors.shadow,
+        height: 1,
+      },
     },
   });
 
@@ -108,11 +114,12 @@ Thank you for using our note-taking app! If you have any other questions, please
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          title: `About Us `,
+          title: `Frequently Asked Questions `,
           headerShown: true,
           headerStyle: {
             backgroundColor: theme.colors.primaryContainer, // Cambia este valor al color que desees
           },
+          headerTintColor: theme.colors.onSurface,
         }}
       />
       <ScrollView contentContainerStyle={styles.scrollView}>

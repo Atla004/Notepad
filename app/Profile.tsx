@@ -19,7 +19,6 @@ export default function Profile() {
   const changeTheme = async () => {
     console.log('toggle theme')
     const actualTheme = await fetchData('theme');
-    
     await storeData('theme', actualTheme == 'light' ? 'dark' : 'light')
     toggleTheme();
   }
@@ -139,23 +138,14 @@ export default function Profile() {
       </Text>
       <Divider bold style={styles.divider} />
       <Text variant="bodySmall" style={styles.textCloseToDivider}>
-        Profile data
+        Profile Settings
       </Text>
-      <Button icon="account" textColor={theme.colors.shadow} style={styles.bnt}
-      >
-        Change Email
-      </Button>
+  
       <Button icon="lock" textColor={theme.colors.shadow} style={styles.bnt}
         onPress={async () => {await changePassword()}}
-      >
-        
+      > 
         Change Password
       </Button>
-
-      <Divider bold style={styles.divider} />
-      <Text variant="bodySmall" style={styles.textCloseToDivider}>
-        Settings
-      </Text>
       <Button
         icon="theme-light-dark"
         textColor={theme.colors.shadow}
@@ -172,6 +162,7 @@ export default function Profile() {
         icon="information"
         textColor={theme.colors.shadow}
         style={styles.bnt}
+        onPress={() => router.push('/AboutUs')}
       >
         About us
       </Button>
@@ -179,6 +170,7 @@ export default function Profile() {
         icon="help-circle"
         textColor={theme.colors.shadow}
         style={styles.bnt}
+        onPress={() => router.push('/F.A.Q')}
       >
         F.A.Q
       </Button>
