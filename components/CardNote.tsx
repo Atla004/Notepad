@@ -44,6 +44,8 @@ const CardNote = ({
 
   const fontSizeByPriority = [20, 17.5, 18, 18, 18, 18]
 
+  const chipColor = theme.dark ? theme.colors.surface : theme.colors.onSurface
+
   const styles = StyleSheet.create({
     cardTitle: {
       fontWeight: 'bold',
@@ -64,7 +66,7 @@ const CardNote = ({
       textAlignVertical: "top",
       fontWeight: 'bold',
       fontSize: 9,
-      color: priority == 5 ? theme.colors.primary : theme.colors.surface
+      color: priority == 5 ? theme.colors.primary : chipColor
       // padding: 0
     },
     text: {
